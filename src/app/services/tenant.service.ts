@@ -27,7 +27,10 @@ export class TenantService {
     return this.http.get<TenantModel>(`${tenantUrl}/settings.json`).pipe(
       map((settings) => ({
         ...settings,
-        logoUrl: `${tenantUrl}/${settings.logoUrl}`,
+        assets: {
+          ...settings.assets,
+          logo: `${tenantUrl}/${settings.assets.logo}`,
+        },
       })),
       tap((settings) => this.title.setTitle(`${settings.name} tools`))
     );

@@ -1,7 +1,9 @@
 {
+  "assets": {
+    "logo": "tp_logo_white_3.png"
+  },
   "colors": {
     "primary": "#041a2d"
   },
-  "name": "Trierpatent",
-  "logoUrl": "tp_logo_white_3.png"
+  "name": "Trierpatent"
 }

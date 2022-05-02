@@ -1,11 +1,6 @@
 <ng-container *ngIf="tenant.settings$ | async as settings">
-  <mat-toolbar
-    [style.backgroundColor]="settings.colors.primary"
-    style="position: relative; justify-content: space-around"
-  >
-    <a routerLink="/"
-      ><img [src]="settings.logoUrl" style="max-height: 48px"
-    /></a>
+  <mat-toolbar class="header" [style.backgroundColor]="settings.colors.primary">
+    <a routerLink="/"><img [src]="settings.assets.logo" /></a>
   </mat-toolbar>
   <main>
     <router-outlet></router-outlet>

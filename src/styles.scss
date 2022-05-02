@@ -22,6 +22,16 @@ main {
   }
 }
 
+.header {
+  position: relative;
+  justify-content: space-around;
+
+  img {
+    max-height: 48px;
+    margin-top: 8px;
+  }
+}
+
 .picker {
   display: flex;
   gap: 10vw;
@@ -39,7 +49,7 @@ main {
 }
 
 .stepper {
-  min-width: 50vw;
+  min-width: 600px;
 
   .controls {
     display: flex;
@@ -48,7 +58,7 @@ main {
   }
 
   @include breakpoints.only-screen-max(small) {
-    //min-width: calc(100vw - 64px);
+    min-width: unset;
   }
 }
 
