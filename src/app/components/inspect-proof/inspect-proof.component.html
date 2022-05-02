@@ -1,0 +1,152 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Inspect proof</mat-card-title>
+  </mat-card-header>
+  <mat-stepper
+    [orientation]="(stepperOrientation | async)!"
+    [linear]="true"
+    class="stepper"
+  >
+    <mat-step [stepControl]="inspectForm" label="Upload proof">
+      <ng-container *ngIf="inspectForm.get('file')?.value; else noFile">
+        <strong>
+          {{ inspectForm.get("file")?.value.name }}
+          <button
+            mat-icon-button
+            (click)="clearFile()"
+            color="warn"
+            matTooltip="Cancel selected file"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </strong>
+        <mat-list class="validator-list">
+          <mat-list-item *ngFor="let validator of fileValidators | keyvalue">
+            <mat-icon
+              matListIcon
+              [class]="result.status"
+              *ngIf="validator.value.validator | async as result"
+              >{{
+                result.status === "valid"
+                  ? "check_circle"
+                  : result.status === "invalid"
+                  ? "error"
+                  : result.status === "undetermined"
+                  ? "help"
+                  : "pending"
+              }}</mat-icon
+            >
+            <p mat-line>{{ validator.value.label }}</p>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <ng-template #noFile>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="fileControl.click()"
+          type="button"
+        >
+          <mat-icon>upload</mat-icon>
+          Select file
+        </button>
+      </ng-template>
+      <input
+        type="file"
+        style="display: none"
+        (change)="selectFile($event)"
+        #fileControl
+      />
+
+      <div class="controls">
+        <div></div>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          [disabled]="inspectForm.invalid"
+        >
+          <mat-icon>navigate_next</mat-icon> Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Validate proof" [stepControl]="proofForm">
+      <mat-list class="validator-list">
+        <ng-container *ngFor="let validator of proofValidators | keyvalue">
+          <mat-list-item *ngIf="validator.value.validator | async as result">
+            <mat-icon matListIcon [class]="result.status">{{
+              result.status === "valid"
+                ? "check_circle"
+                : result.status === "invalid"
+                ? "error"
+                : result.status === "undetermined"
+                ? "help"
+                : "pending"
+            }}</mat-icon>
+            <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line *ngFor="let message of result.messages">
+              {{ message }}
+            </p>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <div class="controls">
+        <button mat-raised-button matStepperPrevious color="primary">
+          <mat-icon>navigate_before</mat-icon>Previous
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          [disabled]="proofForm.invalid"
+        >
+          <mat-icon>navigate_next</mat-icon>Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Verified files">
+      <mat-nav-list>
+        <mat-list-item
+          *ngFor="let fileName of proofForm.value.fileNames"
+          (click)="downloadFile(fileName)"
+        >
+          <mat-icon matListIcon>download</mat-icon>
+          <p mat-line>{{ fileName }}</p>
+        </mat-list-item>
+      </mat-nav-list>
+      <div class="controls">
+        <button mat-raised-button matStepperPrevious color="primary">
+          <mat-icon>navigate_before</mat-icon>Previous
+        </button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</mat-card>
+
+<!--
+  <div>
+    <mat-list>
+      <mat-list-item
+        >Signed Presentation Exists: {{ signedPresentationExists }}</mat-list-item
+      >
+      <mat-list-item
+        >Presentation Valid: {{ presentationValidity }}</mat-list-item
+      >
+      <mat-list-item>Proof Integrity: {{ proofIntegrity }}</mat-list-item>
+      <mat-list-item>Proof exists on blockchain: {{ proofExistsOnBlockchain }}</mat-list-item>
+      <mat-list-item>Exists Since: Block {{ existsSince }}</mat-list-item>
+      <mat-list-item>Current Height on the Blockchain {{ currentHeight }}</mat-list-item>
+      <mat-list-item>Proof creator has impersonate right to the project now: {{ hasRight }}</mat-list-item>
+    </mat-list>
+    <div *ngIf="existsSince">
+      <h3>Proven Documents</h3>
+      <mat-list>
+        <mat-list-item *ngFor="let document of provenDocuments">
+          {{ document }}
+          <button>Download</button>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+   -->

@@ -1,0 +1,27 @@
+@use "@angular/material" as mat;
+@use "theme" as theme;
+
+$app-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: theme.$app-primary,
+      accent: theme.$app-accent,
+      warn: theme.$app-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($app-light-theme);
+
+a {
+  color: map-get(map-get($app-light-theme, "foreground"), "text");
+  cursor: pointer;
+}
+
+.selected {
+  background-color: mat.get-color-from-palette(
+    map-get($app-light-theme, background),
+    hover,
+    0.12
+  );
+}

@@ -1,0 +1,27 @@
+@use "@angular/material" as mat;
+@use "theme" as theme;
+
+$app-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: theme.$app-primary,
+      accent: theme.$app-accent,
+      warn: theme.$app-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($app-dark-theme);
+
+a {
+  color: map-get(map-get($app-dark-theme, "foreground"), "text");
+  cursor: pointer;
+}
+
+.selected {
+  background-color: mat.get-color-from-palette(
+    map-get($app-dark-theme, background),
+    hover,
+    0.12
+  );
+}
