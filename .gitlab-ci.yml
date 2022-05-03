@@ -1,0 +1,43 @@
+stages:
+  - test
+  - docker
+
+cache:
+  paths:
+  - node_modules/
+
+test:
+  stage: test
+  image: node:16
+  script:
+    - npm ci
+    #- npm run lint
+    - npm run build
+
+docker-rc:
+  stage: docker
+  image: docker:stable
+  only:
+    - develop
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - echo $CI_REGISTRY
+    - echo $CI_REGISTRY_IMAGE
+    - docker build -f docker/DockerFile -t $CI_REGISTRY_IMAGE/app:rc .
+    - docker push $CI_REGISTRY_IMAGE/app:rc
+
+docker-latest:
+  stage: docker
+  image: docker:stable
+  only:
+    - master
+  before_script:
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - echo $CI_REGISTRY
+    - echo $CI_REGISTRY_IMAGE
+    - docker build -f docker/DockerFile -t $CI_REGISTRY_IMAGE/app:latest .
+    - docker push $CI_REGISTRY_IMAGE/app:latest

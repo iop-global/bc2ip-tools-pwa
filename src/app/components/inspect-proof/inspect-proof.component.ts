@@ -26,6 +26,7 @@ import {
   NetworkConfig,
 } from '@internet-of-people/sdk';
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
+import { environment } from 'src/environments/environment';
 
 type ValidatorStatusType = 'pending' | 'invalid' | 'valid' | 'undetermined';
 
@@ -49,7 +50,16 @@ interface ProvenDocument {
   authors: string[];
 }
 
-const networkConfig = NetworkConfig.fromNetwork(Network.Devnet);
+interface NetworkMap {
+  [key: string]: Network;
+}
+
+const networkMap: NetworkMap = {
+  'testnet': Network.Testnet,
+  'devnet': Network.Devnet,
+  'mainnet': Network.Mainnet,
+}
+const networkConfig = NetworkConfig.fromNetwork(networkMap[environment.hydraledgerNetwork]);
 
 @Component({
   encapsulation: ViewEncapsulation.None,

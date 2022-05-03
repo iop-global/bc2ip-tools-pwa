@@ -9,6 +9,7 @@ export const environment = {
     // currentTenant: '/assets/695c4fb2-5ed0-474f-bf51-f982a8d2c2da',
     webService: 'http://localhost:4201',
   },
+  hydraledgerNetwork: 'devnet',
   production: false,
 };
 
