@@ -4,6 +4,7 @@ export interface TenantModel {
   };
   colors: {
     primary: string;
+    text: string;
   };
   name: string;
 }

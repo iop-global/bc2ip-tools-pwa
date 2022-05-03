@@ -1,0 +1,78 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Generate proof</mat-card-title>
+  </mat-card-header>
+  <mat-stepper
+    [orientation]="(stepperOrientation | async)!"
+    [linear]="true"
+    class="stepper"
+  >
+    <mat-step [stepControl]="fileForm" label="Upload certificate">
+      <ng-container *ngIf="fileForm.get('file')?.value; else noFile">
+        <strong>
+          {{ fileForm.get("file")?.value.name }}
+          <button
+            mat-icon-button
+            (click)="clearFile()"
+            color="warn"
+            matTooltip="Cancel selected file"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </strong>
+        <mat-list class="validator-list">
+          <mat-list-item *ngFor="let validator of fileValidators | keyvalue">
+            <mat-icon
+              matListIcon
+              [class]="result.status"
+              *ngIf="validator.value.validator | async as result"
+              >{{
+                result.status === "valid"
+                  ? "check_circle"
+                  : result.status === "invalid"
+                  ? "error"
+                  : result.status === "undetermined"
+                  ? "help"
+                  : "pending"
+              }}</mat-icon
+            >
+            <p mat-line>{{ validator.value.label }}</p>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <ng-template #noFile>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="fileControl.click()"
+          type="button"
+        >
+          <mat-icon>upload</mat-icon>
+          Select file
+        </button>
+      </ng-template>
+      <input
+        type="file"
+        style="display: none"
+        (change)="selectFile($event)"
+        accept=".certificate"
+        #fileControl
+      />
+
+      <div class="controls">
+        <div></div>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          [disabled]="fileForm.invalid"
+        >
+          <mat-icon>navigate_next</mat-icon> Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Set up proof"></mat-step>
+    <mat-step label="Sign proof"></mat-step>
+  </mat-stepper>
+</mat-card>

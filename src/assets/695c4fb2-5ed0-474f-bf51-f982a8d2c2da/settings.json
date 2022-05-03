@@ -3,7 +3,8 @@
     "logo": "tp_logo_white_3.png"
   },
   "colors": {
-    "primary": "#041a2d"
+    "primary": "#041a2d",
+    "text": "#FFFFFF"
   },
   "name": "Trierpatent"
 }

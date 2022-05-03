@@ -56,6 +56,7 @@
         type="file"
         style="display: none"
         (change)="selectFile($event)"
+        accept=".proof"
         #fileControl
       />
 
@@ -123,30 +124,3 @@
     </mat-step>
   </mat-stepper>
 </mat-card>
-
-<!--
-  <div>
-    <mat-list>
-      <mat-list-item
-        >Signed Presentation Exists: {{ signedPresentationExists }}</mat-list-item
-      >
-      <mat-list-item
-        >Presentation Valid: {{ presentationValidity }}</mat-list-item
-      >
-      <mat-list-item>Proof Integrity: {{ proofIntegrity }}</mat-list-item>
-      <mat-list-item>Proof exists on blockchain: {{ proofExistsOnBlockchain }}</mat-list-item>
-      <mat-list-item>Exists Since: Block {{ existsSince }}</mat-list-item>
-      <mat-list-item>Current Height on the Blockchain {{ currentHeight }}</mat-list-item>
-      <mat-list-item>Proof creator has impersonate right to the project now: {{ hasRight }}</mat-list-item>
-    </mat-list>
-    <div *ngIf="existsSince">
-      <h3>Proven Documents</h3>
-      <mat-list>
-        <mat-list-item *ngFor="let document of provenDocuments">
-          {{ document }}
-          <button>Download</button>
-        </mat-list-item>
-      </mat-list>
-    </div>
-  </div>
-   -->

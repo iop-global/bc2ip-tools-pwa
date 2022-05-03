@@ -16,9 +16,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HomeComponent } from './components/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InspectProofComponent } from './components/inspect-proof/inspect-proof.component';
+import { GenerateProofComponent } from './components/generate-proof/generate-proof.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, InspectProofComponent],
+  declarations: [
+    AppComponent,
+    GenerateProofComponent,
+    HomeComponent,
+    InspectProofComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

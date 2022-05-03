@@ -32,7 +32,7 @@ export class TenantService {
           logo: `${tenantUrl}/${settings.assets.logo}`,
         },
       })),
-      tap((settings) => this.title.setTitle(`${settings.name} tools`))
+      tap((settings) => this.title.setTitle(`${settings.name} Tools`))
     );
   }
 }

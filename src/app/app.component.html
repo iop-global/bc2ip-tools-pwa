@@ -1,8 +1,13 @@
-<ng-container *ngIf="tenant.settings$ | async as settings">
-  <mat-toolbar class="header" [style.backgroundColor]="settings.colors.primary">
-    <a routerLink="/"><img [src]="settings.assets.logo" /></a>
-  </mat-toolbar>
-  <main>
-    <router-outlet></router-outlet>
-  </main>
-</ng-container>
+<mat-toolbar
+  *ngIf="tenant.settings$ | async as settings"
+  class="app-header"
+  [style.backgroundColor]="settings.colors.primary"
+>
+  <a routerLink="/"><img class="logo" [src]="settings.assets.logo" /></a>
+  <div class="title" [style.color]="settings.colors.text">
+    {{ settings.name }}
+  </div>
+</mat-toolbar>
+<main>
+  <router-outlet></router-outlet>
+</main>

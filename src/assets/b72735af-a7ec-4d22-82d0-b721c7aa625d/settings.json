@@ -1,9 +1,10 @@
 {
   "assets": {
-    "logo": "bc2ip-farbig.png"
+    "logo": "logo.png"
   },
   "colors": {
-    "primary": "#00b1a7"
+    "primary": "#1a2141",
+    "text": "#FFFFFF"
   },
-  "name": "IOP Global"
+  "name": "Demo"
 }

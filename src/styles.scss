@@ -22,13 +22,20 @@ main {
   }
 }
 
-.header {
+.app-header {
   position: relative;
-  justify-content: space-around;
+  justify-content: space-between;
 
-  img {
+  .logo {
     max-height: 48px;
     margin-top: 8px;
+  }
+
+  .title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 
