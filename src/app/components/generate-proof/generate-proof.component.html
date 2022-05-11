@@ -49,7 +49,7 @@
           type="button"
         >
           <mat-icon>upload</mat-icon>
-          Select file
+          Select certificate file
         </button>
       </ng-template>
       <input
@@ -72,7 +72,188 @@
         </button>
       </div>
     </mat-step>
-    <mat-step label="Set up proof"></mat-step>
-    <mat-step label="Sign proof"></mat-step>
+    <mat-step label="Validate certificate" [stepControl]="certificateForm">
+      <mat-list class="validator-list">
+        <ng-container
+          *ngFor="let validator of certificateValidators | keyvalue"
+        >
+          <mat-list-item *ngIf="validator.value.validator | async as result">
+            <mat-icon matListIcon [class]="result.status">{{
+              result.status === "valid"
+                ? "check_circle"
+                : result.status === "invalid"
+                ? "error"
+                : result.status === "undetermined"
+                ? "help"
+                : "pending"
+            }}</mat-icon>
+            <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line *ngFor="let message of result.messages">
+              {{ message }}
+            </p>
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <div class="controls">
+        <button mat-raised-button matStepperPrevious color="primary">
+          <mat-icon>navigate_before</mat-icon>Previous
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          [disabled]="certificateForm.invalid"
+        >
+          <mat-icon>navigate_next</mat-icon>Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step
+      label="Set up proof"
+      [stepControl]="proofForm"
+      [formGroup]="proofForm"
+    >
+      <mat-form-field style="display: block; max-width: 10rem">
+        <mat-label>Proof purpose</mat-label>
+        <input matInput formControlName="purpose" />
+      </mat-form-field>
+      <mat-form-field style="display: block; max-width: 7rem">
+        <mat-label>Valid until</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          readonly
+          formControlName="validUntil"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node
+          *matTreeNodeDef="let node"
+          matTreeNodeToggle
+          matTreeNodePadding
+        >
+          <button mat-icon-button disabled></button>
+          <mat-checkbox
+            class="checklist-leaf-node"
+            [checked]="checklistSelection.isSelected(node)"
+            (change)="todoLeafItemSelectionToggle(node)"
+            >{{ node.item }}</mat-checkbox
+          >
+        </mat-tree-node>
+        <mat-tree-node
+          *matTreeNodeDef="let node; when: hasChild"
+          matTreeNodePadding
+        >
+          <button mat-icon-button matTreeNodeToggle (click)="toggleNode(node)">
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{
+                treeControl.isExpanded(node) ? "expand_more" : "chevron_right"
+              }}
+            </mat-icon>
+          </button>
+          <mat-checkbox
+            [checked]="
+              (node.level > 0 && descendantsAllSelected(node)) ||
+              checklistSelection.isSelected(node)
+            "
+            [indeterminate]="
+              node.level > 0 && descendantsPartiallySelected(node)
+            "
+            (change)="todoItemSelectionToggle(node)"
+            >{{ node.item }}</mat-checkbox
+          >
+        </mat-tree-node>
+      </mat-tree>
+      <div class="controls">
+        <button mat-raised-button matStepperPrevious color="primary">
+          <mat-icon>navigate_before</mat-icon>Previous
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="primary"
+          [disabled]="proofForm.invalid"
+        >
+          <mat-icon>navigate_next</mat-icon>Next
+        </button>
+      </div>
+    </mat-step>
+    <mat-step label="Sign proof">
+      <ng-container
+        *ngIf="vaultForm.get('file')?.value; else noVault"
+        [formGroup]="vaultForm"
+      >
+        <strong style="display: block">
+          {{ vaultForm.get("file")?.value.name }}
+          <button
+            mat-icon-button
+            (click)="clearVault()"
+            color="warn"
+            matTooltip="Cancel selected file"
+            type="button"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </strong>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" />
+        </mat-form-field>
+        <mat-list class="validator-list">
+          <mat-list-item *ngFor="let validator of vaultValidators | keyvalue">
+            <mat-icon
+              matListIcon
+              [class]="result.status"
+              *ngIf="validator.value.validator | async as result"
+              >{{
+                result.status === "valid"
+                  ? "check_circle"
+                  : result.status === "invalid"
+                  ? "error"
+                  : result.status === "undetermined"
+                  ? "help"
+                  : "pending"
+              }}</mat-icon
+            >
+            <p mat-line>{{ validator.value.label }}</p>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <ng-template #noVault>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="vaultControl.click()"
+          type="button"
+        >
+          <mat-icon>upload</mat-icon>
+          Select vault file
+        </button>
+      </ng-template>
+      <input
+        type="file"
+        style="display: none"
+        (change)="selectVault($event)"
+        accept=".json"
+        #vaultControl
+      />
+      <div class="controls">
+        <button mat-raised-button matStepperPrevious color="primary">
+          <mat-icon>navigate_before</mat-icon>Previous
+        </button>
+        <button
+          mat-raised-button
+          matStepperNext
+          color="accent"
+          (click)="downloadProof()"
+          [disabled]="vaultForm.invalid"
+        >
+          <mat-icon>download</mat-icon>Download proof
+        </button>
+      </div>
+    </mat-step>
   </mat-stepper>
 </mat-card>

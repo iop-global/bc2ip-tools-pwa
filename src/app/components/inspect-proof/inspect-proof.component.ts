@@ -101,7 +101,7 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationFound'] = {
-      label: 'Signed-presentation.json found.',
+      label: 'Signed presentation found.',
       validator: merge(
         of(<ValidatorResult>{
           data: null,
@@ -131,7 +131,7 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationValid'] = {
-      label: 'Valid signed-presentation.json.',
+      label: 'Valid signed presentation.',
       validator: this.proofValidators[
         'isSignedPresentationFound'
       ].validator.pipe(

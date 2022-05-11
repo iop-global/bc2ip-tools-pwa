@@ -6,9 +6,19 @@ import { environment } from 'src/environments/environment';
 export class SDKWebService {
   constructor(readonly http: HttpClient) {}
 
-  hasRightAt(did: string, publicKey: string, atHeight: number) {
+  beforeProofExists(id: string) {
     return this.http.get<boolean>(
-      `${environment.endpoints.webService}/dids/${did}/keys/${publicKey}/hasRight/${atHeight}`
+      `${environment.endpoints.webService}/before-proof/exists/${id}`
+    );
+  }
+
+  hasRightAt(did: string, publicKey: string, atHeight?: number) {
+    return this.http.get<boolean>(
+      `${
+        environment.endpoints.webService
+      }/dids/${did}/keys/${publicKey}/hasRight${
+        !!atHeight ? `/${atHeight}` : ''
+      }`
     );
   }
 }
