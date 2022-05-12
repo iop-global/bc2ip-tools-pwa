@@ -13,6 +13,7 @@ import { forkJoin, from, merge, Observable, of } from 'rxjs';
 import * as JSZip from 'jszip';
 import {
   digestJson,
+  KeyId,
   PublicKey,
   Signature,
   SignedJson,
@@ -39,6 +40,15 @@ interface Validator<T> {
   validator: Observable<ValidatorResult>;
 }
 
+interface ProvenDocument {
+  fileName: string;
+  uploaderDid: string;
+  uploaderKeyId: string;
+  proofCreatorUploadedIt: 'yes' | 'no' | 'not_disclosed';
+  owners: string[];
+  authors: string[];
+}
+
 const networkConfig = NetworkConfig.fromNetwork(Network.Devnet);
 
 @Component({
@@ -61,7 +71,7 @@ export class InspectProofComponent implements OnInit {
   });
 
   proofForm = new FormGroup({
-    fileNames: new FormControl(null, Validators.required),
+    provenDocuments: new FormControl(null, Validators.required),
   });
 
   readonly fileValidators: {
@@ -181,7 +191,7 @@ export class InspectProofComponent implements OnInit {
 
                   if (isExpired) {
                     messages.push(
-                      `Expired at ${new Intl.DateTimeFormat('en-US', {
+                      `Expired at ${new Intl.DateTimeFormat('default', {
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
@@ -311,27 +321,72 @@ export class InspectProofComponent implements OnInit {
           const collapsedSignedWitnessStatement =
             result.data.content.provenClaims[0].statements[0];
 
+          const sealer =
+            result.data.content.provenClaims[0].claim.content.sealer;
+          let proofCreatorPubKey: PublicKey | null = null;
+
+          let proofCreatorSealedTheSpecificVersion = 'not disclosed';
+
+          if (typeof sealer !== 'string') {
+            proofCreatorPubKey = new PublicKey(
+              result.data.content.signature.publicKey
+            );
+            const sealerKeyId = new KeyId(sealer.keyId);
+
+            proofCreatorSealedTheSpecificVersion =
+              proofCreatorPubKey.validateId(sealerKeyId) ? 'yes' : 'no';
+          }
+
+          const provenDocsInProof =
+            result.data.content.provenClaims[0].claim.content.files;
+
           const proof = digestJson(collapsedSignedWitnessStatement);
 
           return from(
             Layer2.createMorpheusApi(networkConfig).getBeforeProofHistory(proof)
           ).pipe(
-            withLatestFrom(this.fileValidators['isValidArchive'].validator),
-            tap(([history, zipResult]) =>
-              this.proofForm
-                .get('fileNames')
-                ?.setValue(
-                  Object.keys(zipResult.data.files).filter(
-                    (f) => f !== 'signed-presentation.json'
-                  )
-                )
+            tap(() =>
+              this.proofForm.get('provenDocuments')?.setValue(
+                Object.keys(provenDocsInProof)
+                  .filter((idx) => typeof provenDocsInProof[idx] !== 'string')
+                  .map((idx) => {
+                    const provenDoc = provenDocsInProof[idx];
+
+                    const uploaderDisclosed =
+                      typeof provenDoc.uploader !== 'string';
+
+                    const uploaderDid = uploaderDisclosed
+                      ? provenDoc.uploader.accountDid
+                      : 'Not disclosed';
+                    const uploaderKeyId = uploaderDisclosed
+                      ? provenDoc.uploader.keyId
+                      : 'Not disclosed';
+
+                    return <ProvenDocument>{
+                      fileName: provenDoc.fileName,
+                      authors:
+                        typeof provenDoc.authors === 'string'
+                          ? ['not disclosed']
+                          : Object.values(provenDoc.authors),
+                      owners:
+                        typeof provenDoc.owners === 'string'
+                          ? ['not disclosed']
+                          : Object.values(provenDoc.owners),
+                      uploaderDid,
+                      uploaderKeyId,
+                    };
+                  })
+              )
             ),
-            concatMap(([history]) =>
+            concatMap((history) =>
               from(Layer1.createApi(networkConfig)).pipe(
                 concatMap((api) =>
-                  from(api.getCurrentHeight()).pipe(
+                  forkJoin({
+                    currentHeight: from(api.getCurrentHeight()),
+                    txnStatusOpt: api.getTxnStatus(history.txid!),
+                  }).pipe(
                     map(
-                      (currentHeight) =>
+                      ({ currentHeight, txnStatusOpt }) =>
                         <ValidatorResult>{
                           data: { ...history, currentHeight },
                           messages: [
@@ -341,6 +396,22 @@ export class InspectProofComponent implements OnInit {
                             `Current height: ${Intl.NumberFormat().format(
                               currentHeight
                             )}`,
+                            `Time of seal: ${
+                              !!txnStatusOpt && txnStatusOpt.isPresent()
+                                ? new Intl.DateTimeFormat('default', {
+                                    day: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric',
+                                  }).format(
+                                    new Date(
+                                      txnStatusOpt.get().timestamp?.human!
+                                    )
+                                  )
+                                : 'undetermined'
+                            }`,
+                            `Proof creator sealed this version: ${proofCreatorSealedTheSpecificVersion}`,
                           ],
                           status: 'valid',
                         }
@@ -358,7 +429,49 @@ export class InspectProofComponent implements OnInit {
       ),
     };
 
-    this.proofValidators['proofRight'] = {
+    this.proofValidators['proofRight1'] = {
+      label:
+        'Proof creator had impersonate right to the project at the time of seal.',
+      validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
+        withLatestFrom(
+          this.proofValidators['isSignedPresentationValid'].validator
+        ),
+        concatMap(([proofResult, presentationResult]) => {
+          if (proofResult.status !== 'valid') {
+            return of(<ValidatorResult>{
+              data: null,
+              status: 'invalid',
+            });
+          }
+
+          const subjectDid =
+            presentationResult.data.content.provenClaims[0].claim.subject;
+
+          return this.webService
+            .hasRightAt(
+              subjectDid,
+              presentationResult.data.signature.publicKey,
+              proofResult.data.existsFromHeight
+            )
+            .pipe(
+              catchError(() => of(false)),
+              map(
+                (hasright) =>
+                  <ValidatorResult>{
+                    data: null,
+                    status: hasright ? 'valid' : 'invalid',
+                  }
+              )
+            );
+        }),
+        shareReplay({
+          bufferSize: 1,
+          refCount: true,
+        })
+      ),
+    };
+
+    this.proofValidators['proofRight2'] = {
       label: 'Proof creator has impersonate right to the project now.',
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
@@ -417,7 +530,7 @@ export class InspectProofComponent implements OnInit {
 
     if (!!files && files.length === 1) {
       this.inspectForm.get('file')?.setValue(files[0]);
-      this.proofForm.get('fileNames')?.setValue(null);
+      this.proofForm.get('provenDocuments')?.setValue(null);
     }
   }
 
@@ -440,6 +553,6 @@ export class InspectProofComponent implements OnInit {
 
   clearFile() {
     this.inspectForm.get('file')?.setValue(null);
-    this.proofForm.get('fileNames')?.setValue(null);
+    this.proofForm.get('provenDocuments')?.setValue(null);
   }
 }

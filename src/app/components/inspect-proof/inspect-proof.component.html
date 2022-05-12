@@ -1,4 +1,9 @@
 <mat-card>
+  <mat-card-actions>
+    <button mat-button routerLink="/">
+      <mat-icon>arrow_back</mat-icon> Back to menu
+    </button>
+  </mat-card-actions>
   <mat-card-header>
     <mat-card-title>Inspect proof</mat-card-title>
   </mat-card-header>
@@ -109,11 +114,18 @@
     <mat-step label="Verified files">
       <mat-nav-list>
         <mat-list-item
-          *ngFor="let fileName of proofForm.value.fileNames"
-          (click)="downloadFile(fileName)"
+          *ngFor="let document of proofForm.value.provenDocuments"
+          (click)="downloadFile(document.fileName)"
         >
           <mat-icon matListIcon>download</mat-icon>
-          <p mat-line>{{ fileName }}</p>
+          <p mat-line>{{ document.fileName }}</p>
+          <p mat-line>Uploader DID: {{ document.uploaderDid }}</p>
+          <p mat-line>Uploader KeyId: {{ document.uploaderKeyId }}</p>
+          <p mat-line>
+            Proof creator uploaded it: {{ document.proofCreatorUploadedIt }}
+          </p>
+          <p mat-line>Authors: {{ document.authors.join(", ") }}</p>
+          <p mat-line>Owners: {{ document.owners.join(", ") }}</p>
         </mat-list-item>
       </mat-nav-list>
       <div class="controls">

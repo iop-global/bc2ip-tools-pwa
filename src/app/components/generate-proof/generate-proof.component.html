@@ -1,4 +1,9 @@
 <mat-card>
+  <mat-card-actions>
+    <button mat-button routerLink="/">
+      <mat-icon>arrow_back</mat-icon> Back to menu
+    </button>
+  </mat-card-actions>
   <mat-card-header>
     <mat-card-title>Generate proof</mat-card-title>
   </mat-card-header>
@@ -129,6 +134,7 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
+      <h2>Select which parts of the claim should be included in the proof</h2>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-tree-node
           *matTreeNodeDef="let node"
