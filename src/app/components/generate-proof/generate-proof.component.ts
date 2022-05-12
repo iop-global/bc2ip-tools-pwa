@@ -515,7 +515,17 @@ export class GenerateProofComponent implements OnInit {
 
               try {
                 MorpheusPlugin.init(vault, password);
-              } catch (e) {}
+              } catch (e) {
+                if (
+                  typeof e === 'string' &&
+                  (e as string).includes('Ciphertext was tampered with')
+                ) {
+                  return of(<ValidatorResult>{
+                    data: null,
+                    status: 'invalid',
+                  });
+                }
+              }
 
               const morpheusPlugin = MorpheusPlugin.get(vault);
               let keyId: Crypto.KeyId | null = null;
@@ -654,7 +664,7 @@ export class GenerateProofComponent implements OnInit {
 
             for (const fileNode of selectedFiles) {
               doNotCollapsProps.push(
-                `.content.files[${fileNode.index}].fileName`
+                `.content.files.${fileNode.index}.fileName`
               );
               doNotCollapsProps.push(`.content.files.${fileNode.index}.hash`);
 
@@ -715,6 +725,8 @@ export class GenerateProofComponent implements OnInit {
               )
             );
 
+            // TODO: remove these
+            console.log(proofResult.data.content.claim)
             console.log(doNotCollapsProps);
 
             const collapsedStatement = JSON.parse(
