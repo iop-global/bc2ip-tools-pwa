@@ -427,7 +427,7 @@ export class GenerateProofComponent implements OnInit {
                                   children: Object.values(file.authors).map(
                                     (author, authorIndex) =>
                                       <ItemNode>{
-                                        item: author,
+                                        item: (author as any).author,
                                         type: 'author',
                                         index: Object.keys(file.authors)[
                                           authorIndex
@@ -441,7 +441,7 @@ export class GenerateProofComponent implements OnInit {
                                   children: Object.values(file.owners).map(
                                     (owner, ownerIndex) =>
                                       <ItemNode>{
-                                        item: owner,
+                                        item: (owner as any).owner,
                                         type: 'owner',
                                         index: Object.keys(file.owners)[
                                           ownerIndex
@@ -724,10 +724,6 @@ export class GenerateProofComponent implements OnInit {
                 doNotCollapsProps.join(',')
               )
             );
-
-            // TODO: remove these
-            console.log(proofResult.data.content.claim)
-            console.log(doNotCollapsProps);
 
             const collapsedStatement = JSON.parse(
               selectiveDigestJson(

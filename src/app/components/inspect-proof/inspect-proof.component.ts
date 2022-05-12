@@ -55,11 +55,13 @@ interface NetworkMap {
 }
 
 const networkMap: NetworkMap = {
-  'testnet': Network.Testnet,
-  'devnet': Network.Devnet,
-  'mainnet': Network.Mainnet,
-}
-const networkConfig = NetworkConfig.fromNetwork(networkMap[environment.hydraledgerNetwork]);
+  testnet: Network.Testnet,
+  devnet: Network.Devnet,
+  mainnet: Network.Mainnet,
+};
+const networkConfig = NetworkConfig.fromNetwork(
+  networkMap[environment.hydraledgerNetwork]
+);
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -339,7 +341,7 @@ export class InspectProofComponent implements OnInit {
 
           if (typeof sealer !== 'string') {
             proofCreatorPubKey = new PublicKey(
-              result.data.content.signature.publicKey
+              result.data.signature.publicKey
             );
             const sealerKeyId = new KeyId(sealer.keyId);
 
@@ -367,10 +369,10 @@ export class InspectProofComponent implements OnInit {
 
                     const uploaderDid = uploaderDisclosed
                       ? provenDoc.uploader.accountDid
-                      : 'Not disclosed';
+                      : 'not disclosed';
                     const uploaderKeyId = uploaderDisclosed
                       ? provenDoc.uploader.keyId
-                      : 'Not disclosed';
+                      : 'not disclosed';
 
                     let proofCreatorUploadedIt: 'yes' | 'no' | 'not disclosed' =
                       'not disclosed';
@@ -387,11 +389,25 @@ export class InspectProofComponent implements OnInit {
                       authors:
                         typeof provenDoc.authors === 'string'
                           ? ['not disclosed']
-                          : Object.values(provenDoc.authors),
+                          : Object.values(provenDoc.authors)
+                              .map((a) => {
+                                if (typeof a === 'string') {
+                                  return null;
+                                }
+                                return (a as any).author;
+                              })
+                              .filter((a) => a !== null),
                       owners:
                         typeof provenDoc.owners === 'string'
                           ? ['not disclosed']
-                          : Object.values(provenDoc.owners),
+                          : Object.values(provenDoc.owners)
+                              .map((a) => {
+                                if (typeof a === 'string') {
+                                  return null;
+                                }
+                                return (a as any).owner;
+                              })
+                              .filter((a) => a !== null),
                       uploaderDid,
                       uploaderKeyId,
                       proofCreatorUploadedIt,
