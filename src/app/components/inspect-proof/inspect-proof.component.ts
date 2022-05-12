@@ -362,6 +362,16 @@ export class InspectProofComponent implements OnInit {
                       ? provenDoc.uploader.keyId
                       : 'Not disclosed';
 
+                    let proofCreatorUploadedIt: 'yes' | 'no' | 'not disclosed' =
+                      'not disclosed';
+                    if (proofCreatorPubKey !== null && uploaderDisclosed) {
+                      proofCreatorUploadedIt = proofCreatorPubKey.validateId(
+                        new KeyId(provenDoc.uploader.keyId)
+                      )
+                        ? 'yes'
+                        : 'no';
+                    }
+
                     return <ProvenDocument>{
                       fileName: provenDoc.fileName,
                       authors:
@@ -374,6 +384,7 @@ export class InspectProofComponent implements OnInit {
                           : Object.values(provenDoc.owners),
                       uploaderDid,
                       uploaderKeyId,
+                      proofCreatorUploadedIt,
                     };
                   })
               )
