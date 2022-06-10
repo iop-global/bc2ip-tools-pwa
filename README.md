@@ -1,27 +1,31 @@
-# ToolsWebapp
+# bc2ip Proof Generator / Inspector Webapp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.3.
+## What is bc2ip?
 
-## Development server
+An easy-to-use white-label blockchain application for enterprises, innovators and IP attorneys for all
+product development and IP processes and to meet the requirements of the Trade Secrets Regulation
+(EU 2016/943).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Proof Generator / Inspector
 
-## Code scaffolding
+With this webapp one can create a bc2ip proof out from a bc2ip certificate and inspect a bc2ip proof to see its content's validity.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Generating Proof
 
-## Build
+You can hide sensitive content. Create and sign evidence in a tamper-proof way. No oversharing of data. 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Inspecting Proof
 
-## Running unit tests
+You can verify evidence for cryptographic integrity and authenticity in a legally secure manner.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Development
 
-## Running end-to-end tests
+You can even run this webapp locally. You only need to also run bc2ip's [sdk webservice](https://github.com/iop-global/bc2ip-sdk-webservice).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+# Run:
+$ npm run start
 
-## Further help
+# Then open http://localhost:4200 in your browser.
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
