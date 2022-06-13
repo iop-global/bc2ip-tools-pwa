@@ -9,7 +9,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { forkJoin, from, merge, Observable, of } from 'rxjs';
+import { forkJoin, from, merge, of } from 'rxjs';
 import * as JSZip from 'jszip';
 import {
   digestJson,
@@ -27,19 +27,7 @@ import {
 } from '@internet-of-people/sdk';
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
 import { environment } from 'src/environments/environment';
-
-type ValidatorStatusType = 'pending' | 'invalid' | 'valid' | 'undetermined';
-
-interface ValidatorResult {
-  data: any;
-  messages?: string[];
-  status: ValidatorStatusType;
-}
-
-interface Validator<T> {
-  label: string;
-  validator: Observable<ValidatorResult>;
-}
+import { Validator, ValidatorResult } from '../../validation';
 
 interface ProvenDocument {
   fileName: string;
@@ -101,7 +89,8 @@ export class InspectProofComponent implements OnInit {
 
   ngOnInit() {
     this.fileValidators['isValidArchive'] = {
-      label: 'Valid ZIP archive.',
+      label: 'Valid Proof',
+      techLabel: 'The proof is a valid ZIP archive',
       validator: this.inspectForm.get('file')!.valueChanges.pipe(
         concatMap((file: File | null) =>
           file === null
@@ -123,7 +112,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationFound'] = {
-      label: 'Signed presentation found.',
+      label: 'Proof Signature Found',
+      techLabel: 'The proof contains the signed-presentation.json file',
       validator: merge(
         of(<ValidatorResult>{
           data: null,
@@ -153,7 +143,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationValid'] = {
-      label: 'Valid signed presentation.',
+      label: 'Valid Proof Signature',
+      techLabel: 'The signed-presentation.json file\'s content is cryptographically valid and the proof is not yet expired',
       validator: this.proofValidators[
         'isSignedPresentationFound'
       ].validator.pipe(
@@ -173,11 +164,8 @@ export class InspectProofComponent implements OnInit {
               ).pipe(
                 map((fileText: any) => {
                   const fileJson = JSON.parse(fileText);
-
                   const pubKey = new PublicKey(fileJson.signature.publicKey);
-
                   const signature = new Signature(fileJson.signature.bytes);
-
                   const signedJson = new SignedJson(
                     pubKey,
                     fileJson.content,
@@ -234,7 +222,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofIntegrity'] = {
-      label: 'Proof integrity.',
+      label: 'Valid Proof Files',
+      techLabel: 'The proof\'s files are cryptographically proven by the signed-presentation.json file',
       validator: this.proofValidators[
         'isSignedPresentationValid'
       ].validator.pipe(
@@ -320,7 +309,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofOnBlockChain'] = {
-      label: 'Proof exists on blockchain.',
+      label: 'Proof\'s Timestamp Exists on Blockchain',
+      techLabel: 'The cryptographic hash (timestamp) exists on the Blockchain',
       validator: this.proofValidators['proofIntegrity'].validator.pipe(
         concatMap((result) => {
           if (result.status !== 'valid') {
@@ -468,7 +458,8 @@ export class InspectProofComponent implements OnInit {
 
     this.proofValidators['proofRight1'] = {
       label:
-        'Proof creator had impersonate right to the project at the time of seal.',
+        'Proof\'s creator had MANAGE right to the project when the certificate was created',
+      techLabel: 'The proof\'s creator\'s device\'s DID had impersonate right on the project\'s DID at the time when the project was sealed',
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator
@@ -509,7 +500,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofRight2'] = {
-      label: 'Proof creator has impersonate right to the project now.',
+      label: 'Proof\'s creator has MANAGE right now',
+      techLabel: 'The proof\'s creator\'s device\'s DID has impersonate right on the project\'s DID now',
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator

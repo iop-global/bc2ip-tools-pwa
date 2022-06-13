@@ -43,6 +43,7 @@
               }}</mat-icon
             >
             <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line>{{ validator.value.techLabel }}</p>
           </mat-list-item>
         </mat-list>
       </ng-container>
@@ -77,7 +78,7 @@
         </button>
       </div>
     </mat-step>
-    <mat-step label="Validate proof" [stepControl]="proofForm">
+    <mat-step label="Validate content" [stepControl]="proofForm">
       <mat-list class="validator-list">
         <ng-container *ngFor="let validator of proofValidators | keyvalue">
           <mat-list-item *ngIf="validator.value.validator | async as result">
@@ -91,6 +92,7 @@
                 : "pending"
             }}</mat-icon>
             <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line>{{ validator.value.techLabel }}</p>
             <p mat-line *ngFor="let message of result.messages">
               {{ message }}
             </p>

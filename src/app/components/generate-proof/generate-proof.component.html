@@ -43,6 +43,7 @@
               }}</mat-icon
             >
             <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line>{{ validator.value.techLabel }}</p>
           </mat-list-item>
         </mat-list>
       </ng-container>
@@ -77,7 +78,7 @@
         </button>
       </div>
     </mat-step>
-    <mat-step label="Validate certificate" [stepControl]="certificateForm">
+    <mat-step label="Validate content" [stepControl]="certificateForm">
       <mat-list class="validator-list">
         <ng-container
           *ngFor="let validator of certificateValidators | keyvalue"
@@ -93,6 +94,7 @@
                 : "pending"
             }}</mat-icon>
             <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line>{{ validator.value.techLabel }}</p>
             <p mat-line *ngFor="let message of result.messages">
               {{ message }}
             </p>
@@ -225,6 +227,7 @@
               }}</mat-icon
             >
             <p mat-line>{{ validator.value.label }}</p>
+            <p mat-line>{{ validator.value.techLabel }}</p>
           </mat-list-item>
         </mat-list>
       </ng-container>

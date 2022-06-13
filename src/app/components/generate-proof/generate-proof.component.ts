@@ -12,7 +12,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { combineLatest, forkJoin, from, merge, Observable, of } from 'rxjs';
+import { combineLatest, forkJoin, from, merge, of } from 'rxjs';
 import * as JSZip from 'jszip';
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
 import { FlatTreeControl } from '@angular/cdk/tree';
@@ -31,19 +31,7 @@ import {
 import { Crypto, Types } from '@internet-of-people/sdk';
 import { blake2b } from 'hash-wasm';
 import { endOfDay } from 'date-fns';
-
-type ValidatorStatusType = 'pending' | 'invalid' | 'valid' | 'undetermined';
-
-interface ValidatorResult {
-  data: any;
-  messages?: string[];
-  status: ValidatorStatusType;
-}
-
-interface Validator<T> {
-  label: string;
-  validator: Observable<ValidatorResult>;
-}
+import { Validator, ValidatorResult } from '../../validation';
 
 type ItemNodeType = 'file' | 'author' | 'owner' | 'uploader' | 'sealer';
 
@@ -251,7 +239,8 @@ export class GenerateProofComponent implements OnInit {
 
   ngOnInit() {
     this.fileValidators['isValidArchive'] = {
-      label: 'Valid ZIP archive.',
+      label: 'Valid Certificate',
+      techLabel: 'The certificate is a valid ZIP archive',
       validator: this.fileForm.get('file')!.valueChanges.pipe(
         concatMap((file: File | null) =>
           file === null
@@ -273,7 +262,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['isSignedWitnessStatementFound'] = {
-      label: 'Signed witness statement found.',
+      label: 'Certificate Signature Found',
+      techLabel: 'The certificate contains the signed-witness-statement.json file',
       validator: merge(
         of(<ValidatorResult>{
           data: null,
@@ -303,7 +293,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['isSignedWitnessStatementValid'] = {
-      label: 'Valid signed witness statement.',
+      label: 'Valid Certificate Signature',
+      techLabel: 'The signed-witness-statement.json file\'s content is cryptographically valid and consistent with the certificate\'s content',
       validator: this.certificateValidators[
         'isSignedWitnessStatementFound'
       ].validator.pipe(
@@ -389,7 +380,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['proofValid'] = {
-      label: 'Proof exists on blockchain.',
+      label: 'Certificate\'s Timestamp Exists on Blockchain',
+      techLabel: 'The cryptographic hash (timestamp) exists on the Blockchain',
       validator: this.certificateValidators[
         'isSignedWitnessStatementValid'
       ].validator.pipe(
