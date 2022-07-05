@@ -3,7 +3,9 @@
   class="app-header"
   [style.backgroundColor]="settings.colors.primary"
 >
-  <img class="logo" [src]="settings.assets.logo" />
+  <a style="display: flex" routerLink="/"
+    ><img class="logo" [src]="settings.assets.logo"
+  /></a>
   <div class="title" [style.color]="settings.colors.text">
     {{ settings.name }}
   </div>
