@@ -16,6 +16,14 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "de": {
+            "translation": "src/locale/messages-de.xlf"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -46,6 +54,12 @@
             "scripts": []
           },
           "configurations": {
+            "de": {
+              "localize": ["de"]
+            },
+            "en": {
+              "localize": ["en"]
+            },
             "production": {
               "budgets": [
                 {
@@ -81,6 +95,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
+            "de": {
+              "browserTarget": "tools-webapp:build:de"
+            },
+            "en": {
+              "browserTarget": "tools-webapp:build:en"
+            },
             "production": {
               "browserTarget": "tools-webapp:build:production"
             },

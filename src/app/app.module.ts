@@ -22,6 +22,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { InspectProofComponent } from './components/inspect-proof/inspect-proof.component';
 import { GenerateProofComponent } from './components/generate-proof/generate-proof.component';
 import { MatNativeDateModule } from '@angular/material/core';
+import { IopLocalizePipe } from './pipes/localize.pipe';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     GenerateProofComponent,
     HomeComponent,
     InspectProofComponent,
+    IopLocalizePipe,
   ],
   imports: [
     BrowserModule,

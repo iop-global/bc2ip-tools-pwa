@@ -1,11 +1,11 @@
 <mat-card>
   <mat-card-actions>
     <button mat-button routerLink="/">
-      <mat-icon>arrow_back</mat-icon> Back to menu
+      <mat-icon>arrow_back</mat-icon>&nbsp;<span i18n>Back to menu</span>
     </button>
   </mat-card-actions>
   <mat-card-header>
-    <mat-card-title>Generate proof</mat-card-title>
+    <mat-card-title i18n>Generate proof</mat-card-title>
   </mat-card-header>
   <mat-stepper
     [orientation]="(stepperOrientation | async)!"
@@ -20,7 +20,7 @@
             mat-icon-button
             (click)="clearFile()"
             color="warn"
-            matTooltip="Cancel selected file"
+            [matTooltip]="'Cancel selected file' | localize"
             type="button"
           >
             <mat-icon>delete</mat-icon>
@@ -55,7 +55,7 @@
           type="button"
         >
           <mat-icon>upload</mat-icon>
-          Select certificate file
+          <span i18n>Select certificate file</span>
         </button>
       </ng-template>
       <input
@@ -103,7 +103,7 @@
       </mat-list>
       <div class="controls">
         <button mat-raised-button matStepperPrevious color="primary">
-          <mat-icon>navigate_before</mat-icon>Previous
+          <mat-icon>navigate_before</mat-icon><span i18n>Previous</span>
         </button>
         <button
           mat-raised-button
@@ -111,21 +111,21 @@
           color="primary"
           [disabled]="certificateForm.invalid"
         >
-          <mat-icon>navigate_next</mat-icon>Next
+          <mat-icon>navigate_next</mat-icon><span i18n>Next</span>
         </button>
       </div>
     </mat-step>
     <mat-step
-      label="Set up proof"
+      [label]="'Set up proof' | localize"
       [stepControl]="proofForm"
       [formGroup]="proofForm"
     >
       <mat-form-field style="display: block; max-width: 10rem">
-        <mat-label>Proof purpose</mat-label>
+        <mat-label i18n>Proof purpose</mat-label>
         <input matInput formControlName="purpose" />
       </mat-form-field>
       <mat-form-field style="display: block; max-width: 7rem">
-        <mat-label>Valid until</mat-label>
+        <mat-label i18n>Valid until</mat-label>
         <input
           matInput
           [matDatepicker]="picker"
@@ -136,7 +136,7 @@
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <h3>Select which parts of the claim to include in the proof</h3>
+      <h3 i18n>Select parts of the claim to include in the proof</h3>
       <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-tree-node
           *matTreeNodeDef="let node"
@@ -177,7 +177,7 @@
       </mat-tree>
       <div class="controls">
         <button mat-raised-button matStepperPrevious color="primary">
-          <mat-icon>navigate_before</mat-icon>Previous
+          <mat-icon>navigate_before</mat-icon><span i18n>Previous</span>
         </button>
         <button
           mat-raised-button
@@ -185,11 +185,11 @@
           color="primary"
           [disabled]="proofForm.invalid"
         >
-          <mat-icon>navigate_next</mat-icon>Next
+          <mat-icon>navigate_next</mat-icon><span i18n>Next</span>
         </button>
       </div>
     </mat-step>
-    <mat-step label="Sign proof">
+    <mat-step [label]="'Sign proof' | localize">
       <ng-container
         *ngIf="vaultForm.get('file')?.value; else noVault"
         [formGroup]="vaultForm"
@@ -200,14 +200,14 @@
             mat-icon-button
             (click)="clearVault()"
             color="warn"
-            matTooltip="Cancel selected file"
+            [matTooltip]="'Cancel selected file' | localize"
             type="button"
           >
             <mat-icon>delete</mat-icon>
           </button>
         </strong>
         <mat-form-field>
-          <mat-label>Password</mat-label>
+          <mat-label i18n>Password</mat-label>
           <input matInput formControlName="password" type="password" />
         </mat-form-field>
         <mat-list class="validator-list">
@@ -239,7 +239,7 @@
           type="button"
         >
           <mat-icon>upload</mat-icon>
-          Select vault file
+          <span i18n>Select vault file</span>
         </button>
       </ng-template>
       <input
@@ -251,7 +251,7 @@
       />
       <div class="controls">
         <button mat-raised-button matStepperPrevious color="primary">
-          <mat-icon>navigate_before</mat-icon>Previous
+          <mat-icon>navigate_before</mat-icon><span i18n>Previous</span>
         </button>
         <button
           mat-raised-button
@@ -260,7 +260,7 @@
           (click)="downloadProof()"
           [disabled]="vaultForm.invalid"
         >
-          <mat-icon>download</mat-icon>Download proof
+          <mat-icon>download</mat-icon><span i18n>Download proof</span>
         </button>
       </div>
     </mat-step>

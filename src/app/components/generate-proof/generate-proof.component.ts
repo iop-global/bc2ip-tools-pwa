@@ -239,8 +239,8 @@ export class GenerateProofComponent implements OnInit {
 
   ngOnInit() {
     this.fileValidators['isValidArchive'] = {
-      label: 'Valid Certificate',
-      techLabel: 'The certificate is a valid ZIP archive',
+      label: $localize`Valid Certificate`,
+      techLabel: $localize`The certificate is a valid ZIP archive`,
       validator: this.fileForm.get('file')!.valueChanges.pipe(
         concatMap((file: File | null) =>
           file === null
@@ -262,8 +262,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['isSignedWitnessStatementFound'] = {
-      label: 'Certificate Signature Found',
-      techLabel: 'The certificate contains the signed-witness-statement.json file',
+      label: $localize`Certificate Signature Found`,
+      techLabel: $localize`The certificate contains the signed-witness-statement.json file`,
       validator: merge(
         of(<ValidatorResult>{
           data: null,
@@ -293,8 +293,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['isSignedWitnessStatementValid'] = {
-      label: 'Valid Certificate Signature',
-      techLabel: 'The signed-witness-statement.json file\'s content is cryptographically valid and consistent with the certificate\'s content',
+      label: $localize`Valid Certificate Signature`,
+      techLabel: $localize`The signed-witness-statement.json file\'s content is cryptographically valid and consistent with the certificate\'s content`,
       validator: this.certificateValidators[
         'isSignedWitnessStatementFound'
       ].validator.pipe(
@@ -325,7 +325,7 @@ export class GenerateProofComponent implements OnInit {
                     return of(<ValidatorResult>{
                       data: null,
                       messages: [
-                        'Contains different amount of files than the zip has',
+                        $localize`Contains different amount of files than the zip has`,
                       ],
                       status: 'invalid',
                     });
@@ -352,7 +352,9 @@ export class GenerateProofComponent implements OnInit {
                         ? <ValidatorResult>{
                             data: null,
                             messages: [
-                              `Invalid hashes: ${invalidHashes.join(', ')}`,
+                              `${$localize`Invalid hashes`}: ${invalidHashes.join(
+                                ', '
+                              )}`,
                             ],
                             status: 'invalid',
                           }
@@ -380,8 +382,8 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.certificateValidators['proofValid'] = {
-      label: 'Certificate\'s Timestamp Exists on Blockchain',
-      techLabel: 'The cryptographic hash (timestamp) exists on the Blockchain',
+      label: $localize`Certificate\'s Timestamp Exists on Blockchain`,
+      techLabel: $localize`The cryptographic hash (timestamp) exists on the Blockchain`,
       validator: this.certificateValidators[
         'isSignedWitnessStatementValid'
       ].validator.pipe(
@@ -489,7 +491,7 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.vaultValidators['isPasswordValid'] = {
-      label: 'Password is valid',
+      label: $localize`Password is valid`,
       validator: this.vaultForm.get('password')!.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
@@ -550,7 +552,7 @@ export class GenerateProofComponent implements OnInit {
     };
 
     this.vaultValidators['vaultHasRight'] = {
-      label: 'Vault has impersonate right on the DID at the moment',
+      label: $localize`Vault has impersonate right on the DID at the moment`,
       validator: combineLatest({
         isPasswordValid: this.vaultValidators['isPasswordValid'].validator,
         proofValid: this.certificateValidators['proofValid'].validator,
