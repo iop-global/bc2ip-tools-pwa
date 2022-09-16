@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -23,6 +24,7 @@ import { InspectProofComponent } from './components/inspect-proof/inspect-proof.
 import { GenerateProofComponent } from './components/generate-proof/generate-proof.component';
 import { MatNativeDateModule } from '@angular/material/core';
 import { IopLocalizePipe } from './pipes/localize.pipe';
+import { I18nModule } from './i18n.module';
 
 @NgModule({
   declarations: [
@@ -46,13 +48,14 @@ import { IopLocalizePipe } from './pipes/localize.pipe';
     MatListModule,
     MatInputModule,
     MatIconModule,
+    MatMenuModule,
     MatStepperModule,
     MatToolbarModule,
     MatTooltipModule,
     MatTreeModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [I18nModule.setLocale(), I18nModule.setLocaleId()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -36,4 +36,9 @@ export class AppComponent implements OnInit {
         )
         .subscribe();
   }
+
+  setLocale(locale: string) {
+    localStorage.setItem('locale', locale);
+    location.reload();
+  }
 }

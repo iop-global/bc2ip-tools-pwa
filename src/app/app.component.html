@@ -9,6 +9,19 @@
   <div class="title" [style.color]="settings.colors.text">
     {{ settings.name }}
   </div>
+  <button mat-icon-button color="accent" [matMenuTriggerFor]="languageMenu">
+    <mat-icon>language</mat-icon>
+  </button>
+  <mat-menu #languageMenu="matMenu">
+    <button mat-menu-item (click)="setLocale('de')">
+      <mat-icon><img src="/assets/locales/de/flag.svg" /></mat-icon>
+      <span i18n>German</span>
+    </button>
+    <button mat-menu-item (click)="setLocale('en')">
+      <mat-icon><img src="/assets/locales/en/flag.svg" /></mat-icon>
+      <span i18n>English</span>
+    </button>
+  </mat-menu>
 </mat-toolbar>
 <main>
   <router-outlet></router-outlet>
