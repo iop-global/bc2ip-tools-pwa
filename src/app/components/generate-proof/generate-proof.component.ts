@@ -2,18 +2,17 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   catchError,
-  concatMap,
   debounceTime,
   distinctUntilChanged,
   filter,
   map,
   shareReplay,
+  switchMap,
   take,
   tap,
 } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { combineLatest, forkJoin, from, merge, of } from 'rxjs';
-import * as JSZip from 'jszip';
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
@@ -32,6 +31,18 @@ import { Crypto, Types } from '@internet-of-people/sdk';
 import { blake2b } from 'hash-wasm';
 import { endOfDay } from 'date-fns';
 import { Validator, ValidatorResult } from '../../validation';
+import {
+  BlobReader,
+  BlobWriter,
+  Entry,
+  TextReader,
+  TextWriter,
+  Uint8ArrayWriter,
+  ZipReader,
+  ZipWriter,
+} from '@zip.js/zip.js';
+import { MatDialog } from '@angular/material/dialog';
+import { IopCertificatePasswordDialogComponent } from '../certificate-password-dialog/certificate-password-dialog.component';
 
 type ItemNodeType = 'file' | 'author' | 'owner' | 'uploader' | 'sealer';
 
@@ -69,6 +80,7 @@ export class GenerateProofComponent implements OnInit {
 
   fileForm = new FormGroup({
     file: new FormControl(null, Validators.required, this.fileValidator),
+    password: new FormControl(),
   });
 
   vaultForm = new FormGroup({
@@ -111,6 +123,7 @@ export class GenerateProofComponent implements OnInit {
 
   constructor(
     readonly breakpoint: BreakpointObserver,
+    readonly dialog: MatDialog,
     readonly webService: SDKWebService
   ) {
     this.treeFlattener = new MatTreeFlattener(
@@ -127,6 +140,22 @@ export class GenerateProofComponent implements OnInit {
       this.treeControl,
       this.treeFlattener
     );
+  }
+
+  requestCertificatePassword() {
+    const password = this.fileForm.get('password')!.value;
+
+    return password !== null
+      ? of(password)
+      : this.dialog
+          .open(IopCertificatePasswordDialogComponent)
+          .afterClosed()
+          .pipe(
+            filter((result) => typeof result === 'string' && result.length > 0),
+            tap((password) => {
+              this.fileForm.get('password')?.setValue(password);
+            })
+          );
   }
 
   getLevel = (node: ItemFlatNode) => node.level;
@@ -241,14 +270,28 @@ export class GenerateProofComponent implements OnInit {
     this.fileValidators['isValidArchive'] = {
       label: $localize`Valid Certificate`,
       techLabel: $localize`The certificate is a valid ZIP archive`,
-      validator: this.fileForm.get('file')!.valueChanges.pipe(
-        concatMap((file: File | null) =>
-          file === null
-            ? of(null)
-            : from(new JSZip().loadAsync(file)).pipe(catchError(() => of(null)))
+      validator: this.fileForm.valueChanges.pipe(
+        switchMap(
+          ({
+            file,
+            password,
+          }: {
+            file: File | null;
+            password: string | null;
+          }) => {
+            if (file === null) {
+              return of(null);
+            }
+
+            const zipFileReader = new BlobReader(file);
+
+            return new ZipReader(zipFileReader, {
+              ...(password !== null ? { password } : {}),
+            }).getEntries();
+          }
         ),
         map(
-          (zipFile: JSZip | null) =>
+          (zipFile: Entry[] | null) =>
             <ValidatorResult>{
               data: zipFile,
               status: zipFile === null ? 'invalid' : 'valid',
@@ -276,8 +319,8 @@ export class GenerateProofComponent implements OnInit {
                 data: result.data,
                 status:
                   result.status === 'valid' &&
-                  Object.keys(result.data.files).includes(
-                    'signed-witness-statement.json'
+                  result.data.some(
+                    (f: Entry) => f.filename === 'signed-witness-statement.json'
                   )
                     ? 'valid'
                     : 'invalid',
@@ -298,18 +341,21 @@ export class GenerateProofComponent implements OnInit {
       validator: this.certificateValidators[
         'isSignedWitnessStatementFound'
       ].validator.pipe(
-        concatMap((zipResult) =>
+        switchMap((zipResult) =>
           zipResult.status !== 'valid'
             ? of(<ValidatorResult>{
                 data: null,
                 status: zipResult.status,
               })
             : from(
-                zipResult.data.files['signed-witness-statement.json'].async(
-                  'text'
-                )
+                zipResult.data
+                  .find(
+                    (e: Entry) => e.filename === 'signed-witness-statement.json'
+                  )!
+                  .getData(new TextWriter())
               ).pipe(
-                concatMap((fileText: any) => {
+                catchError((err) => this.requestCertificatePassword()),
+                switchMap((fileText: any) => {
                   const statement = JSON.parse(fileText);
 
                   const claim = (
@@ -320,7 +366,7 @@ export class GenerateProofComponent implements OnInit {
 
                   if (
                     Object.keys(claimFiles).length !==
-                    Object.keys(zipResult.data.files).length - 1
+                    Object.keys(zipResult.data).length - 1
                   ) {
                     return of(<ValidatorResult>{
                       data: null,
@@ -334,9 +380,11 @@ export class GenerateProofComponent implements OnInit {
                   return forkJoin(
                     Object.values(claimFiles).map((file: any) =>
                       from(
-                        zipResult.data.files[file.fileName].async('uint8array')
+                        zipResult.data
+                          .find((e: Entry) => e.filename === file.fileName)!
+                          .getData(new Uint8ArrayWriter())
                       ).pipe(
-                        concatMap((fileContent: any) => blake2b(fileContent)),
+                        switchMap((fileContent: any) => blake2b(fileContent)),
                         map((fileHash) =>
                           fileHash !== file.hash ? file.fileName : null
                         )
@@ -387,7 +435,7 @@ export class GenerateProofComponent implements OnInit {
       validator: this.certificateValidators[
         'isSignedWitnessStatementValid'
       ].validator.pipe(
-        concatMap((certificateResult) =>
+        switchMap((certificateResult) =>
           certificateResult.status !== 'valid'
             ? of(<ValidatorResult>{
                 data: null,
@@ -495,7 +543,7 @@ export class GenerateProofComponent implements OnInit {
       validator: this.vaultForm.get('password')!.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        concatMap((password) => {
+        switchMap((password) => {
           if (password === null || password === '') {
             return of(<ValidatorResult>{
               data: null,
@@ -504,7 +552,7 @@ export class GenerateProofComponent implements OnInit {
           }
 
           return from(this.vaultForm.get('file')!.value.text()).pipe(
-            concatMap((vaultText: any) => {
+            switchMap((vaultText: any) => {
               const vault = Vault.load(JSON.parse(vaultText));
 
               try {
@@ -557,7 +605,7 @@ export class GenerateProofComponent implements OnInit {
         isPasswordValid: this.vaultValidators['isPasswordValid'].validator,
         proofValid: this.certificateValidators['proofValid'].validator,
       }).pipe(
-        concatMap(({ isPasswordValid, proofValid }) => {
+        switchMap(({ isPasswordValid, proofValid }) => {
           if (
             isPasswordValid.status !== 'valid' ||
             proofValid.status !== 'valid'
@@ -591,6 +639,8 @@ export class GenerateProofComponent implements OnInit {
   }
 
   selectFile(event: Event) {
+    this.fileForm.get('password')?.reset();
+
     const files = (event.target as HTMLInputElement).files;
 
     if (!!files && files.length === 1) {
@@ -601,7 +651,7 @@ export class GenerateProofComponent implements OnInit {
 
   clearFile() {
     this.certificateForm.get('claim')?.setValue(null);
-    this.fileForm.get('file')?.setValue(null);
+    this.fileForm.reset();
   }
 
   selectVault(event: Event) {
@@ -638,7 +688,7 @@ export class GenerateProofComponent implements OnInit {
             zipFileResult.status === 'valid'
         ),
         take(1),
-        concatMap(
+        switchMap(
           ({
             passwordResult,
             proofResult,
@@ -753,22 +803,36 @@ export class GenerateProofComponent implements OnInit {
               signature: signedPresentation.signature,
             };
 
-            const jsZip: JSZip = new JSZip();
+            const zipFileWriter = new BlobWriter('application/zip');
 
-            for (const file of Object.keys(zipFileResult.data.files).filter(
-              (fileName) =>
-                selectedFiles.some((sFile) => sFile.item === fileName)
-            )) {
-              const fileContent = zipFileResult.data.files[file].async('blob');
-              jsZip.file(file, fileContent);
-            }
+            const zipWriter = new ZipWriter(zipFileWriter);
 
-            jsZip.file(
-              'signed-presentation.json',
-              JSON.stringify(signedPresentationJson)
-            );
+            return from(
+              zipWriter.add(
+                'signed-presentation.json',
+                new TextReader(JSON.stringify(signedPresentationJson))
+              )
+            ).pipe(
+              switchMap(() =>
+                forkJoin(
+                  (zipFileResult.data as Entry[])
+                    .filter((e) =>
+                      selectedFiles.some((f) => f.item === e.filename)
+                    )
+                    .map((e) =>
+                      from(e.getData!(new BlobWriter())).pipe(
+                        switchMap((blob) =>
+                          zipWriter.add(e.filename, new BlobReader(blob))
+                        )
+                      )
+                    )
+                )
+              ),
+              switchMap(() => {
+                zipWriter.close();
 
-            return from(jsZip.generateAsync({ type: 'blob' })).pipe(
+                return zipFileWriter.getData();
+              }),
               tap((blob) => {
                 const a = document.createElement('a');
 

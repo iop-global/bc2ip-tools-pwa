@@ -25,6 +25,8 @@ import { GenerateProofComponent } from './components/generate-proof/generate-pro
 import { MatNativeDateModule } from '@angular/material/core';
 import { IopLocalizePipe } from './pipes/localize.pipe';
 import { I18nModule } from './i18n.module';
+import { IopCertificatePasswordDialogComponent } from './components/certificate-password-dialog/certificate-password-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { I18nModule } from './i18n.module';
     HomeComponent,
     InspectProofComponent,
     IopLocalizePipe,
+    IopCertificatePasswordDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { I18nModule } from './i18n.module';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatFormFieldModule,

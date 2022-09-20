@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   catchError,
-  concatMap,
+  switchMap,
   map,
   shareReplay,
   tap,
@@ -10,7 +10,6 @@ import {
 } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { forkJoin, from, merge, of } from 'rxjs';
-import * as JSZip from 'jszip';
 import {
   digestJson,
   KeyId,
@@ -18,7 +17,7 @@ import {
   Signature,
   SignedJson,
 } from '@internet-of-people/sdk-wasm';
-import { blake2b } from 'hash-wasm';
+import { blake2b, md5 } from 'hash-wasm';
 import {
   Layer1,
   Layer2,
@@ -28,6 +27,14 @@ import {
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
 import { environment } from 'src/environments/environment';
 import { Validator, ValidatorResult } from '../../validation';
+import {
+  BlobReader,
+  BlobWriter,
+  Entry,
+  TextWriter,
+  Uint8ArrayWriter,
+  ZipReader,
+} from '@zip.js/zip.js';
 
 interface ProvenDocument {
   fileName: string;
@@ -92,13 +99,17 @@ export class InspectProofComponent implements OnInit {
       label: 'Valid Proof',
       techLabel: 'The proof is a valid ZIP archive',
       validator: this.inspectForm.get('file')!.valueChanges.pipe(
-        concatMap((file: File | null) =>
-          file === null
-            ? of(null)
-            : from(new JSZip().loadAsync(file)).pipe(catchError(() => of(null)))
-        ),
+        switchMap((file: File | null) => {
+          if (file === null) {
+            return of(null);
+          }
+
+          const zipFileReader = new BlobReader(file);
+
+          return new ZipReader(zipFileReader).getEntries();
+        }),
         map(
-          (zipFile: JSZip | null) =>
+          (zipFile: Entry[] | null) =>
             <ValidatorResult>{
               data: zipFile,
               status: zipFile === null ? 'invalid' : 'valid',
@@ -126,8 +137,8 @@ export class InspectProofComponent implements OnInit {
                 data: result.data,
                 status:
                   result.status === 'valid' &&
-                  Object.keys(result.data.files).includes(
-                    'signed-presentation.json'
+                  result.data.some(
+                    (f: Entry) => f.filename === 'signed-presentation.json'
                   )
                     ? 'valid'
                     : 'invalid',
@@ -144,11 +155,12 @@ export class InspectProofComponent implements OnInit {
 
     this.proofValidators['isSignedPresentationValid'] = {
       label: 'Valid Proof Signature',
-      techLabel: 'The signed-presentation.json file\'s content is cryptographically valid and the proof is not yet expired',
+      techLabel:
+        "The signed-presentation.json file's content is cryptographically valid and the proof is not yet expired",
       validator: this.proofValidators[
         'isSignedPresentationFound'
       ].validator.pipe(
-        concatMap((result) =>
+        switchMap((result) =>
           result.status === 'pending'
             ? of(<ValidatorResult>{
                 data: null,
@@ -160,7 +172,11 @@ export class InspectProofComponent implements OnInit {
                 status: 'invalid',
               })
             : from(
-                result.data.files['signed-presentation.json'].async('text')
+                result.data
+                  .find(
+                    (e: Entry) => e.filename === 'signed-presentation.json'
+                  )!
+                  .getData(new TextWriter())
               ).pipe(
                 map((fileText: any) => {
                   const fileJson = JSON.parse(fileText);
@@ -223,12 +239,13 @@ export class InspectProofComponent implements OnInit {
 
     this.proofValidators['proofIntegrity'] = {
       label: 'Valid Proof Files',
-      techLabel: 'The proof\'s files are cryptographically proven by the signed-presentation.json file',
+      techLabel:
+        "The proof's files are cryptographically proven by the signed-presentation.json file",
       validator: this.proofValidators[
         'isSignedPresentationValid'
       ].validator.pipe(
         withLatestFrom(this.fileValidators['isValidArchive'].validator),
-        concatMap(([presentationResult, zipResult]) => {
+        switchMap(([presentationResult, zipResult]) => {
           if (
             presentationResult.status !== 'valid' &&
             presentationResult.status !== 'undetermined'
@@ -245,7 +262,7 @@ export class InspectProofComponent implements OnInit {
 
           if (
             Object.keys(nonCollapsedClaimFiles).length !==
-            Object.keys(zipResult.data.files).length - 1 // -1, because the zip contains the statement, but the statement does not contain itself
+            zipResult.data.length - 1 // -1, because the zip contains the statement, but the statement does not contain itself
           ) {
             return of(<ValidatorResult>{
               data: null,
@@ -258,8 +275,9 @@ export class InspectProofComponent implements OnInit {
             .map((f: any) => f.fileName)
             .sort();
 
-          const filesInZip = Object.keys(zipResult.data.files)
-            .filter((f) => f !== 'signed-presentation.json')
+          const filesInZip = zipResult.data
+            .map((e: Entry) => e.filename)
+            .filter((f: string) => f !== 'signed-presentation.json')
             .sort();
 
           if (
@@ -276,9 +294,11 @@ export class InspectProofComponent implements OnInit {
           return forkJoin(
             nonCollapsedClaimFiles.map((file: any) =>
               from(
-                zipResult.data.files[file.fileName].async('uint8array')
+                zipResult.data
+                  .find((e: Entry) => (e.filename = file.fileName))!
+                  .getData(new Uint8ArrayWriter())
               ).pipe(
-                concatMap((fileContent: any) => blake2b(fileContent)),
+                switchMap((fileContent: any) => blake2b(fileContent)),
                 map((fileHash) =>
                   fileHash !== file.hash ? file.fileName : null
                 )
@@ -309,10 +329,10 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofOnBlockChain'] = {
-      label: 'Proof\'s Timestamp Exists on Blockchain',
+      label: "Proof's Timestamp Exists on Blockchain",
       techLabel: 'The cryptographic hash (timestamp) exists on the Blockchain',
       validator: this.proofValidators['proofIntegrity'].validator.pipe(
-        concatMap((result) => {
+        switchMap((result) => {
           if (result.status !== 'valid') {
             return of(<ValidatorResult>{
               data: null,
@@ -330,9 +350,7 @@ export class InspectProofComponent implements OnInit {
           let proofCreatorSealedTheSpecificVersion = 'not disclosed';
 
           if (typeof sealer !== 'string') {
-            proofCreatorPubKey = new PublicKey(
-              result.data.signature.publicKey
-            );
+            proofCreatorPubKey = new PublicKey(result.data.signature.publicKey);
             const sealerKeyId = new KeyId(sealer.keyId);
 
             proofCreatorSealedTheSpecificVersion =
@@ -405,9 +423,9 @@ export class InspectProofComponent implements OnInit {
                   })
               )
             ),
-            concatMap((history) =>
+            switchMap((history) =>
               from(Layer1.createApi(networkConfig)).pipe(
-                concatMap((api) =>
+                switchMap((api) =>
                   forkJoin({
                     currentHeight: from(api.getCurrentHeight()),
                     txnStatusOpt: api.getTxnStatus(history.txid!),
@@ -458,13 +476,14 @@ export class InspectProofComponent implements OnInit {
 
     this.proofValidators['proofRight1'] = {
       label:
-        'Proof\'s creator had MANAGE right to the project when the certificate was created',
-      techLabel: 'The proof\'s creator\'s device\'s DID had impersonate right on the project\'s DID at the time when the project was sealed',
+        "Proof's creator had MANAGE right to the project when the certificate was created",
+      techLabel:
+        "The proof's creator's device's DID had impersonate right on the project's DID at the time when the project was sealed",
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator
         ),
-        concatMap(([proofResult, presentationResult]) => {
+        switchMap(([proofResult, presentationResult]) => {
           if (proofResult.status !== 'valid') {
             return of(<ValidatorResult>{
               data: null,
@@ -500,13 +519,14 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofRight2'] = {
-      label: 'Proof\'s creator has MANAGE right now',
-      techLabel: 'The proof\'s creator\'s device\'s DID has impersonate right on the project\'s DID now',
+      label: "Proof's creator has MANAGE right now",
+      techLabel:
+        "The proof's creator's device's DID has impersonate right on the project's DID now",
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator
         ),
-        concatMap(([proofResult, presentationResult]) => {
+        switchMap(([proofResult, presentationResult]) => {
           if (proofResult.status !== 'valid') {
             return of(<ValidatorResult>{
               data: null,
@@ -566,8 +586,11 @@ export class InspectProofComponent implements OnInit {
   downloadFile(fileName: string) {
     this.fileValidators['isValidArchive'].validator
       .pipe(
-        concatMap((result) =>
-          from((result.data as JSZip).files[fileName].async('blob')).pipe(
+        switchMap((result) =>
+          from(
+            (result.data as Entry[]).find((e) => e.filename === fileName)!
+              .getData!(new BlobWriter())
+          ).pipe(
             tap((blob) => {
               const a = document.createElement('a');
               a.href = window.URL.createObjectURL(blob);
