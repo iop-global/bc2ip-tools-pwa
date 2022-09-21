@@ -295,7 +295,7 @@ export class InspectProofComponent implements OnInit {
             nonCollapsedClaimFiles.map((file: any) =>
               from(
                 zipResult.data
-                  .find((e: Entry) => (e.filename = file.fileName))!
+                  .find((e: Entry) => (e.filename === file.fileName))
                   .getData(new Uint8ArrayWriter())
               ).pipe(
                 switchMap((fileContent: any) => blake2b(fileContent)),
