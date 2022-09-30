@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-const TARGET_LANGS = ['de'];
+const TARGET_LANGS = ['en','de'];
 
 console.log(`Importing...`);
 
@@ -40,7 +40,7 @@ for(const lang of TARGET_LANGS) {
 
 for (const line of lines) {
     const parts = line.split('\t');
-    if (parts.length !== (2+TARGET_LANGS.length)) { // 2 = ID, EN
+    if (parts.length !== (1 + TARGET_LANGS.length)) { // ID, Array<TARGET_LANGS>
         console.log(parts);
         throw new Error(`Invalid line in messages_import.json: ${line}`);
     }
@@ -51,12 +51,12 @@ for (const line of lines) {
     const id = parts[0];
     const translations = parts.slice(1);
     for(let i = 0; i<translations.length; i++) {
-        if(!excelLangColumns[(i+1)+'']) {
+        if(!excelLangColumns[i+'']) {
             continue;
         }
 
-        const lang = excelLangColumns[i+1];
-        currentTranslations[lang][id] = translations[i+1];
+        const lang = excelLangColumns[i];
+        currentTranslations[lang][id] = translations[i];
     }
 }
 

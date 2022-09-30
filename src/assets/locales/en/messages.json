@@ -23,7 +23,7 @@
   "4929082866065542889": "Certificate's Timestamp Exists on Blockchain",
   "8377734050503977035": "The cryptographic hash (timestamp) exists on the Blockchain",
   "7903146314031095808": "Password is valid",
-  "2050584751227012978": "Vault has impersonate right on the DID at the moment",
+  "2050584751227012978": "The holder of this credentials currently has management permission for the project.",
   "9216987863724951115": "Inspect proof",
   "8149147652948800831": "Select proof file",
   "8201962250180904640": "Uploader DID",
@@ -36,5 +36,8 @@
   "8236526026896448753": "Sign proof",
   "7826307626945344418": "Upload proof",
   "4778236069537926539": "Validate content",
-  "5028669691544134861": "Verified files"
+  "5028669691544134861": "Verified files",
+  "205044832662301680": "Password is required",
+  "2159130950882492111": "Cancel",
+  "7840797906265767028": " Set password "
 }
