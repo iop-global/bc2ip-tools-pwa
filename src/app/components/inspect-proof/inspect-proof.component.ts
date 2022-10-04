@@ -17,7 +17,7 @@ import {
   Signature,
   SignedJson,
 } from '@internet-of-people/sdk-wasm';
-import { blake2b, md5 } from 'hash-wasm';
+import { blake2b } from 'hash-wasm';
 import {
   Layer1,
   Layer2,
@@ -96,8 +96,8 @@ export class InspectProofComponent implements OnInit {
 
   ngOnInit() {
     this.fileValidators['isValidArchive'] = {
-      label: 'Valid Proof',
-      techLabel: 'The proof is a valid ZIP archive',
+      label: $localize`Valid Proof`,
+      techLabel: $localize`The proof is a valid ZIP archive`,
       validator: this.inspectForm.get('file')!.valueChanges.pipe(
         switchMap((file: File | null) => {
           if (file === null) {
@@ -123,8 +123,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationFound'] = {
-      label: 'Proof Signature Found',
-      techLabel: 'The proof contains the signed-presentation.json file',
+      label: $localize`Proof Signature Found`,
+      techLabel: $localize`The proof contains the signed-presentation.json file`,
       validator: merge(
         of(<ValidatorResult>{
           data: null,
@@ -154,9 +154,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['isSignedPresentationValid'] = {
-      label: 'Valid Proof Signature',
-      techLabel:
-        "The signed-presentation.json file's content is cryptographically valid and the proof is not yet expired",
+      label: $localize`Valid Proof Signature`,
+      techLabel: $localize`The signed-presentation.json file's content is cryptographically valid and the proof is not yet expired`,
       validator: this.proofValidators[
         'isSignedPresentationFound'
       ].validator.pipe(
@@ -238,9 +237,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofIntegrity'] = {
-      label: 'Valid Proof Files',
-      techLabel:
-        "The proof's files are cryptographically proven by the signed-presentation.json file",
+      label: $localize`Valid Proof Files`,
+      techLabel: $localize`The proof's files are cryptographically proven by the signed-presentation.json file`,
       validator: this.proofValidators[
         'isSignedPresentationValid'
       ].validator.pipe(
@@ -266,7 +264,7 @@ export class InspectProofComponent implements OnInit {
           ) {
             return of(<ValidatorResult>{
               data: null,
-              messages: ['Proof contains different amount of files.'],
+              messages: [$localize`Proof contains different amount of files.`],
               status: 'invalid',
             });
           }
@@ -286,7 +284,7 @@ export class InspectProofComponent implements OnInit {
           ) {
             return of(<ValidatorResult>{
               data: null,
-              messages: ['Contains different files.'],
+              messages: [$localize`Contains different files.`],
               status: 'invalid',
             });
           }
@@ -295,7 +293,7 @@ export class InspectProofComponent implements OnInit {
             nonCollapsedClaimFiles.map((file: any) =>
               from(
                 zipResult.data
-                  .find((e: Entry) => (e.filename === file.fileName))
+                  .find((e: Entry) => e.filename === file.fileName)
                   .getData(new Uint8ArrayWriter())
               ).pipe(
                 switchMap((fileContent: any) => blake2b(fileContent)),
@@ -311,7 +309,9 @@ export class InspectProofComponent implements OnInit {
               return invalidHashes.length > 0
                 ? <ValidatorResult>{
                     data: null,
-                    messages: [`Invalid hashes: ${invalidHashes.join(', ')}`],
+                    messages: [
+                      $localize`Invalid hashes: ${invalidHashes.join(', ')}`,
+                    ],
                     status: 'invalid',
                   }
                 : <ValidatorResult>{
@@ -329,8 +329,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofOnBlockChain'] = {
-      label: "Proof's Timestamp Exists on Blockchain",
-      techLabel: 'The cryptographic hash (timestamp) exists on the Blockchain',
+      label: $localize`Proof's Timestamp Exists on Blockchain`,
+      techLabel: $localize`The cryptographic hash (timestamp) exists on the Blockchain`,
       validator: this.proofValidators['proofIntegrity'].validator.pipe(
         switchMap((result) => {
           if (result.status !== 'valid') {
@@ -435,28 +435,29 @@ export class InspectProofComponent implements OnInit {
                         <ValidatorResult>{
                           data: { ...history, currentHeight },
                           messages: [
-                            `Exists since: block ${Intl.NumberFormat().format(
-                              history.existsFromHeight!
-                            )}`,
-                            `Current height: ${Intl.NumberFormat().format(
-                              currentHeight
-                            )}`,
-                            `Time of seal: ${
-                              !!txnStatusOpt && txnStatusOpt.isPresent()
-                                ? new Intl.DateTimeFormat('default', {
-                                    day: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric',
-                                  }).format(
-                                    new Date(
-                                      txnStatusOpt.get().timestamp?.human!
-                                    )
-                                  )
-                                : 'undetermined'
-                            }`,
-                            `Proof creator sealed this version: ${proofCreatorSealedTheSpecificVersion}`,
+                            $localize`Exists since: block` +
+                              ' ' +
+                              Intl.NumberFormat().format(
+                                history.existsFromHeight!
+                              ),
+                            $localize`Current height:` +
+                              ' ' +
+                              Intl.NumberFormat().format(currentHeight),
+                            $localize`Time of seal:` + ' ' + !!txnStatusOpt &&
+                            txnStatusOpt.isPresent()
+                              ? new Intl.DateTimeFormat('default', {
+                                  day: '2-digit',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                }).format(
+                                  new Date(txnStatusOpt.get().timestamp?.human!)
+                                )
+                              : 'undetermined',
+                            $localize`Proof creator sealed this version:` +
+                              ' ' +
+                              proofCreatorSealedTheSpecificVersion,
                           ],
                           status: 'valid',
                         }
@@ -475,10 +476,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofRight1'] = {
-      label:
-        "Proof's creator had MANAGE right to the project when the certificate was created",
-      techLabel:
-        "The proof's creator's device's DID had impersonate right on the project's DID at the time when the project was sealed",
+      label: $localize`Proof's creator had MANAGE right to the project when the certificate was created`,
+      techLabel: $localize`The proof's creator's device's DID had impersonate right on the project's DID at the time when the project was sealed`,
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator
@@ -519,9 +518,8 @@ export class InspectProofComponent implements OnInit {
     };
 
     this.proofValidators['proofRight2'] = {
-      label: "Proof's creator has MANAGE right now",
-      techLabel:
-        "The proof's creator's device's DID has impersonate right on the project's DID now",
+      label: $localize`Proof's creator has MANAGE right now`,
+      techLabel: $localize`The proof's creator's device's DID has impersonate right on the project's DID now`,
       validator: this.proofValidators['proofOnBlockChain'].validator.pipe(
         withLatestFrom(
           this.proofValidators['isSignedPresentationValid'].validator
