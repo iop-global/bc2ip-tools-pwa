@@ -48,8 +48,8 @@
   "8552600490705539497": "The signed-presentation.json file's content is cryptographically valid and the proof is not yet expired",
   "1712643974692916907": "Valid Proof Files",
   "8855601563013855532": "The proof's files are cryptographically proven by the signed-presentation.json file",
-  "8781439864577268857": "Proof contains different amount of files.",
-  "1020719943773852375": "Contains different files.",
+  "8781439864577268857": "The proof is invalid; it does not contain the correct number of files.",
+  "1020719943773852375": "The proof is invalid; it contains incorrect files.",
   "6837600949402367602": "Invalid hashes: {$PH}",
   "2184680969347998536": "Proof's Timestamp Exists on Blockchain",
   "3169155984780888075": "Exists since: block",
@@ -58,6 +58,6 @@
   "6842940774186480643": "Proof creator sealed this version:",
   "628487691404476189": "Proof's creator had MANAGE right to the project when the certificate was created",
   "1927109856134625219": "The proof's creator's device's DID had impersonate right on the project's DID at the time when the project was sealed",
-  "3921402304321532516": "Proof's creator has MANAGE right now",
+  "3921402304321532516": "Proof's creator currently has management rights to the Project",
   "4320965390346008458": "The proof's creator's device's DID has impersonate right on the project's DID now"
 }
