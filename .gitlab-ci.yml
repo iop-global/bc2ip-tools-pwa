@@ -31,7 +31,7 @@ docker-rc:
     - docker push $CI_REGISTRY_IMAGE/app:$nextVersion-rc
     # GCP images
     - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
-    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/app:$nextVersion-rc
+    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
     - cat $GCP_DEPLOY_JSON_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
     - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
     - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
