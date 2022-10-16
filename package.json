@@ -2,6 +2,7 @@
   "name": "tools-webapp",
   "version": "0.0.0",
   "nextVersion": "1.0.0",
+  "nextVersionIncrement": "major",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -44,6 +45,15 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "release-it": "^15.5.0",
     "typescript": "~4.6.2"
+  },
+  "release-it": {
+    "git": {
+      "changelog": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --compare-url 'https://github.com/iop-global/bc2ip-tools-webapp/compare/{from}..{to}' --unreleased-only --hide-credit"
+    },
+    "hooks": {
+      "after:bump": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --unreleased false --hide-credit "
+    }
   }
 }
