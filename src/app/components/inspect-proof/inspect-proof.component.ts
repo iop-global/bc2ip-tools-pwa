@@ -40,7 +40,7 @@ interface ProvenDocument {
   fileName: string;
   uploaderDid: string;
   uploaderKeyId: string;
-  proofCreatorUploadedIt: 'yes' | 'no' | 'not_disclosed';
+  proofCreatorUploadedIt: string;
   owners: string[];
   authors: string[];
 }
@@ -216,10 +216,35 @@ export class InspectProofComponent implements OnInit {
                     );
                   }
 
+                  const projectName =
+                    typeof fileJson.content.provenClaims[0].claim.content
+                      .projectName === 'object'
+                      ? fileJson.content.provenClaims[0].claim.content
+                          .projectName.value
+                      : $localize`not disclosed`;
+                  const projectDesc =
+                    typeof fileJson.content.provenClaims[0].claim.content
+                      .projectDescription === 'object'
+                      ? fileJson.content.provenClaims[0].claim.content
+                          .projectDescription.value
+                      : $localize`not disclosed`;
+                  const versionDesc =
+                    typeof fileJson.content.provenClaims[0].claim.content
+                      .versionDescription === 'object'
+                      ? fileJson.content.provenClaims[0].claim.content
+                          .versionDescription.value
+                      : $localize`not disclosed`;
+
                   messages.push(
-                    `Project name: ${fileJson.content.provenClaims[0].claim.content.projectName}`,
-                    `Project version Id: ${fileJson.content.provenClaims[0].claim.content.versionId}`,
-                    `Purpose of license: ${fileJson.content.licenses[0].purpose}`
+                    `${$localize`Project name`}: ${projectName}`,
+                    `${$localize`Project description`}: ${projectDesc}`,
+                    `${$localize`Version description`}: ${versionDesc}`,
+                    `${$localize`Project version Id`}: ${
+                      fileJson.content.provenClaims[0].claim.content.versionId
+                    }`,
+                    `${$localize`Purpose of license`}: ${
+                      fileJson.content.licenses[0].purpose
+                    }`
                   );
                   return <ValidatorResult>{
                     data: fileJson,
@@ -347,14 +372,16 @@ export class InspectProofComponent implements OnInit {
             result.data.content.provenClaims[0].claim.content.sealer;
           let proofCreatorPubKey: PublicKey | null = null;
 
-          let proofCreatorSealedTheSpecificVersion = 'not disclosed';
+          let proofCreatorSealedTheSpecificVersion = $localize`not disclosed`;
 
           if (typeof sealer !== 'string') {
             proofCreatorPubKey = new PublicKey(result.data.signature.publicKey);
             const sealerKeyId = new KeyId(sealer.keyId);
 
             proofCreatorSealedTheSpecificVersion =
-              proofCreatorPubKey.validateId(sealerKeyId) ? 'yes' : 'no';
+              proofCreatorPubKey.validateId(sealerKeyId)
+                ? $localize`yes`
+                : $localize`no`;
           }
 
           const provenDocsInProof =
@@ -377,26 +404,25 @@ export class InspectProofComponent implements OnInit {
 
                     const uploaderDid = uploaderDisclosed
                       ? provenDoc.uploader.accountDid
-                      : 'not disclosed';
+                      : $localize`not disclosed`;
                     const uploaderKeyId = uploaderDisclosed
                       ? provenDoc.uploader.keyId
-                      : 'not disclosed';
+                      : $localize`not disclosed`;
 
-                    let proofCreatorUploadedIt: 'yes' | 'no' | 'not disclosed' =
-                      'not disclosed';
+                    let proofCreatorUploadedIt = $localize`not disclosed`;
                     if (proofCreatorPubKey !== null && uploaderDisclosed) {
                       proofCreatorUploadedIt = proofCreatorPubKey.validateId(
                         new KeyId(provenDoc.uploader.keyId)
                       )
-                        ? 'yes'
-                        : 'no';
+                        ? $localize`yes`
+                        : $localize`no`;
                     }
 
                     return <ProvenDocument>{
                       fileName: provenDoc.fileName,
                       authors:
                         typeof provenDoc.authors === 'string'
-                          ? ['not disclosed']
+                          ? [$localize`not disclosed`]
                           : Object.values(provenDoc.authors)
                               .map((a) => {
                                 if (typeof a === 'string') {
@@ -407,7 +433,7 @@ export class InspectProofComponent implements OnInit {
                               .filter((a) => a !== null),
                       owners:
                         typeof provenDoc.owners === 'string'
-                          ? ['not disclosed']
+                          ? [$localize`not disclosed`]
                           : Object.values(provenDoc.owners)
                               .map((a) => {
                                 if (typeof a === 'string') {

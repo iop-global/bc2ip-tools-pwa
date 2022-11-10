@@ -44,7 +44,22 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { IopCertificatePasswordDialogComponent } from '../certificate-password-dialog/certificate-password-dialog.component';
 
-type ItemNodeType = 'file' | 'author' | 'owner' | 'uploader' | 'sealer';
+type ItemNodeType =
+  | 'file'
+  | 'author'
+  | 'owner'
+  | 'uploader'
+  | 'sealer'
+  | 'projectName'
+  | 'projectDescription'
+  | 'versionDescription';
+
+const SINGLE_SELECTABLE_ITEM_NODES: ItemNodeType[] = [
+  'sealer',
+  'projectName',
+  'projectDescription',
+  'versionDescription',
+];
 
 export interface ItemNode {
   children?: ItemNode[];
@@ -458,6 +473,22 @@ export class GenerateProofComponent implements OnInit {
                         );
 
                       this.dataSource.data = [
+                        {
+                          item: 'Project name',
+                          type: 'projectName',
+                        },
+                        {
+                          item: 'Project description',
+                          type: 'projectDescription',
+                        },
+                        {
+                          item: 'Project version description',
+                          type: 'versionDescription',
+                        },
+                        {
+                          item: 'Sealer',
+                          type: 'sealer',
+                        },
                         ...Object.values(
                           certificateResult.data.content.claim.content.files
                         ).map(
@@ -506,10 +537,6 @@ export class GenerateProofComponent implements OnInit {
                               )[fileIndex],
                             }
                         ),
-                        {
-                          item: 'Sealer',
-                          type: 'sealer',
-                        },
                       ];
                     }
 
@@ -752,15 +779,11 @@ export class GenerateProofComponent implements OnInit {
               }
             }
 
-            const sealers = [...this.flatNodeMap.keys()].filter(
-              (node) =>
-                node.type === 'sealer' &&
-                this.checklistSelection.isSelected(node)
-            );
-
-            if (sealers.length > 0) {
-              doNotCollapsProps.push('.content.sealer');
-            }
+            SINGLE_SELECTABLE_ITEM_NODES.forEach((t) => {
+              if (this.isItemNodeTypeSelected(t)) {
+                doNotCollapsProps.push(`.content.${t}`);
+              }
+            });
 
             const collapsedClaim = JSON.parse(
               selectiveDigestJson(
@@ -838,7 +861,7 @@ export class GenerateProofComponent implements OnInit {
 
                 a.href = window.URL.createObjectURL(blob);
                 a.download = `${
-                  proofResult.data.content.claim.content.projectName
+                  proofResult.data.content.claim.content.projectName.value
                 } - ${
                   proofResult.data.content.claim.content.versionId
                 }.${new Date().getTime()}.proof`;
@@ -850,5 +873,11 @@ export class GenerateProofComponent implements OnInit {
         )
       )
       .subscribe();
+  }
+
+  private isItemNodeTypeSelected(type: ItemNodeType): boolean {
+    return [...this.flatNodeMap.keys()].some(
+      (node) => node.type === type && this.checklistSelection.isSelected(node)
+    );
   }
 }
