@@ -474,15 +474,15 @@ export class GenerateProofComponent implements OnInit {
 
                       this.dataSource.data = [
                         {
-                          item: 'Project name',
+                          item: $localize`Project name`,
                           type: 'projectName',
                         },
                         {
-                          item: 'Project description',
+                          item: $localize`Project description`,
                           type: 'projectDescription',
                         },
                         {
-                          item: 'Project version description',
+                          item: $localize`Version description`,
                           type: 'versionDescription',
                         },
                         {
