@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [1.1.0](https://gitlab.iop-ventures.com/tresor/tools-webapp/compare/1.0.0...1.1.0)
+
+- Fix German translation [`fcad3fa`](https://github.com/iop-global/bc2ip-tools-webapp/commit/fcad3fa3ac88ca0a5c1c5aec89011feb319b9a3c)
+- Project's metadata is also maskable [`0e1720b`](https://github.com/iop-global/bc2ip-tools-webapp/commit/0e1720b39a9e8026e2cd0ae01bbc5481505f9352)
+- Prepare next release [`8dc7426`](https://github.com/iop-global/bc2ip-tools-webapp/commit/8dc742627d58e40e0b7478dc81b34acbc5443a4c)
+
 #### 1.0.0
 
+> 16 October 2022
+
+- Release 1.0.0 [`9694ab0`](https://github.com/iop-global/bc2ip-tools-webapp/commit/9694ab070bbdb99b0d8875b528ab1c3da4b70f66)
 - Add release script [`680314a`](https://github.com/iop-global/bc2ip-tools-webapp/commit/680314a8c70a9dcf64d95b2cf83b83849d102501)
 - Version based docker images #2 [`871b550`](https://github.com/iop-global/bc2ip-tools-webapp/commit/871b550589c045275e474fa29da1ede3585ce968)
 - Version based docker images [`0604fc8`](https://github.com/iop-global/bc2ip-tools-webapp/commit/0604fc83fa2ff84f25c6e855a3b226299e1ed4cb)
