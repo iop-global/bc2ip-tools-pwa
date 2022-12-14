@@ -65,6 +65,7 @@ export interface ItemNode {
   children?: ItemNode[];
   item: string;
   type: ItemNodeType;
+  disabled: boolean;
   index?: string;
   file?: string;
 }
@@ -73,6 +74,7 @@ export interface ItemFlatNode {
   item: string;
   level: number;
   expandable: boolean;
+  disabled: boolean;
   type: ItemNodeType;
   index?: string;
   file?: string;
@@ -194,6 +196,7 @@ export class GenerateProofComponent implements OnInit {
     flatNode.index = node.index;
     flatNode.file = node.file;
     flatNode.expandable = !!node.children?.length;
+    flatNode.disabled = node.disabled;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
@@ -472,22 +475,30 @@ export class GenerateProofComponent implements OnInit {
                             .projectName
                         );
 
+                      const claimSupportsMetadataMasking =
+                        typeof certificateResult.data.content.claim.content
+                          .projectDescription === 'object';
+
                       this.dataSource.data = [
                         {
                           item: $localize`Project name`,
                           type: 'projectName',
+                          disabled: !claimSupportsMetadataMasking,
                         },
                         {
                           item: $localize`Project description`,
                           type: 'projectDescription',
+                          disabled: !claimSupportsMetadataMasking,
                         },
                         {
                           item: $localize`Version description`,
                           type: 'versionDescription',
+                          disabled: !claimSupportsMetadataMasking,
                         },
                         {
                           item: 'Sealer',
                           type: 'sealer',
+                          disabled: false,
                         },
                         ...Object.values(
                           certificateResult.data.content.claim.content.files
@@ -506,6 +517,7 @@ export class GenerateProofComponent implements OnInit {
                                           authorIndex
                                         ],
                                         file: file.fileName,
+                                        disabled: false,
                                       }
                                   ),
                                 },
@@ -520,6 +532,7 @@ export class GenerateProofComponent implements OnInit {
                                           ownerIndex
                                         ],
                                         file: file.fileName,
+                                        disabled: false,
                                       }
                                   ),
                                 },
@@ -527,6 +540,7 @@ export class GenerateProofComponent implements OnInit {
                                   item: 'Uploader',
                                   type: 'uploader',
                                   file: file.fileName,
+                                  disabled: false,
                                 },
                               ],
                               item: file.fileName,
@@ -535,6 +549,7 @@ export class GenerateProofComponent implements OnInit {
                                 certificateResult.data.content.claim.content
                                   .files
                               )[fileIndex],
+                              disabled: false,
                             }
                         ),
                       ];

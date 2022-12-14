@@ -216,32 +216,39 @@ export class InspectProofComponent implements OnInit {
                     );
                   }
 
-                  const projectName =
-                    typeof fileJson.content.provenClaims[0].claim.content
-                      .projectName === 'object'
-                      ? fileJson.content.provenClaims[0].claim.content
-                          .projectName.value
-                      : $localize`not disclosed`;
-                  const projectDesc =
-                    typeof fileJson.content.provenClaims[0].claim.content
-                      .projectDescription === 'object'
-                      ? fileJson.content.provenClaims[0].claim.content
-                          .projectDescription.value
-                      : $localize`not disclosed`;
-                  const versionDesc =
-                    typeof fileJson.content.provenClaims[0].claim.content
-                      .versionDescription === 'object'
-                      ? fileJson.content.provenClaims[0].claim.content
-                          .versionDescription.value
-                      : $localize`not disclosed`;
+                  const extractMetadata = (claimProp: any): string => {
+                    const metadataDisclosed = typeof claimProp === 'object';
+                    if (metadataDisclosed) {
+                      return claimProp.value;
+                    }
+
+                    // Note: older certs does not wrap metadata into a
+                    // nonced bundle, thus we need to check if it's just a simple
+                    // string which starts with 'cju' it means it's a collapsed (not disclosed).
+                    // Otherwise it's an older cert metadata in a not wrapped form.
+                    const metadataDiscloedInOlderCert =
+                      typeof claimProp === 'string' &&
+                      !claimProp.startsWith('cju');
+
+                    if (metadataDiscloedInOlderCert) {
+                      return claimProp;
+                    }
+
+                    return $localize`not disclosed`;
+                  };
+
+                  const claim = fileJson.content.provenClaims[0].claim.content;
+                  const projectName = extractMetadata(claim.projectName);
+                  const projectDesc = extractMetadata(claim.projectDescription);
+                  const versionDesc = extractMetadata(claim.versionDescription);
 
                   messages.push(
                     `${$localize`Project name`}: ${projectName}`,
                     `${$localize`Project description`}: ${projectDesc}`,
-                    `${$localize`Version description`}: ${versionDesc}`,
-                    `${$localize`Project version Id`}: ${
-                      fileJson.content.provenClaims[0].claim.content.versionId
+                    `${$localize`Version description`}: ${
+                      versionDesc === '' ? '-' : versionDesc
                     }`,
+                    `${$localize`Project version Id`}: ${claim.versionId}`,
                     `${$localize`Purpose of license`}: ${
                       fileJson.content.licenses[0].purpose
                     }`

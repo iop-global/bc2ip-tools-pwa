@@ -148,8 +148,11 @@
             class="checklist-leaf-node"
             [checked]="checklistSelection.isSelected(node)"
             (change)="todoLeafItemSelectionToggle(node)"
-            >{{ node.item }}</mat-checkbox
+            [disabled]="node.disabled === true"
           >
+            {{ node.item }}
+            <i *ngIf="node.disabled" i18n>(not supported)</i>
+          </mat-checkbox>
         </mat-tree-node>
         <mat-tree-node
           *matTreeNodeDef="let node; when: hasChild"
