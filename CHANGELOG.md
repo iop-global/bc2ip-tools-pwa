@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [1.1.1](https://gitlab.iop-ventures.com/tresor/tools-webapp/compare/1.1.0...1.1.1)
+
+- Prepare release 1.1.1 [`0d1a70e`](https://github.com/iop-global/bc2ip-tools-webapp/commit/0d1a70e3482b10ef93b27f789ebb43a73288556e)
+- Inspect proof: handle invalid password [`050f293`](https://github.com/iop-global/bc2ip-tools-webapp/commit/050f293a252d0b285a5e8e103d242ce62cb01504)
+- Make it clear if an older cert's metadata is not maskable [`9d91aa2`](https://github.com/iop-global/bc2ip-tools-webapp/commit/9d91aa2ac9572cfe309f5c79fdf0ca5f0eaabf97)
+
 #### [1.1.0](https://gitlab.iop-ventures.com/tresor/tools-webapp/compare/1.0.0...1.1.0)
 
+> 11 November 2022
+
+- Release 1.1.0 [`d0b6e34`](https://github.com/iop-global/bc2ip-tools-webapp/commit/d0b6e34e6690991aa58dd307e1c27602f29d8546)
 - Fix German translation [`fcad3fa`](https://github.com/iop-global/bc2ip-tools-webapp/commit/fcad3fa3ac88ca0a5c1c5aec89011feb319b9a3c)
 - Project's metadata is also maskable [`0e1720b`](https://github.com/iop-global/bc2ip-tools-webapp/commit/0e1720b39a9e8026e2cd0ae01bbc5481505f9352)
 - Prepare next release [`8dc7426`](https://github.com/iop-global/bc2ip-tools-webapp/commit/8dc742627d58e40e0b7478dc81b34acbc5443a4c)
