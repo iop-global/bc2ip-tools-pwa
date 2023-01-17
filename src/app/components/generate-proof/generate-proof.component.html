@@ -27,12 +27,9 @@
           </button>
         </strong>
         <mat-list class="validator-list">
-          <mat-list-item *ngFor="let validator of fileValidators | keyvalue">
-            <mat-icon
-              matListIcon
-              [class]="result.status"
-              *ngIf="validator.value.validator | async as result"
-              >{{
+          <ng-container *ngFor="let validator of fileValidators | keyvalue">
+            <mat-list-item *ngIf="validator.value.validator | async as result">
+              <mat-icon matListIcon [class]="result.status">{{
                 result.status === "valid"
                   ? "check_circle"
                   : result.status === "invalid"
@@ -40,11 +37,14 @@
                   : result.status === "undetermined"
                   ? "help"
                   : "pending"
-              }}</mat-icon
-            >
-            <p mat-line>{{ validator.value.label }}</p>
-            <p mat-line>{{ validator.value.techLabel }}</p>
-          </mat-list-item>
+              }}</mat-icon>
+              <p mat-line>{{ validator.value.label }}</p>
+              <p mat-line>{{ validator.value.techLabel }}</p>
+              <p mat-line *ngFor="let message of result.messages">
+                {{ message }}
+              </p>
+            </mat-list-item>
+          </ng-container>
         </mat-list>
       </ng-container>
       <ng-template #noFile>

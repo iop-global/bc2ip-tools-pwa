@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
   catchError,
-  debounceTime,
   distinctUntilChanged,
   filter,
   map,
@@ -12,7 +11,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { combineLatest, forkJoin, from, merge, of } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, from, merge, of } from 'rxjs';
 import { SDKWebService } from 'src/app/services/sdk-webservice.service';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {
@@ -171,7 +170,8 @@ export class GenerateProofComponent implements OnInit {
             filter((result) => typeof result === 'string' && result.length > 0),
             tap((password) => {
               this.fileForm.get('password')?.setValue(password);
-            })
+            }),
+            map(() => EMPTY)
           );
   }
 
@@ -298,22 +298,47 @@ export class GenerateProofComponent implements OnInit {
             password: string | null;
           }) => {
             if (file === null) {
-              return of(null);
+              return of(<ValidatorResult>{
+                data: null,
+                status: 'invalid',
+              });
             }
 
             const zipFileReader = new BlobReader(file);
 
             return new ZipReader(zipFileReader, {
               ...(password !== null ? { password } : {}),
-            }).getEntries();
+            })
+              .getEntries()
+              .then((entries) => {
+                if (password === null || password === '') {
+                  return <ValidatorResult>{
+                    data: entries,
+                    status: 'valid',
+                  };
+                }
+                return Promise.all(
+                  entries.map((e) =>
+                    e.getData ? e.getData(new BlobWriter()) : false
+                  )
+                )
+                  .then(
+                    () =>
+                      <ValidatorResult>{
+                        data: entries,
+                        status: 'valid',
+                      }
+                  )
+                  .catch(
+                    (e: any) =>
+                      <ValidatorResult>{
+                        data: null,
+                        status: 'invalid',
+                        messages: [e],
+                      }
+                  );
+              });
           }
-        ),
-        map(
-          (zipFile: Entry[] | null) =>
-            <ValidatorResult>{
-              data: zipFile,
-              status: zipFile === null ? 'invalid' : 'valid',
-            }
         ),
         shareReplay({
           bufferSize: 1,
@@ -583,7 +608,6 @@ export class GenerateProofComponent implements OnInit {
     this.vaultValidators['isPasswordValid'] = {
       label: $localize`Password is valid`,
       validator: this.vaultForm.get('password')!.valueChanges.pipe(
-        debounceTime(300),
         distinctUntilChanged(),
         switchMap((password) => {
           if (password === null || password === '') {
