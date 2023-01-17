@@ -9,6 +9,8 @@ cache:
 test:
   stage: test
   image: node:16
+  except:
+    - tags
   script:
     - npm ci
     - npm run build
