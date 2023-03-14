@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Certificate Error</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">OK</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Certificate</ion-card-title>
+      <ion-card-subtitle color="danger">Your certificate is not valid.</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      {{ props.certificateName }}
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-list lines="inset">
+    <ion-item>
+      <ion-label>Certificate integrity</ion-label>
+      <ion-icon *ngIf="props.result.certificateIntegrityOK" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+      <ion-icon *ngIf="!props.result.certificateIntegrityOK" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-label>Signature present</ion-label>
+      <ion-icon *ngIf="props.result.signaturePresent" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+      <ion-icon *ngIf="!props.result.signaturePresent" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-label>Signature valid</ion-label>
+      <ion-icon *ngIf="props.result.signatureValid" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+      <ion-icon *ngIf="!props.result.signatureValid" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    </ion-item>
+    <ion-item>
+      <ion-label>Timestamp exists on blockchain</ion-label>
+      <ion-icon *ngIf="props.result.timestampFoundOnBlockchain" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+      <ion-icon *ngIf="!props.result.timestampFoundOnBlockchain" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>

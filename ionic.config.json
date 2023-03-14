@@ -1,0 +1,7 @@
+{
+  "name": "bc2ip Tools",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

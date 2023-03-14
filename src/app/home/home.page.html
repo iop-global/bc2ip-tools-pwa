@@ -1,0 +1,53 @@
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col></ion-col>
+      <ion-col size="12" size-sm="5" size-xl="3" class="ion-text-center">
+        <ion-text>
+          <h1>Welcome to bc2ip's Tools</h1>
+        </ion-text>
+        <ion-text>
+          Here you can create and inspect proofs out of your bc2ip certficate.
+        </ion-text>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="ion-margin-top">
+    <ion-row class="ion-align-items-center">
+      <ion-col></ion-col>
+
+      <ion-col size="12" size-sm="5" size-xl="3" class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Create a Proof</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            Use this, if you have a bc2ip certificate and you need to reveal part of it to a thirdparty.
+          </ion-card-content>
+
+          <ion-button expand="block" class="ion-margin" routerLink="/create-proof">Create</ion-button>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-sm="5" size-xl="3" class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Inspect a Proof</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            If you have a bc2ip proof which you'd like to inspect and see its content, choose this.
+          </ion-card-content>
+
+          <ion-button expand="block" class="ion-margin">Inspect</ion-button>
+        </ion-card>
+      </ion-col>
+
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>

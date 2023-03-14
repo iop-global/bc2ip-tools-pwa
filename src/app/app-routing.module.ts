@@ -1,34 +1,31 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { GenerateProofComponent } from './components/generate-proof/generate-proof.component';
-import { HomeComponent } from './components/home/home.component';
-import { InspectProofComponent } from './components/inspect-proof/inspect-proof.component';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'generate-proof',
-    component: GenerateProofComponent,
+    path: '',
+    loadChildren: () =>
+      import('./home/home.module').then((m) => m.HomePageModule),
   },
   {
-    path: 'home',
-    component: HomeComponent,
+    path: 'create-proof',
+    loadChildren: () =>
+      import('./create-proof/create-proof.module').then(
+        (m) => m.CreateProofPageModule
+      ),
   },
   {
     path: 'inspect-proof',
-    component: InspectProofComponent,
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'home',
+    loadChildren: () =>
+      import('./inspect-proof/inspect-proof.module').then(
+        (m) => m.InspectProofPageModule
+      ),
   },
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
-      useHash: true,
-    }),
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
   exports: [RouterModule],
 })

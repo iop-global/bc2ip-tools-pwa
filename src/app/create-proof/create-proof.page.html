@@ -1,0 +1,63 @@
+<ion-content>
+  <ion-grid>
+    <ion-row class="ion-align-items-center">
+      <ion-col></ion-col>
+      <ion-col size="12" size-sm="8" size-xl="5">
+        <ion-button size="small" fill="outline" class="ion-margin-start ion-margin-top" routerLink="/" routerDirection="back">
+          <ion-icon slot="start" name="arrow-back"></ion-icon>
+          Back
+        </ion-button>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title *ngIf="currentStep === 1">1. Select Certificate</ion-card-title>
+            <ion-card-title *ngIf="currentStep === 2">1. Selected Certificate</ion-card-title>
+            <ion-card-subtitle *ngIf="step1Completed" color="success">Your certificate is valid.</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-text *ngIf="currentStep === 1">
+              Select your certificate file which you'd like to use to create a proof.
+            </ion-text>
+            
+            <ng-container *ngIf="currentStep === 2">
+              <ion-text>
+                <code>{{ selectedCertificate }}</code>
+              </ion-text>
+              <div>
+                <ion-button class="ion-margin-top" size="small" fill="outline" (click)="startOver()">
+                  Start Over
+                </ion-button>
+              </div>
+            </ng-container>
+            
+          </ion-card-content>
+
+          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="fileControl.click()">
+            Select certificate file
+          </ion-button>
+
+          <input
+            type="file"
+            style="display: none"
+            (change)="selectFile($event)"
+            accept=".certificate"
+            #fileControl
+          />
+        </ion-card>
+
+        <ion-card [class.iop-muted-content]="currentStep === 1">
+          <ion-card-header>
+            <ion-card-title>2. Select what you Share</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-text>
+              Here you can select what data you'd like to share from your certificate. What you don't share will be completly removed from your proof.
+            </ion-text>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
