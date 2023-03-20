@@ -2,59 +2,245 @@
   <ion-grid>
     <ion-row class="ion-align-items-center">
       <ion-col></ion-col>
-      <ion-col size="12" size-sm="8" size-xl="5">
+      <ion-col size="12" size-sm="8" size-xl="8">
         <ion-button size="small" fill="outline" class="ion-margin-start ion-margin-top" routerLink="/" routerDirection="back">
           <ion-icon slot="start" name="arrow-back"></ion-icon>
-          Back
+          Cancel &amp; Back
         </ion-button>
         <ion-card>
           <ion-card-header>
             <ion-card-title *ngIf="currentStep === 1">1. Select Certificate</ion-card-title>
-            <ion-card-title *ngIf="currentStep === 2">1. Selected Certificate</ion-card-title>
-            <ion-card-subtitle *ngIf="step1Completed" color="success">Your certificate is valid.</ion-card-subtitle>
+            <ion-card-title *ngIf="currentStep > 1">1. Selected Certificate</ion-card-title>
+            <ion-card-subtitle *ngIf="currentStep > 1" color="success">Your certificate is valid.</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
             <ion-text *ngIf="currentStep === 1">
               Select your certificate file which you'd like to use to create a proof.
             </ion-text>
+
+            <ng-container *ngIf="currentStep > 1">
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-label>
+                    <h1>Name:</h1>
+                    <p class="ion-text-wrap">{{ selectedCertificate }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label>
+                    <h1>Process ID:</h1>
+                    <p class="ion-text-wrap">{{ selectedCertificateProcessId }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
             
-            <ng-container *ngIf="currentStep === 2">
-              <ion-text>
-                <code>{{ selectedCertificate }}</code>
-              </ion-text>
-              <div>
-                <ion-button class="ion-margin-top" size="small" fill="outline" (click)="startOver()">
-                  Start Over
-                </ion-button>
-              </div>
+              <ion-button class="ion-margin-top" size="small" fill="outline" (click)="goto(1)">
+                Start Over
+              </ion-button>
             </ng-container>
-            
           </ion-card-content>
 
-          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="fileControl.click()">
+          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="certificateFileControl.click()">
             Select certificate file
           </ion-button>
 
           <input
             type="file"
             style="display: none"
-            (change)="selectFile($event)"
+            (change)="selectCertificate($event)"
             accept=".certificate"
-            #fileControl
+            #certificateFileControl
           />
         </ion-card>
 
         <ion-card [class.iop-muted-content]="currentStep === 1">
           <ion-card-header>
-            <ion-card-title>2. Select what you Share</ion-card-title>
+            <ion-card-title>2. Select the data you Share</ion-card-title>
+            <ion-card-subtitle *ngIf="currentStep > 2" color="success">Data selected.</ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content *ngIf="currentStep > 2">
+            <ion-button size="small" fill="outline" (click)="goto(2)">
+              Edit data
+            </ion-button>
+          </ion-card-content>
+
+          <form *ngIf="currentStep === 2" [formGroup]="form" (ngSubmit)="proofContentSelected()">
+            <ion-card-content>
+              <ion-text>
+                Here you can select what data you'd like to share from your certificate. What you don't share will be completly removed from your proof.
+              </ion-text>
+
+              <ng-container *ngIf="currentStep === 2">
+                <ion-item-group>
+                  <ion-item-divider class="ion-margin-top">
+                    <ion-label>Proof Settings</ion-label>
+                  </ion-item-divider>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="fixed">Purpose of share:</ion-label>
+                    <ion-input formControlName="purpose" placeholder="E.g.: provide evidense for court-case No. 42"></ion-input>
+                    <ion-note *ngIf="hasErrors('purpose') && form.get('purpose')?.hasError('required')" slot="error">
+                      Please provide the purpose of the proof to be created.
+                    </ion-note>
+                  </ion-item>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="fixed">
+                      Valid until:
+                      <p>(UTC)</p>
+                    </ion-label>
+                    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+                    <ion-modal [keepContentsMounted]="true">
+                      <ng-template>
+                        <ion-datetime
+                        formControlName="validUntil"
+                        id="datetime"
+                        [min]="now"
+                        presentation="date"
+                        showDefaultButtons="true"
+                      ></ion-datetime>
+                      </ng-template>
+                    </ion-modal>
+                  </ion-item>
+                  <ion-item class="ion-margin-top">
+                    <ion-label>Protect with password</ion-label>
+                    <ion-toggle
+                      formControlName="protectWithPassword"
+                      slot="end"
+                      (ionChange)="onProtectWithPasswordChange($event)"
+                    >
+                    </ion-toggle>
+                  </ion-item>
+                  <ng-container *ngIf="form.get('protectWithPassword')?.value">
+                    <ion-item class="ion-margin-start">
+                      <ion-label position="fixed">Password:</ion-label>
+                      <ion-input
+                        formControlName="password"
+                        type="password"
+                        placeholder="Please, enter your password"
+                        (ionChange)="onPasswordChange($event)"
+                      ></ion-input>
+                      <ion-note *ngIf="hasErrors('password') && form.get('password')?.hasError('required')" slot="error">
+                        To make your proof password protected, please provide a secure password.
+                      </ion-note>
+                    </ion-item>
+                    <ion-item class="ion-margin-start">
+                      <ion-label position="fixed">Repeat password:</ion-label>
+                      <ion-input formControlName="passwordRepeat"  type="password" placeholder="Please, repeat the password"></ion-input>
+                      <ion-note *ngIf="hasErrors('passwordRepeat') && form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')" slot="error">
+                        Passwords do not match.
+                      </ion-note>
+                    </ion-item>
+                  </ng-container>
+                </ion-item-group>
+
+                <ion-item-group>
+                  <ion-item-divider class="ion-margin-top">
+                    <ion-label>Project Data</ion-label>
+                  </ion-item-divider>
+                  <ion-item lines="full" class="ion-margin-top">
+                    <ion-label position="fixed">Name:</ion-label>
+                    <ion-text color="medium">{{ statement?.content?.claim?.content?.projectName?.value }}</ion-text>
+                    <ion-toggle formControlName="shareProjectName" slot="end"></ion-toggle>
+                  </ion-item>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="fixed">Description:</ion-label>
+                    <ion-text color="medium">{{ statement?.content?.claim?.content?.projectDescription?.value }}</ion-text>
+                    <ion-toggle formControlName="shareProjectDescription" slot="end"></ion-toggle>
+                  </ion-item>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="fixed">Version description:</ion-label>
+                    <ion-text color="medium">{{ statement?.content?.claim?.content?.versionDescription?.value }}</ion-text>
+                    <ion-toggle formControlName="shareVersionDescription" slot="end"></ion-toggle>
+                  </ion-item>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="fixed">Version sealer:</ion-label>
+                    <ion-text color="medium">
+                      DID: {{ statement?.content?.claim?.content?.sealer?.accountDid }}<br>
+                      KeyID: {{ statement?.content?.claim?.content?.sealer?.keyId }}
+                    </ion-text>
+                    <ion-toggle formControlName="shareVersionSealer" slot="end"></ion-toggle>
+                  </ion-item>
+                </ion-item-group>
+
+                <ion-item-group>
+                  <ion-item-divider class="ion-margin-top">
+                    <ion-label>Files</ion-label>
+                  </ion-item-divider>
+
+                  <ng-container *ngFor="let file of statement?.content?.claim?.content?.files | keyvalue" formGroupName="files">
+                    <ng-container [formGroupName]="file.key">
+                      <ion-item class="ion-margin-top">
+                        <ion-label>{{ file.value.fileName }}</ion-label>
+                        <ion-toggle formControlName="shareFile" slot="end"></ion-toggle>
+                        <ion-input hidden formControlName="fileName" [value]="file.value.fileName"></ion-input>
+                      </ion-item>
+                      
+                      <ng-container *ngIf="form.get('files')?.get(file.key)?.get('shareFile')?.value">
+                        <ion-item class="ion-margin-start">
+                          <ion-label position="fixed">Uploader</ion-label>
+                          <ion-text color="medium">
+                            DID: {{ file.value.uploader.accountDid }}
+                            KeyID: {{ file.value.uploader.keyId }}
+                          </ion-text>
+                          <ion-toggle formControlName="uploader" slot="end"></ion-toggle>
+                        </ion-item>
+  
+                        <ng-container *ngFor="let author of file.value.authors | keyvalue">
+                          <ion-item class="ion-margin-start" formGroupName="authors">
+                            <ion-label position="fixed">Author</ion-label>
+                            <ion-text color="medium">{{ author.value.author }}</ion-text>
+                            <ion-toggle [formControlName]="author.key" slot="end"></ion-toggle>
+                          </ion-item>
+                        </ng-container>
+
+                        <ng-container *ngFor="let owner of file.value.owners | keyvalue">
+                          <ion-item class="ion-margin-start" formGroupName="owners">
+                            <ion-label position="fixed">Owner</ion-label>
+                            <ion-text color="medium">{{ owner.value.owner }}</ion-text>
+                            <ion-toggle [formControlName]="owner.key" slot="end"></ion-toggle>
+                          </ion-item>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ion-item-group>
+              </ng-container>
+            </ion-card-content>
+
+            <ion-button
+              *ngIf="currentStep === 2"
+              class="ion-margin"
+              expand="block"
+              type="submit"
+            >
+              Continue
+            </ion-button>
+          </form>
+        </ion-card>
+
+        <ion-card [class.iop-muted-content]="currentStep !== 3">
+          <ion-card-header>
+            <ion-card-title>3. Secure Sign Data</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-text>
-              Here you can select what data you'd like to share from your certificate. What you don't share will be completly removed from your proof.
+            <ion-text *ngIf="currentStep === 3">
+              To be able to download the proof, you first must sign it with your credential.
             </ion-text>
           </ion-card-content>
+
+          <ion-button  *ngIf="currentStep === 3" class="ion-margin" (click)="credentialFileControl.click()">
+            Select credential
+          </ion-button>
+
+          <input
+            type="file"
+            style="display: none"
+            (change)="selectCredential($event)"
+            accept=".json"
+            #credentialFileControl
+          />
         </ion-card>
       </ion-col>
       <ion-col></ion-col>

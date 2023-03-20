@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Entry, TextWriter, Uint8ArrayWriter } from '@zip.js/zip.js';
-import { Types } from '@internet-of-people/sdk';
 import { digestJson } from '@internet-of-people/sdk-wasm';
 import { blake2b } from 'hash-wasm';
-import { ClaimRoot, ClaimFiles, ClaimFile } from '../types/statement';
+import {
+  ClaimFiles,
+  ClaimFile,
+  SignedWitnessStatement,
+} from '../types/statement';
 import { SDKWebService } from './sdk-webservice.service';
 
 export class CertificateValidationResult {
@@ -41,8 +44,10 @@ export class CertificateServiceService {
       return new CertificateValidationResult(false, false, false, false);
     }
 
-    const statement = JSON.parse(await statementFile.getData(new TextWriter()));
-    const claimFiles = await this.extractClaimFiles(statement);
+    const statement = JSON.parse(
+      await statementFile.getData(new TextWriter())
+    ) as SignedWitnessStatement;
+    const claimFiles = statement.content.claim.content.files;
     const signatureValid = await this.isStatementValid(
       claimFiles,
       entries.length
@@ -64,6 +69,13 @@ export class CertificateServiceService {
     );
   }
 
+  async extractStatement(entries: Entry[]): Promise<SignedWitnessStatement> {
+    const statementFile = entries.find((e) => e.filename === STATEMENT_JSON);
+    return JSON.parse(
+      await statementFile!.getData(new TextWriter())
+    ) as SignedWitnessStatement;
+  }
+
   private async areHashesValid(
     claimFiles: ClaimFiles,
     entries: Entry[]
@@ -75,16 +87,8 @@ export class CertificateServiceService {
     return validations.filter((valid) => valid === false).length === 0;
   }
 
-  private async extractClaimFiles(statement: any): Promise<ClaimFiles> {
-    const claim = (statement.content as Types.Sdk.IWitnessStatement)
-      .claim as any as ClaimRoot;
-
-    const claimFiles = claim.content.files;
-    return claimFiles;
-  }
-
   private async isStatementValid(
-    claimFiles: any,
+    claimFiles: ClaimFiles,
     numberOfEntries: number
   ): Promise<boolean> {
     // check if it has the same amount of file
