@@ -5,19 +5,19 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./home/home.module').then((m) => m.HomePageModule),
+      import('./pages/home/home.module').then((m) => m.HomePageModule),
   },
   {
     path: 'create-proof',
     loadChildren: () =>
-      import('./create-proof/create-proof.module').then(
+      import('./pages/create-proof/create-proof.module').then(
         (m) => m.CreateProofPageModule
       ),
   },
   {
     path: 'inspect-proof',
     loadChildren: () =>
-      import('./inspect-proof/inspect-proof.module').then(
+      import('./pages/inspect-proof/inspect-proof.module').then(
         (m) => m.InspectProofPageModule
       ),
   },

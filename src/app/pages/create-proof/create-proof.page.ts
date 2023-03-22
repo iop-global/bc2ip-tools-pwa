@@ -9,24 +9,24 @@ import { Entry } from '@zip.js/zip.js';
 import {
   CredentialPasswordModalComponent,
   CredentialPasswordModalProps,
-} from '../components/credential-password-modal/credential-password-modal.component';
+} from '../../components/credential-password-modal/credential-password-modal.component';
 import {
   InvalidCertificateModalComponent,
   InvalidCertificateModalProps,
-} from '../components/invalid-certificate-modal/invalid-certificate-modal.component';
+} from '../../components/invalid-certificate-modal/invalid-certificate-modal.component';
 import {
   UnlockCredentialModalComponent,
   UnlockCredentialModalProps,
-} from '../components/unlock-credential-modal/unlock-credential-modal.component';
+} from '../../components/unlock-credential-modal/unlock-credential-modal.component';
 import {
   CertificateServiceService,
   CertificateValidationResult,
-} from '../services/certificate-service.service';
-import { PresentationServiceService } from '../services/presentation-service.service';
-import { getSignerFromCredential } from '../tools/crypto';
-import { Zipper } from '../tools/zipper';
-import { ValidatedCreateProofFormResult } from '../types/create-proof-form';
-import { SignedWitnessStatement } from '../types/statement';
+} from '../../services/certificate-service.service';
+import { PresentationServiceService } from '../../services/presentation-service.service';
+import { getSignerFromCredential } from '../../tools/crypto';
+import { Zipper } from '../../tools/zipper';
+import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
+import { SignedWitnessStatement } from '../../types/statement';
 import {
   passwordRepeatValidator,
   passwordRequiredValidator,
@@ -114,9 +114,16 @@ export class CreateProofPage {
 
     if (!!files && files.length === 1) {
       const zipFile = files[0];
-      this.certificateEntries = (await Zipper.doesRequirePassword(zipFile))
+      const entries = (await Zipper.doesRequirePassword(zipFile))
         ? await this.handlePasswordProtectedZip(zipFile)
         : await Zipper.getEntries(zipFile);
+
+      if (!entries) {
+        this.certificateFileControl.nativeElement.value = '';
+        return;
+      }
+
+      this.certificateEntries = entries;
 
       const validationResult = await this.certificateService.validate(
         this.certificateEntries
@@ -180,7 +187,6 @@ export class CreateProofPage {
       const modal = await this.modalCtrl.create({
         component: UnlockCredentialModalComponent,
         componentProps,
-        presentingElement: document.querySelector('.ion-app') as HTMLElement,
       });
       await modal.present();
       const result = await modal.onWillDismiss<string>();
@@ -265,7 +271,9 @@ export class CreateProofPage {
     this.goto(1);
   }
 
-  private async handlePasswordProtectedZip(zipFile: Blob): Promise<Entry[]> {
+  private async handlePasswordProtectedZip(
+    zipFile: Blob
+  ): Promise<Entry[] | null> {
     const componentProps: CredentialPasswordModalProps = { zipFile };
     const modal = await this.modalCtrl.create({
       component: CredentialPasswordModalComponent,
@@ -280,6 +288,6 @@ export class CreateProofPage {
       return result.data;
     }
 
-    return [];
+    return null;
   }
 }
