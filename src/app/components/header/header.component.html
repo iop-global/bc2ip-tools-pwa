@@ -5,7 +5,25 @@
       <ion-text>Dev Tools</ion-text>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button><ion-icon slot="icon-only" name="language-outline"></ion-icon></ion-button>
+      <ion-button id="popover-button">
+        <ion-icon slot="icon-only" name="globe-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
+    <ion-popover trigger="popover-button" [dismissOnSelect]="true">
+      <ng-template>
+        <ion-content>
+          <ion-list>
+            <ion-item [button]="true" [detail]="false" lines="full">
+              <ion-img src="assets/locales/de/flag.svg" slot="start" class="iop-flag"></ion-img>
+              <ion-text slot="end">German</ion-text>
+            </ion-item>
+            <ion-item [button]="true" [detail]="false">
+              <ion-img src="assets/locales/en/flag.svg" slot="start" class="iop-flag"></ion-img>
+              <ion-text slot="end">English</ion-text>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ng-template>
+    </ion-popover>
   </ion-toolbar>
 </ion-header>
