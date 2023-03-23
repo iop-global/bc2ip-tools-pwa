@@ -25,6 +25,8 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/* IOP specific */
+
 ion-note.iop-validation-error-list {
   ul {
     padding: 0;
@@ -37,6 +39,16 @@ ion-note.iop-validation-error-list {
   opacity: 50%;
 }
 
-ion-label.label-fixed.sc-ion-label-ios-h {
-  white-space: normal;
+.iop-max-width-label {
+  width: 100%;
+  max-width: initial !important;
+}
+
+.iop-max-width {
+  width: 100%;
+}
+
+/* Overrides */
+input {
+  font-size: 14px !important;
 }

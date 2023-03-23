@@ -6,6 +6,7 @@ import {
   Entry,
   TextReader,
   ZipWriter,
+  ZipWriterConstructorOptions,
 } from '@zip.js/zip.js';
 import { DateTime } from 'luxon';
 import { ValidatedCreateProofFormResult } from '../types/create-proof-form';
@@ -111,7 +112,11 @@ export class PresentationServiceService {
     };
 
     const zipFileWriter = new BlobWriter('application/zip');
-    const zipWriter = new ZipWriter(zipFileWriter);
+    const zipWriterOpts: ZipWriterConstructorOptions = {};
+    if (formResult.protectWithPassword) {
+      zipWriterOpts.password = formResult.password!;
+    }
+    const zipWriter = new ZipWriter(zipFileWriter, zipWriterOpts);
 
     await zipWriter.add(
       'signed-presentation.json',

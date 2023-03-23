@@ -23,13 +23,13 @@
               <ion-list>
                 <ion-item lines="none">
                   <ion-label>
-                    <h1>Name:</h1>
+                    <h3>Name:</h3>
                     <p class="ion-text-wrap">{{ selectedCertificate }}</p>
                   </ion-label>
                 </ion-item>
                 <ion-item lines="none">
                   <ion-label>
-                    <h1>Process ID:</h1>
+                    <h3>Process ID:</h3>
                     <p class="ion-text-wrap">{{ selectedCertificateProcessId }}</p>
                   </ion-label>
                 </ion-item>
@@ -78,18 +78,15 @@
                     <ion-label>Proof Settings</ion-label>
                   </ion-item-divider>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="fixed">Purpose of share:</ion-label>
-                    <ion-input formControlName="purpose" placeholder="E.g.: provide evidense for court-case No. 42"></ion-input>
+                    <ion-label position="stacked" class="ion-text-wrap"><h2>Purpose of share:</h2></ion-label>
+                    <ion-input formControlName="purpose" placeholder="E.g.: prove at a court-case"></ion-input>
                     <ion-note *ngIf="hasErrors('purpose') && form.get('purpose')?.hasError('required')" slot="error">
                       Please provide the purpose of the proof to be created.
                     </ion-note>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="fixed">
-                      Valid until:
-                      <p>(UTC)</p>
-                    </ion-label>
-                    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+                    <ion-label position="stacked"><h2>Valid until (in UTC):</h2></ion-label>
+                    <ion-datetime-button datetime="datetime" class="ion-margin-bottom"></ion-datetime-button>
                     <ion-modal [keepContentsMounted]="true">
                       <ng-template>
                         <ion-datetime
@@ -103,7 +100,7 @@
                     </ion-modal>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label>Protect with password</ion-label>
+                    <ion-label><h2>Protect with password</h2></ion-label>
                     <ion-toggle
                       formControlName="protectWithPassword"
                       slot="end"
@@ -113,7 +110,7 @@
                   </ion-item>
                   <ng-container *ngIf="form.get('protectWithPassword')?.value">
                     <ion-item class="ion-margin-start">
-                      <ion-label position="fixed">Password:</ion-label>
+                      <ion-label position="stacked"><h2>Password:</h2></ion-label>
                       <ion-input
                         formControlName="password"
                         type="password"
@@ -125,7 +122,7 @@
                       </ion-note>
                     </ion-item>
                     <ion-item class="ion-margin-start">
-                      <ion-label position="fixed">Repeat password:</ion-label>
+                      <ion-label position="stacked" class="ion-text-wrap"><h2>Repeat password:</h2></ion-label>
                       <ion-input formControlName="passwordRepeat"  type="password" placeholder="Please, repeat the password"></ion-input>
                       <ion-note *ngIf="hasErrors('passwordRepeat') && form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')" slot="error">
                         Passwords do not match.
@@ -138,27 +135,35 @@
                   <ion-item-divider class="ion-margin-top">
                     <ion-label>Project Data</ion-label>
                   </ion-item-divider>
-                  <ion-item lines="full" class="ion-margin-top">
-                    <ion-label position="fixed">Name:</ion-label>
-                    <ion-text color="medium">{{ statement?.content?.claim?.content?.projectName?.value }}</ion-text>
+                  <ion-item class="ion-margin-top">
+                    <ion-label>
+                      <h2>Name:</h2>
+                      <p>{{ statement?.content?.claim?.content?.projectName?.value }}</p>
+                    </ion-label>
                     <ion-toggle formControlName="shareProjectName" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="fixed">Description:</ion-label>
-                    <ion-text color="medium">{{ statement?.content?.claim?.content?.projectDescription?.value }}</ion-text>
+                    <ion-label>
+                      <h2>Description:</h2>
+                      <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.projectDescription?.value }}</p>
+                    </ion-label>
                     <ion-toggle formControlName="shareProjectDescription" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="fixed">Version description:</ion-label>
-                    <ion-text color="medium">{{ statement?.content?.claim?.content?.versionDescription?.value }}</ion-text>
+                    <ion-label>
+                      <h2>Version description:</h2>
+                      <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.versionDescription?.value }}</p>
+                    </ion-label>
                     <ion-toggle formControlName="shareVersionDescription" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="fixed">Version sealer:</ion-label>
-                    <ion-text color="medium">
-                      DID: {{ statement?.content?.claim?.content?.sealer?.accountDid }}<br>
-                      KeyID: {{ statement?.content?.claim?.content?.sealer?.keyId }}
-                    </ion-text>
+                    <ion-label>
+                      <h2>Version sealer:</h2>
+                      <p class="ion-text-wrap">
+                        <u>DID:</u> {{ statement?.content?.claim?.content?.sealer?.accountDid }}<br>
+                        <u>KeyID:</u> {{ statement?.content?.claim?.content?.sealer?.keyId }}
+                      </p>
+                    </ion-label>
                     <ion-toggle formControlName="shareVersionSealer" slot="end"></ion-toggle>
                   </ion-item>
                 </ion-item-group>
@@ -171,33 +176,39 @@
                   <ng-container *ngFor="let file of statement?.content?.claim?.content?.files | keyvalue" formGroupName="files">
                     <ng-container [formGroupName]="file.key">
                       <ion-item class="ion-margin-top">
-                        <ion-label>{{ file.value.fileName }}</ion-label>
+                        <ion-label class="iop-max-width-label ion-text-wrap"><h2>{{ file.value.fileName }}</h2></ion-label>
                         <ion-toggle formControlName="shareFile" slot="end"></ion-toggle>
                         <ion-input hidden formControlName="fileName" [value]="file.value.fileName"></ion-input>
                       </ion-item>
                       
                       <ng-container *ngIf="form.get('files')?.get(file.key)?.get('shareFile')?.value">
                         <ion-item class="ion-margin-start">
-                          <ion-label position="fixed">Uploader</ion-label>
-                          <ion-text color="medium">
-                            DID: {{ file.value.uploader.accountDid }}
-                            KeyID: {{ file.value.uploader.keyId }}
-                          </ion-text>
+                          <ion-label>
+                            <h2>Uploader</h2>
+                            <p class="ion-text-wrap">
+                              <u>DID:</u> {{ file.value.uploader.accountDid }}<br>
+                              <u>KeyID:</u> {{ file.value.uploader.keyId }}
+                            </p>
+                          </ion-label>
                           <ion-toggle formControlName="uploader" slot="end"></ion-toggle>
                         </ion-item>
   
                         <ng-container *ngFor="let author of file.value.authors | keyvalue">
                           <ion-item class="ion-margin-start" formGroupName="authors">
-                            <ion-label position="fixed">Author</ion-label>
-                            <ion-text color="medium">{{ author.value.author }}</ion-text>
+                            <ion-label>
+                              <h2>Author</h2>
+                              <p class="ion-text-wrap">{{ author.value.author }}</p>
+                            </ion-label>
                             <ion-toggle [formControlName]="author.key" slot="end"></ion-toggle>
                           </ion-item>
                         </ng-container>
 
                         <ng-container *ngFor="let owner of file.value.owners | keyvalue">
                           <ion-item class="ion-margin-start" formGroupName="owners">
-                            <ion-label position="fixed">Owner</ion-label>
-                            <ion-text color="medium">{{ owner.value.owner }}</ion-text>
+                            <ion-label>
+                              <h2>Owner</h2>
+                              <p class="ion-text-wrap">{{ owner.value.owner }}</p>
+                            </ion-label>
                             <ion-toggle [formControlName]="owner.key" slot="end"></ion-toggle>
                           </ion-item>
                         </ng-container>
