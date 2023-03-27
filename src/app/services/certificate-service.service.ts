@@ -1,34 +1,39 @@
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Entry, TextWriter, Uint8ArrayWriter } from '@zip.js/zip.js';
-import { digestJson } from '@internet-of-people/sdk-wasm';
-import { blake2b } from 'hash-wasm';
 import {
-  ClaimFiles,
-  ClaimFile,
-  SignedWitnessStatement,
-} from '../types/statement';
+  digestJson,
+  PublicKey,
+  Signature,
+  SignedJson,
+} from '@internet-of-people/sdk-wasm';
+import { blake2b } from 'hash-wasm';
+import { ClaimFile, SignedWitnessStatement } from '../types/statement';
 import { SDKWebService } from './sdk-webservice.service';
+
+const STATEMENT_JSON = 'signed-witness-statement.json';
 
 export class CertificateValidationResult {
   constructor(
+    readonly statementPresent: boolean,
+    readonly signatureIsValid: boolean,
     readonly certificateIntegrityOK: boolean,
-    readonly signaturePresent: boolean,
-    readonly signatureValid: boolean,
     readonly timestampFoundOnBlockchain: boolean
   ) {}
 
   isValid(): boolean {
     return (
+      this.statementPresent &&
+      this.signatureIsValid &&
       this.certificateIntegrityOK &&
-      this.signaturePresent &&
-      this.signatureValid &&
       this.timestampFoundOnBlockchain
     );
   }
-}
 
-const STATEMENT_JSON = 'signed-witness-statement.json';
+  static statementNotFound(): CertificateValidationResult {
+    return new CertificateValidationResult(false, false, false, false);
+  }
+}
 
 @Injectable({
   providedIn: 'root',
@@ -37,34 +42,32 @@ export class CertificateServiceService {
   constructor(private readonly sdkWebService: SDKWebService) {}
 
   async validate(entries: Entry[]): Promise<CertificateValidationResult> {
-    const statementFile = entries.find((e) => e.filename === STATEMENT_JSON);
-    const statementFound = !!statementFile;
+    const statementEntry =
+      CertificateServiceService.isStatementPresent(entries);
+    const statementPresent = !!statementEntry;
 
-    if (!statementFound) {
-      return new CertificateValidationResult(false, false, false, false);
+    if (!statementPresent) {
+      return CertificateValidationResult.statementNotFound();
     }
 
     const statement = JSON.parse(
-      await statementFile.getData(new TextWriter())
+      await statementEntry.getData(new TextWriter())
     ) as SignedWitnessStatement;
-    const claimFiles = statement.content.claim.content.files;
-    const signatureValid = await this.isStatementValid(
-      claimFiles,
-      entries.length
-    );
-    const certificateIntegrityOK = await this.areHashesValid(
-      claimFiles,
+
+    const integrityOK = await CertificateServiceService.isIntegrityOK(
+      statement,
       entries
     );
-
+    const signatureIsValid =
+      CertificateServiceService.isSignatureValid(statement);
     const timestampFoundOnBlockchain = await lastValueFrom(
       this.sdkWebService.beforeProofExists(digestJson(statement))
     );
 
     return new CertificateValidationResult(
-      certificateIntegrityOK,
-      true,
-      signatureValid,
+      statementPresent,
+      signatureIsValid,
+      integrityOK,
       timestampFoundOnBlockchain
     );
   }
@@ -76,30 +79,49 @@ export class CertificateServiceService {
     ) as SignedWitnessStatement;
   }
 
-  private async areHashesValid(
-    claimFiles: ClaimFiles,
+  private static async isIntegrityOK(
+    statement: SignedWitnessStatement,
     entries: Entry[]
   ): Promise<boolean> {
-    const claims = Object.values(claimFiles);
-    const validations = await Promise.all(
-      claims.map((c) => this.compareClaimFileWithZipEntries(c, entries))
-    );
-    return validations.filter((valid) => valid === false).length === 0;
-  }
+    try {
+      const claimFiles = statement.content.claim.content.files;
+      const sameAmountOfFiles =
+        Object.keys(claimFiles).length === entries.length - 1;
 
-  private async isStatementValid(
-    claimFiles: ClaimFiles,
-    numberOfEntries: number
-  ): Promise<boolean> {
-    // check if it has the same amount of file
-    if (Object.keys(claimFiles).length !== numberOfEntries - 1) {
+      const claims = Object.values(claimFiles);
+      const validations = await Promise.all(
+        claims.map((c) => this.compareClaimFileWithZipEntries(c, entries))
+      );
+
+      const allHashesAreValid =
+        validations.filter((valid) => valid === false).length === 0;
+
+      return allHashesAreValid && sameAmountOfFiles;
+    } catch (e: any) {
+      console.error(e);
       return false;
     }
-
-    return true;
   }
 
-  private async compareClaimFileWithZipEntries(
+  private static isSignatureValid(statement: SignedWitnessStatement): boolean {
+    try {
+      const signedBytes = new SignedJson(
+        new PublicKey(statement.signature.publicKey),
+        statement.content,
+        new Signature(statement.signature.bytes)
+      );
+      return signedBytes.validate();
+    } catch (e: any) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  private static isStatementPresent(entries: Entry[]): Entry | undefined {
+    return entries.find((e) => e.filename === STATEMENT_JSON);
+  }
+
+  private static async compareClaimFileWithZipEntries(
     claim: ClaimFile,
     entries: Entry[]
   ): Promise<boolean> {

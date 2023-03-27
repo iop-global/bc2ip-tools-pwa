@@ -17,27 +17,100 @@
       {{ props.certificateName }}
     </ion-card-content>
   </ion-card>
+
+  <ion-accordion-group>
+    <ion-accordion>
+      <ion-item slot="header" color="light">
+        <ion-label>
+          <h2>Signed Witness Statement present</h2>
+        </ion-label>
+        <ion-icon *ngIf="props.result.statementPresent" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+        <ion-icon *ngIf="!props.result.statementPresent" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <p class="ion-text-wrap">The cryptographic statement that describes the validity of the certificate is present.</p>
+        <p class="ion-text-wrap">
+          <ion-text class="medium">Certificates must contain a Signed Witness Statement which describes and validates the certificate itself.</ion-text>
+        </p>
+      </div>
+    </ion-accordion>
+    <ion-accordion>
+      <ion-item slot="header" color="light">
+        <ion-label>
+          <h2>Certificate Integrity OK</h2>
+        </ion-label>
+        <ion-icon *ngIf="props.result.certificateIntegrityOK" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+        <ion-icon *ngIf="!props.result.certificateIntegrityOK" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <p class="ion-text-wrap">The certificate contains the same files that are described in its cryptographic signature. All files are verified and trusted.</p>
+        <p class="ion-text-wrap"><ion-text class="medium">Files are compared to the Signed Witness Statement, both based on their hashes and their presence.</ion-text></p>
+      </div>
+    </ion-accordion>
+    <ion-accordion>
+      <ion-item slot="header" color="light">
+        <ion-label>
+          <h2>Valid Signature</h2>
+        </ion-label>
+        <ion-icon *ngIf="props.result.signatureIsValid" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+        <ion-icon *ngIf="!props.result.signatureIsValid" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <p class="ion-text-wrap">The signature is valid, it was not edited by a thirdparty.</p>
+        <p class="ion-text-wrap">
+          <ion-text class="medium">The Signed Witness Statement's content is signed by the project version's sealer's device.</ion-text>
+        </p>
+      </div>
+    </ion-accordion>
+    <ion-accordion>
+      <ion-item slot="header" color="light">
+        <ion-label>
+          <h2>Timestamp Exists on the Blockchain</h2>
+        </ion-label>
+        <ion-icon *ngIf="props.result.timestampFoundOnBlockchain" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
+        <ion-icon *ngIf="!props.result.timestampFoundOnBlockchain" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <p class="ion-text-wrap">The certificate's timestamp exists on the blockchain, thus it's confirmed it was created through bc2ip.</p>
+        <p class="ion-text-wrap">
+          <ion-text class="medium">
+            The Signed Witness Statement is cryptographically hashed and without any private data is stored on the blockchain. 
+            It ensures that even if the signature is valid cryptographically, the blockchain proves, when the project's version was sealed and by whom.
+          </ion-text>
+        </p>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
   
   <ion-list lines="inset">
-    <ion-item>
-      <ion-label>Certificate integrity</ion-label>
-      <ion-icon *ngIf="props.result.certificateIntegrityOK" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
-      <ion-icon *ngIf="!props.result.certificateIntegrityOK" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    <ion-item-divider class="ion-margin-top">
+      <ion-label>References</ion-label>
+    </ion-item-divider>
+    <ion-item lines="none">
+      <ion-label>
+        <h2 class="ion-text-wrap">
+          To see how this site validates and creates certificate, please visit our GitHub page. Also, to see the technical background of it,
+          please visit IOP's developer portal.
+        </h2>
+      </ion-label>
     </ion-item>
-    <ion-item>
-      <ion-label>Signature present</ion-label>
-      <ion-icon *ngIf="props.result.signaturePresent" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
-      <ion-icon *ngIf="!props.result.signaturePresent" name="close-circle-outline" color="danger" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item>
-      <ion-label>Signature valid</ion-label>
-      <ion-icon *ngIf="props.result.signatureValid" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
-      <ion-icon *ngIf="!props.result.signatureValid" name="close-circle-outline" color="danger" slot="end"></ion-icon>
-    </ion-item>
-    <ion-item>
-      <ion-label>Timestamp exists on blockchain</ion-label>
-      <ion-icon *ngIf="props.result.timestampFoundOnBlockchain" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
-      <ion-icon *ngIf="!props.result.timestampFoundOnBlockchain" name="close-circle-outline" color="danger" slot="end"></ion-icon>
+    <ion-item lines="none">
+      <ion-button
+        href="https://github.com/iop-global/bc2ip-tools-webapp"
+        target="_blank"
+        fill="outline"
+        size="small"
+      >
+        GitHub
+      </ion-button>
+      <ion-button
+        href="https://developer.iop.technology/glossary"
+        target="_blank"
+        fill="outline"
+        size="small"
+      >
+        Developer Portal
+      </ion-button>
     </ion-item>
   </ion-list>
 </ion-content>
