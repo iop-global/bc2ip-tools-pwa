@@ -27,10 +27,12 @@
     "@internet-of-people/sdk": "^5.1.0",
     "@ionic/angular": "^6.1.9",
     "@zip.js/zip.js": "^2.6.78",
+    "crypto-browserify": "^3.12.0",
     "hash-wasm": "^4.9.0",
     "ionicons": "^6.0.3",
     "luxon": "^3.3.0",
     "rxjs": "~7.5.0",
+    "stream-browserify": "^3.0.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

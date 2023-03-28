@@ -7,23 +7,20 @@ import {
 } from '@ionic/angular';
 import { Entry } from '@zip.js/zip.js';
 import {
-  CredentialPasswordModalComponent,
-  CredentialPasswordModalProps,
-} from '../../components/credential-password-modal/credential-password-modal.component';
-import {
-  InvalidCertificateModalComponent,
-  InvalidCertificateModalProps,
-} from '../../components/invalid-certificate-modal/invalid-certificate-modal.component';
+  InvalidCryptoArchiveModalComponent,
+  InvalidCryptoArchiveModalProps,
+} from '../../components/invalid-crypto-archive-modal/invalid-crypto-archive-modal.component';
 import {
   UnlockCredentialModalComponent,
   UnlockCredentialModalProps,
 } from '../../components/unlock-credential-modal/unlock-credential-modal.component';
-import {
-  CertificateServiceService,
-  CertificateValidationResult,
-} from '../../services/certificate-service.service';
+import { CertificateService } from '../../services/certificate.service';
 import { PresentationServiceService } from '../../services/presentation-service.service';
-import { getSignerFromCredential } from '../../tools/crypto';
+import {
+  CryptoValidationResult,
+  getSignerFromCredential,
+} from '../../tools/crypto';
+import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
 import { SignedWitnessStatement } from '../../types/statement';
@@ -59,7 +56,7 @@ export class CreateProofPage {
 
   constructor(
     private readonly modalCtrl: ModalController,
-    private readonly certificateService: CertificateServiceService,
+    private readonly certificateService: CertificateService,
     private readonly presentationService: PresentationServiceService,
     private readonly alertController: AlertController
   ) {}
@@ -115,7 +112,11 @@ export class CreateProofPage {
     if (!!files && files.length === 1) {
       const zipFile = files[0];
       const entries = (await Zipper.doesRequirePassword(zipFile))
-        ? await this.handlePasswordProtectedZip(zipFile)
+        ? await handlePasswordProtectedZip(
+            this.modalCtrl,
+            zipFile,
+            'certificate'
+          )
         : await Zipper.getEntries(zipFile);
 
       if (!entries) {
@@ -129,52 +130,49 @@ export class CreateProofPage {
         this.certificateEntries
       );
 
-      if (validationResult.isValid()) {
-        this.selectedCertificate = zipFile.name;
-        this.statement = await this.certificateService.extractStatement(
-          this.certificateEntries
-        );
-        this.selectedCertificateProcessId = this.statement.content.processId;
-        const claimFiles = this.statement.content.claim.content.files;
-
-        this.form = new FormGroup({
-          purpose: new FormControl(null, [Validators.required]),
-          validUntil: new FormControl(new Date().toISOString(), [
-            Validators.required,
-          ]),
-          protectWithPassword: new FormControl(false),
-          password: new FormControl(null, [passwordRequiredValidator]),
-          passwordRepeat: new FormControl(null, [passwordRepeatValidator]),
-          shareProjectName: new FormControl(false),
-          shareProjectDescription: new FormControl(false),
-          shareVersionDescription: new FormControl(false),
-          shareVersionSealer: new FormControl(false),
-          files: new FormGroup(
-            Object.keys(claimFiles).map((fileIdx) => {
-              const file = claimFiles[fileIdx];
-              return new FormGroup({
-                shareFile: new FormControl(false),
-                fileName: new FormControl(claimFiles[fileIdx].fileName),
-                uploader: new FormControl(false),
-                authors: new FormGroup(
-                  Object.keys(file.authors).map((_) => new FormControl(false))
-                ),
-                owners: new FormGroup(
-                  Object.keys(file.owners).map((_) => new FormControl(false))
-                ),
-              });
-            })
-          ),
-        });
-
-        this.goto(2);
-      } else {
-        await this.handleInvalidCertificate(
-          validationResult,
-          zipFile.name,
-          event
-        );
+      if (!validationResult.isValid()) {
+        await this.handleInvalidCertificate(validationResult, zipFile.name);
+        return;
       }
+
+      this.selectedCertificate = zipFile.name;
+      this.statement = await this.certificateService.extractStatement(
+        this.certificateEntries
+      );
+      this.selectedCertificateProcessId = this.statement.content.processId;
+      const claimFiles = this.statement.content.claim.content.files;
+
+      this.form = new FormGroup({
+        purpose: new FormControl(null, [Validators.required]),
+        validUntil: new FormControl(new Date().toISOString(), [
+          Validators.required,
+        ]),
+        protectWithPassword: new FormControl(false),
+        password: new FormControl(null, [passwordRequiredValidator]),
+        passwordRepeat: new FormControl(null, [passwordRepeatValidator]),
+        shareProjectName: new FormControl(false),
+        shareProjectDescription: new FormControl(false),
+        shareVersionDescription: new FormControl(false),
+        shareVersionSealer: new FormControl(false),
+        files: new FormGroup(
+          Object.keys(claimFiles).map((fileIdx) => {
+            const file = claimFiles[fileIdx];
+            return new FormGroup({
+              shareFile: new FormControl(false),
+              fileName: new FormControl(claimFiles[fileIdx].fileName),
+              uploader: new FormControl(false),
+              authors: new FormGroup(
+                Object.keys(file.authors).map((_) => new FormControl(false))
+              ),
+              owners: new FormGroup(
+                Object.keys(file.owners).map((_) => new FormControl(false))
+              ),
+            });
+          })
+        ),
+      });
+
+      this.goto(2);
     }
   }
 
@@ -257,37 +255,20 @@ export class CreateProofPage {
   }
 
   private async handleInvalidCertificate(
-    result: CertificateValidationResult,
-    certificateName: string,
-    event: Event
+    result: CryptoValidationResult,
+    certificateName: string
   ): Promise<void> {
-    const props: InvalidCertificateModalProps = { result, certificateName };
+    const props: InvalidCryptoArchiveModalProps = {
+      result,
+      archiveName: certificateName,
+      mode: 'certificate',
+    };
     const modal = await this.modalCtrl.create({
-      component: InvalidCertificateModalComponent,
+      component: InvalidCryptoArchiveModalComponent,
       componentProps: { props },
       presentingElement: document.querySelector('.ion-app') as HTMLElement,
     });
     await modal.present();
     this.goto(1);
-  }
-
-  private async handlePasswordProtectedZip(
-    zipFile: Blob
-  ): Promise<Entry[] | null> {
-    const componentProps: CredentialPasswordModalProps = { zipFile };
-    const modal = await this.modalCtrl.create({
-      component: CredentialPasswordModalComponent,
-      componentProps,
-      presentingElement: document.querySelector('.ion-app') as HTMLElement,
-    });
-    modal.present();
-
-    const result = await modal.onWillDismiss();
-
-    if (result.role === 'confirm') {
-      return result.data;
-    }
-
-    return null;
   }
 }

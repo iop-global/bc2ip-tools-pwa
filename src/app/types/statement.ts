@@ -1,3 +1,5 @@
+import { ActorUser, ClaimAuthors, ClaimOwners, NoncedValue } from './common';
+
 export interface SignedWitnessStatement {
   content: StatementContent;
   signature: {
@@ -45,32 +47,4 @@ export interface ClaimFile {
   owners: ClaimOwners;
   fileName: string;
   uploader: ActorUser;
-}
-
-interface ActorUser {
-  accountDid: string;
-  keyId: string;
-}
-
-interface NoncedAuthorName {
-  nonce: string;
-  author: string;
-}
-
-interface NoncedOwnerName {
-  nonce: string;
-  owner: string;
-}
-
-interface NoncedValue {
-  nonce: string;
-  value: string;
-}
-
-interface ClaimAuthors {
-  [key: string]: NoncedAuthorName;
-}
-
-interface ClaimOwners {
-  [key: string]: NoncedOwnerName;
 }

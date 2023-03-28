@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { CreateProofPageRoutingModule } from './create-proof-routing.module';
 import { CreateProofPage } from './create-proof.page';
 import { CredentialPasswordModalModule } from '../../components/credential-password-modal/credential-password-modal.module';
-import { InvalidCertificateModalModule } from '../../components/invalid-certificate-modal/invalid-certificate-modal.module';
+import { InvalidCryptoArchiveModalModule } from '../../components/invalid-crypto-archive-modal/invalid-crypto-archive-modal.module';
 import { UnlockCredentialModalModule } from '../../components/unlock-credential-modal/unlock-credential-modal.module';
 
 @NgModule({
@@ -16,7 +16,7 @@ import { UnlockCredentialModalModule } from '../../components/unlock-credential-
     IonicModule,
     CreateProofPageRoutingModule,
     CredentialPasswordModalModule,
-    InvalidCertificateModalModule,
+    InvalidCryptoArchiveModalModule,
     UnlockCredentialModalModule,
   ],
   declarations: [CreateProofPage],

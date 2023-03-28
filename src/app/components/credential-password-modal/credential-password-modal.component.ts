@@ -13,6 +13,7 @@ import { Zipper } from '../../tools/zipper';
 
 export interface CredentialPasswordModalProps {
   zipFile: Blob;
+  mode: 'certificate' | 'proof';
 }
 
 @Component({
@@ -24,6 +25,7 @@ export class CredentialPasswordModalComponent implements AfterViewInit {
   @ViewChild('password', { static: true }) password!: IonInput;
 
   readonly zipFile!: Blob;
+  readonly mode!: 'certificate' | 'proof';
 
   private readonly entries: Entry[] = [];
 

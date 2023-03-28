@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { InvalidCertificateModalComponent } from './invalid-certificate-modal.component';
+import { InvalidCryptoArchiveModalComponent } from './invalid-crypto-archive-modal.component';
 
 describe('InvalidCertificateModalComponent', () => {
-  let component: InvalidCertificateModalComponent;
-  let fixture: ComponentFixture<InvalidCertificateModalComponent>;
+  let component: InvalidCryptoArchiveModalComponent;
+  let fixture: ComponentFixture<InvalidCryptoArchiveModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InvalidCertificateModalComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [InvalidCryptoArchiveModalComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InvalidCertificateModalComponent);
+    fixture = TestBed.createComponent(InvalidCryptoArchiveModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
