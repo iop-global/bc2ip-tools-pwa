@@ -3,14 +3,14 @@ FROM node:18 AS appbuild
 WORKDIR /usr/src/app
 COPY ./ ./
 RUN rm -rf node_modules
-RUN rm -rf dist
+RUN rm -rf www
 RUN npm ci
 RUN npm run build
 
 # Build Stage 2
 FROM nginx:stable-alpine
 
-COPY --from=appbuild /usr/src/app/dist/tools-webapp /usr/share/nginx/html
+COPY --from=appbuild /usr/src/app/www /usr/share/nginx/html
 COPY docker/nginx.mime.types /etc/nginx/mime.types
 
 COPY docker/docker-entrypoint.sh /usr/local/bin/
