@@ -1,8 +1,10 @@
 {
-  "name": "bc-2-ip-tools",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "name": "tools-webapp",
+  "author": "IOP Global GmbH",
+  "homepage": "https://bc2ip.com/",
+  "version": "1.1.1",
+  "nextVersion": "2.0.0",
+  "nextVersionIncrement": "major",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -66,8 +68,16 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "release-it": "^15.9.3",
     "ts-node": "~8.3.0",
     "typescript": "~4.8.4"
   },
-  "description": "An Ionic project"
+  "release-it": {
+    "git": {
+      "changelog": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --compare-url 'https://github.com/iop-global/bc2ip-tools-webapp/compare/{from}..{to}' --unreleased-only --hide-credit"
+    },
+    "hooks": {
+      "after:bump": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --unreleased false --hide-credit "
+    }
+  }
 }

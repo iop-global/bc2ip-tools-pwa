@@ -1,0 +1,62 @@
+stages:
+  - test
+  - docker
+
+cache:
+  paths:
+  - node_modules/
+
+test:
+  stage: test
+  image: node:18
+  except:
+    - tags
+  script:
+    - npm ci
+    - npm run build
+
+docker-rc:
+  stage: docker
+  image: docker:stable
+  only:
+    - develop
+  before_script:
+    - apk update
+    - apk add jq
+  script:
+    - nextVersion=$(cat package.json | jq -r '.nextVersion')
+    # gitlab images
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -f docker/DockerFile -t $CI_REGISTRY_IMAGE/app:rc .
+    - docker tag $CI_REGISTRY_IMAGE/app:rc $CI_REGISTRY_IMAGE/app:$nextVersion-rc
+    - docker push $CI_REGISTRY_IMAGE/app:rc
+    - docker push $CI_REGISTRY_IMAGE/app:$nextVersion-rc
+    # GCP images
+    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
+    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
+    - cat $GCP_DEPLOY_JSON_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
+
+docker-latest:
+  stage: docker
+  image: docker:stable
+  only:
+    - master
+  before_script:
+    - apk update
+    - apk add jq
+  script:
+    - version=$(cat package.json | jq -r '.version')
+    # gitlab images
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker build -f docker/DockerFile -t $CI_REGISTRY_IMAGE/app:latest .
+    - docker tag $CI_REGISTRY_IMAGE/app:latest $CI_REGISTRY_IMAGE/app:$version
+    - docker push $CI_REGISTRY_IMAGE/app:latest
+    - docker push $CI_REGISTRY_IMAGE/app:$version
+    # GCP images
+    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:latest
+    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$version
+    - cat $GCP_DEPLOY_JSON_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:latest
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$version
