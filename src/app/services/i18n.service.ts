@@ -6,9 +6,7 @@ import { loadTranslations } from '@angular/localize';
   providedIn: 'root',
 })
 export class I18nService {
-  locale =
-    localStorage.getItem('locale') ??
-    (navigator.language.slice(0, 2) === 'de' ? 'de' : 'en');
+  locale = localStorage.getItem('locale') ?? (navigator.language.slice(0, 2) === 'de' ? 'de' : 'en');
 
   async loadTranslation() {
     // Use web pack magic string to only include required locale data
@@ -21,9 +19,7 @@ export class I18nService {
     registerLocaleData(localeModule.default);
 
     if (this.locale !== 'en') {
-      await import(`src/assets/locales/${this.locale}/messages.json`).then(
-        (m) => loadTranslations(m.default)
-      );
+      await import(`src/assets/locales/${this.locale}/messages.json`).then((m) => loadTranslations(m.default));
     }
   }
 

@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
 import { selectiveDigestJson } from '@internet-of-people/sdk-wasm';
-import {
-  BlobReader,
-  BlobWriter,
-  Entry,
-  TextReader,
-  ZipWriter,
-  ZipWriterConstructorOptions,
-} from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, Entry, TextReader, ZipWriter, ZipWriterConstructorOptions } from '@zip.js/zip.js';
 import { DateTime } from 'luxon';
 import { ValidatedCreateProofFormResult } from '../types/create-proof-form';
 import { SignedWitnessStatement } from '../types/statement';
@@ -21,7 +14,7 @@ export class PresentationServiceService {
     formResult: ValidatedCreateProofFormResult,
     statement: SignedWitnessStatement,
     certificateEntries: Entry[],
-    signerContext: SignerContext
+    signerContext: SignerContext,
   ): Promise<void> {
     const doNotCollapsProps: string[] = [];
 
@@ -68,22 +61,15 @@ export class PresentationServiceService {
       doNotCollapsProps.push('.content.sealer');
     }
 
-    const collapsedClaim = JSON.parse(
-      selectiveDigestJson(statement.content.claim, doNotCollapsProps.join(','))
-    );
+    const collapsedClaim = JSON.parse(selectiveDigestJson(statement.content.claim, doNotCollapsProps.join(',')));
 
     const collapsedStatement = JSON.parse(
-      selectiveDigestJson(
-        statement,
-        ['.signature', '.content.constraints'].join(',')
-      )
+      selectiveDigestJson(statement, ['.signature', '.content.constraints'].join(',')),
     );
 
     const validFrom = new Date();
     // We treat the date selected on the UI as UTC date.
-    const validUntil =
-      DateTime.fromISO(formResult.validUntil).toFormat('kkkk-LL-dd') +
-      'T23:59:59.999Z';
+    const validUntil = DateTime.fromISO(formResult.validUntil).toFormat('kkkk-LL-dd') + 'T23:59:59.999Z';
 
     const presentation = {
       provenClaims: [
@@ -102,9 +88,7 @@ export class PresentationServiceService {
       ],
     };
 
-    const signedPresentation = signerContext.priv
-      .signClaimPresentation(signerContext.keyId, presentation)
-      .toJSON();
+    const signedPresentation = signerContext.priv.signClaimPresentation(signerContext.keyId, presentation).toJSON();
 
     const signedPresentationJson = {
       content: signedPresentation.content,
@@ -118,23 +102,16 @@ export class PresentationServiceService {
     }
     const zipWriter = new ZipWriter(zipFileWriter, zipWriterOpts);
 
-    await zipWriter.add(
-      'signed-presentation.json',
-      new TextReader(JSON.stringify(signedPresentationJson))
-    );
+    await zipWriter.add('signed-presentation.json', new TextReader(JSON.stringify(signedPresentationJson)));
 
     const filesToBePacked = certificateEntries.filter((entry) =>
-      Object.values(formResult.files).some(
-        (f) => f.shareFile && f.fileName === entry.filename
-      )
+      Object.values(formResult.files).some((f) => f.shareFile && f.fileName === entry.filename),
     );
 
     await Promise.all(
       filesToBePacked.map((f) =>
-        f
-          .getData(new BlobWriter())
-          .then((data) => zipWriter.add(f.filename, new BlobReader(data)))
-      )
+        f.getData(new BlobWriter()).then((data) => zipWriter.add(f.filename, new BlobReader(data))),
+      ),
     );
     await zipWriter.close();
     const data = await zipFileWriter.getData();

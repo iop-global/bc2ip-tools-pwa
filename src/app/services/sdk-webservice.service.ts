@@ -11,7 +11,7 @@ export class SDKWebService {
     return this.http.get<boolean>(
       // TODO
       //`${environment.endpoints.webService}/before-proof/exists/${id}`
-      `https://dev-tools.bc2ip.com/webservice/before-proof/exists/${id}`
+      `https://dev-tools.bc2ip.com/webservice/before-proof/exists/${id}`,
     );
   }
 
@@ -21,7 +21,7 @@ export class SDKWebService {
     return this.http.get<boolean>(
       // TODO
       //`${environment.endpoints.webService}/dids/${did}/keys/${publicKey}/hasRight${atHeight}`
-      `https://dev-tools.bc2ip.com/webservice/dids/${did}/keys/${publicKey}/hasRight${suffix}`
+      `https://dev-tools.bc2ip.com/webservice/dids/${did}/keys/${publicKey}/hasRight${suffix}`,
     );
   }
 }

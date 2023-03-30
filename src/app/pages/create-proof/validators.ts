@@ -1,8 +1,6 @@
 import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 
-export const passwordRequiredValidator = (
-  control: AbstractControl
-): ValidationErrors | null => {
+export const passwordRequiredValidator = (control: AbstractControl): ValidationErrors | null => {
   if (!control.parent) {
     return null;
   }
@@ -13,9 +11,7 @@ export const passwordRequiredValidator = (
   return null;
 };
 
-export const passwordRepeatValidator = (
-  control: AbstractControl
-): ValidationErrors | null => {
+export const passwordRepeatValidator = (control: AbstractControl): ValidationErrors | null => {
   if (!control.parent) {
     return null;
   }

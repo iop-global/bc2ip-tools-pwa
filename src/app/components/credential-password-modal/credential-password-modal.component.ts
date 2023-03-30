@@ -34,29 +34,18 @@ export class CredentialPasswordModalComponent implements AfterViewInit {
 
   private readonly entries: Entry[] = [];
 
-  private readonly passwordValidator = (
-    control: AbstractControl
-  ): Observable<ValidationErrors | null> => {
-    return from(
-      Zipper.getEntriesWithPassword(
-        this.zipFile,
-        this.form.get('password')?.value!
-      )
-    ).pipe(
+  private readonly passwordValidator = (control: AbstractControl): Observable<ValidationErrors | null> => {
+    return from(Zipper.getEntriesWithPassword(this.zipFile, this.form.get('password')?.value!)).pipe(
       map((entries: Entry[]) => {
         this.entries.push(...entries);
         return null;
       }),
-      catchError(() => of({ invalidPassword: true }))
+      catchError(() => of({ invalidPassword: true })),
     );
   };
 
   form = new FormGroup({
-    password: new FormControl(
-      null,
-      [Validators.required],
-      [this.passwordValidator]
-    ),
+    password: new FormControl(null, [Validators.required], [this.passwordValidator]),
   });
 
   constructor(private readonly modalCtrl: ModalController) {}

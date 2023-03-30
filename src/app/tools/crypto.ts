@@ -11,18 +11,12 @@ export interface SignerContext {
   keyId: Crypto.KeyId;
 }
 
-export const tryUnlockCredential = async (
-  credential: Blob,
-  password: string
-): Promise<boolean> => {
+export const tryUnlockCredential = async (credential: Blob, password: string): Promise<boolean> => {
   const vault = Vault.load(JSON.parse(await credential.text()));
   try {
     MorpheusPlugin.init(vault, password);
   } catch (e) {
-    if (
-      typeof e === 'string' &&
-      (e as string).includes('Ciphertext was tampered with')
-    ) {
+    if (typeof e === 'string' && (e as string).includes('Ciphertext was tampered with')) {
       return false;
     }
   }
@@ -39,18 +33,12 @@ export const tryUnlockCredential = async (
   return true;
 };
 
-export const getSignerFromCredential = async (
-  credential: Blob,
-  password: string
-): Promise<SignerContext> => {
+export const getSignerFromCredential = async (credential: Blob, password: string): Promise<SignerContext> => {
   const vault = Vault.load(JSON.parse(await credential.text()));
   try {
     MorpheusPlugin.init(vault, password);
   } catch (e: any) {
-    if (
-      typeof e === 'string' &&
-      (e as string).includes('Ciphertext was tampered with')
-    ) {
+    if (typeof e === 'string' && (e as string).includes('Ciphertext was tampered with')) {
       throw e;
     }
     // otherwise nothing todo if it was already initiated
@@ -65,14 +53,10 @@ export const isSignatureValid = (
   signature: {
     bytes: string;
     publicKey: string;
-  }
+  },
 ): boolean => {
   try {
-    const signedBytes = new SignedJson(
-      new PublicKey(signature.publicKey),
-      content,
-      new Signature(signature.bytes)
-    );
+    const signedBytes = new SignedJson(new PublicKey(signature.publicKey), content, new Signature(signature.bytes));
     return signedBytes.validate();
   } catch (e: any) {
     console.error(e);
@@ -82,18 +66,14 @@ export const isSignatureValid = (
 
 export const isIntegrityOK = async (
   claimFiles: PresentationClaimFile[] | ClaimFile[],
-  entries: Entry[]
+  entries: Entry[],
 ): Promise<boolean> => {
   try {
-    const sameAmountOfFiles =
-      Object.keys(claimFiles).length === entries.length - 1;
+    const sameAmountOfFiles = Object.keys(claimFiles).length === entries.length - 1;
 
-    const validations = await Promise.all(
-      claimFiles.map((c) => compareClaimFileWithZipEntries(c, entries))
-    );
+    const validations = await Promise.all(claimFiles.map((c) => compareClaimFileWithZipEntries(c, entries)));
 
-    const allHashesAreValid =
-      validations.filter((valid) => valid === false).length === 0;
+    const allHashesAreValid = validations.filter((valid) => valid === false).length === 0;
 
     return allHashesAreValid && sameAmountOfFiles;
   } catch (e: any) {
@@ -104,7 +84,7 @@ export const isIntegrityOK = async (
 
 const compareClaimFileWithZipEntries = async (
   claim: PresentationClaimFile | ClaimFile,
-  entries: Entry[]
+  entries: Entry[],
 ): Promise<boolean> => {
   const zipEntry = entries.find((e) => e.filename === claim.fileName);
   if (!zipEntry) {
@@ -122,7 +102,7 @@ export class CryptoValidationResult {
     readonly signatureIsValid: boolean,
     readonly integrityOK: boolean,
     readonly timestampFoundOnBlockchain: boolean,
-    readonly notExpired?: boolean
+    readonly notExpired?: boolean,
   ) {}
 
   static descriptorNotFound(): CryptoValidationResult {

@@ -28,10 +28,7 @@ export class InspectProofPage {
 
   private proofEntries: Entry[] = [];
 
-  constructor(
-    private readonly proofService: ProofService,
-    private readonly modalCtrl: ModalController
-  ) {}
+  constructor(private readonly proofService: ProofService, private readonly modalCtrl: ModalController) {}
 
   async selectProof(event: Event): Promise<void> {
     const files = (event.target as HTMLInputElement).files;
@@ -69,18 +66,14 @@ export class InspectProofPage {
   }
 
   async downloadFile(fileName: string): Promise<void> {
-    const file = await this.proofEntries.find((e) => e.filename === fileName)!
-      .getData!(new BlobWriter());
+    const file = await this.proofEntries.find((e) => e.filename === fileName)!.getData!(new BlobWriter());
     const a = document.createElement('a');
     a.href = window.URL.createObjectURL(file);
     a.download = fileName;
     a.click();
   }
 
-  private async handleInvalidProof(
-    result: CryptoValidationResult,
-    proofName: string
-  ): Promise<void> {
+  private async handleInvalidProof(result: CryptoValidationResult, proofName: string): Promise<void> {
     const props: InvalidCryptoArchiveModalProps = {
       result,
       archiveName: proofName,

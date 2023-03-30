@@ -8,7 +8,7 @@ import {
 export const handlePasswordProtectedZip = async (
   modalCtrl: ModalController,
   zipFile: Blob,
-  mode: 'certificate' | 'proof'
+  mode: 'certificate' | 'proof',
 ): Promise<Entry[] | null> => {
   const componentProps: CredentialPasswordModalProps = { zipFile, mode };
   const modal = await modalCtrl.create({

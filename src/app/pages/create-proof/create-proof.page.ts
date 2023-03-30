@@ -1,18 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  AlertController,
-  CheckboxCustomEvent,
-  IonicModule,
-  ModalController,
-} from '@ionic/angular';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertController, CheckboxCustomEvent, IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { Entry } from '@zip.js/zip.js';
 import {
@@ -25,18 +14,12 @@ import {
 } from '../../components/unlock-credential-modal/unlock-credential-modal.component';
 import { CertificateService } from '../../services/certificate.service';
 import { PresentationServiceService } from '../../services/presentation-service.service';
-import {
-  getSignerFromCredential,
-  CryptoValidationResult,
-} from '../../tools/crypto';
+import { getSignerFromCredential, CryptoValidationResult } from '../../tools/crypto';
 import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
 import { SignedWitnessStatement } from '../../types/statement';
-import {
-  passwordRequiredValidator,
-  passwordRepeatValidator,
-} from './validators';
+import { passwordRequiredValidator, passwordRepeatValidator } from './validators';
 import { CredentialPasswordModalComponent } from '../../components/credential-password-modal/credential-password-modal.component';
 
 @Component({
@@ -79,7 +62,7 @@ export class CreateProofPage {
     private readonly modalCtrl: ModalController,
     private readonly certificateService: CertificateService,
     private readonly presentationService: PresentationServiceService,
-    private readonly alertController: AlertController
+    private readonly alertController: AlertController,
   ) {}
 
   gotoStep3(result: ValidatedCreateProofFormResult): void {
@@ -109,8 +92,7 @@ export class CreateProofPage {
   }
 
   hasErrors(field: string): boolean {
-    const subimmtedOrTouched =
-      this.form.get(field)?.dirty || this.formSubmitted;
+    const subimmtedOrTouched = this.form.get(field)?.dirty || this.formSubmitted;
     const hasErrors = !!this.form.get(field)?.errors;
     return subimmtedOrTouched && hasErrors;
   }
@@ -133,11 +115,7 @@ export class CreateProofPage {
     if (!!files && files.length === 1) {
       const zipFile = files[0];
       const entries = (await Zipper.doesRequirePassword(zipFile))
-        ? await handlePasswordProtectedZip(
-            this.modalCtrl,
-            zipFile,
-            'certificate'
-          )
+        ? await handlePasswordProtectedZip(this.modalCtrl, zipFile, 'certificate')
         : await Zipper.getEntries(zipFile);
 
       if (!entries) {
@@ -147,9 +125,7 @@ export class CreateProofPage {
 
       this.certificateEntries = entries;
 
-      const validationResult = await this.certificateService.validate(
-        this.certificateEntries
-      );
+      const validationResult = await this.certificateService.validate(this.certificateEntries);
 
       if (!validationResult.isValid()) {
         await this.handleInvalidCertificate(validationResult, zipFile.name);
@@ -157,17 +133,13 @@ export class CreateProofPage {
       }
 
       this.selectedCertificate = zipFile.name;
-      this.statement = await this.certificateService.extractStatement(
-        this.certificateEntries
-      );
+      this.statement = await this.certificateService.extractStatement(this.certificateEntries);
       this.selectedCertificateProcessId = this.statement.content.processId;
       const claimFiles = this.statement.content.claim.content.files;
 
       this.form = new FormGroup({
         purpose: new FormControl(null, [Validators.required]),
-        validUntil: new FormControl(new Date().toISOString(), [
-          Validators.required,
-        ]),
+        validUntil: new FormControl(new Date().toISOString(), [Validators.required]),
         protectWithPassword: new FormControl(false),
         password: new FormControl(null, [passwordRequiredValidator]),
         passwordRepeat: new FormControl(null, [passwordRepeatValidator]),
@@ -182,14 +154,10 @@ export class CreateProofPage {
               shareFile: new FormControl(false),
               fileName: new FormControl(claimFiles[fileIdx].fileName),
               uploader: new FormControl(false),
-              authors: new FormGroup(
-                Object.keys(file.authors).map((_) => new FormControl(false))
-              ),
-              owners: new FormGroup(
-                Object.keys(file.owners).map((_) => new FormControl(false))
-              ),
+              authors: new FormGroup(Object.keys(file.authors).map((_) => new FormControl(false))),
+              owners: new FormGroup(Object.keys(file.owners).map((_) => new FormControl(false))),
             });
-          })
+          }),
         ),
       });
 
@@ -219,7 +187,7 @@ export class CreateProofPage {
         this.formResult!,
         this.statement!,
         this.certificateEntries,
-        await getSignerFromCredential(credentialFile, result.data!)
+        await getSignerFromCredential(credentialFile, result.data!),
       );
 
       const alert = await this.alertController.create({
@@ -247,8 +215,7 @@ export class CreateProofPage {
     if (!this.isSomethingToBeShared(this.form.value)) {
       const alert = await this.alertController.create({
         header: 'Cannot create proof',
-        message:
-          "You must select at least one file or any of the project's properties",
+        message: "You must select at least one file or any of the project's properties",
         buttons: ['OK'],
       });
 
@@ -259,12 +226,8 @@ export class CreateProofPage {
     this.gotoStep3(this.form.value);
   }
 
-  private isSomethingToBeShared(
-    formValue: ValidatedCreateProofFormResult
-  ): boolean {
-    const atLeastOneFileSelected = Object.values(formValue.files).some(
-      (file) => file.shareFile
-    );
+  private isSomethingToBeShared(formValue: ValidatedCreateProofFormResult): boolean {
+    const atLeastOneFileSelected = Object.values(formValue.files).some((file) => file.shareFile);
 
     return (
       formValue.shareProjectDescription === true ||
@@ -275,10 +238,7 @@ export class CreateProofPage {
     );
   }
 
-  private async handleInvalidCertificate(
-    result: CryptoValidationResult,
-    certificateName: string
-  ): Promise<void> {
+  private async handleInvalidCertificate(result: CryptoValidationResult, certificateName: string): Promise<void> {
     const props: InvalidCryptoArchiveModalProps = {
       result,
       archiveName: certificateName,

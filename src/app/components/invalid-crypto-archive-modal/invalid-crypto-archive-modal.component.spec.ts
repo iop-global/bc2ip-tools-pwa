@@ -9,8 +9,8 @@ describe('InvalidCryptoArchiveModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InvalidCryptoArchiveModalComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [InvalidCryptoArchiveModalComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InvalidCryptoArchiveModalComponent);

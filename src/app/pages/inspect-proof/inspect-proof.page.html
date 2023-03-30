@@ -3,7 +3,13 @@
     <ion-row class="ion-align-items-center">
       <ion-col></ion-col>
       <ion-col size="12" size-sm="8" size-xl="8">
-        <ion-button size="small" fill="outline" class="ion-margin-start ion-margin-top" routerLink="/" routerDirection="back">
+        <ion-button
+          size="small"
+          fill="outline"
+          class="ion-margin-start ion-margin-top"
+          routerLink="/"
+          routerDirection="back"
+        >
           <ion-icon slot="start" name="arrow-back"></ion-icon>
           <ion-text i18n>Cancel &amp; Back</ion-text>
         </ion-button>
@@ -14,7 +20,9 @@
               <ng-container *ngIf="selectedProof !== null" i18n>Selected Proof</ng-container>
               <ng-container *ngIf="selectedProof === null" i18n>Select Proof</ng-container>
             </ion-card-title>
-            <ion-card-subtitle *ngIf="selectedProof !== null" color="success" i18n>Your proof is valid.</ion-card-subtitle>
+            <ion-card-subtitle *ngIf="selectedProof !== null" color="success" i18n
+              >Your proof is valid.</ion-card-subtitle
+            >
           </ion-card-header>
 
           <ion-card-content>
@@ -37,7 +45,7 @@
                   </ion-label>
                 </ion-item>
               </ion-list>
-            
+
               <ion-button class="ion-margin-top" size="small" fill="outline" (click)="startOver()" i18n>
                 Start Over
               </ion-button>
@@ -48,16 +56,10 @@
             Select proof file
           </ion-button>
 
-          <input
-            type="file"
-            style="display: none"
-            (change)="selectProof($event)"
-            accept=".proof"
-            #proofFileControl
-          />
+          <input type="file" style="display: none" (change)="selectProof($event)" accept=".proof" #proofFileControl />
         </ion-card>
 
-         <ion-card [class.iop-muted-content]="selectedProof === null">
+        <ion-card [class.iop-muted-content]="selectedProof === null">
           <ion-card-header>
             <ion-card-title i18n>Verified Proof Data</ion-card-title>
           </ion-card-header>
@@ -77,8 +79,8 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Validity</h2>
                   <p>
-                    <u i18n>From:</u> {{ proofData!.validFrom | date:'medium':'UTC' }} UTC<br>
-                    <u i18n>Until:</u> {{ proofData!.validUntil | date:'medium':'UTC' }} UTC
+                    <u i18n>From:</u> {{ proofData!.validFrom | date : 'medium' : 'UTC' }} UTC<br />
+                    <u i18n>Until:</u> {{ proofData!.validUntil | date : 'medium' : 'UTC' }} UTC
                   </p>
                 </ion-label>
               </ion-item>
@@ -86,8 +88,9 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Timestamp on Blockchain</h2>
                   <p>
-                    <u i18n>Exists since:</u> {{ proofData!.existsSinceBlockTime | date:'medium':'UTC' }} UTC (block {{ proofData!.existsSinceBlock | number:'1.0-0' }} )<br>
-                    <u i18n>Current block height:</u> {{ proofData!.currentBlockHeight | number:'1.0-0' }}
+                    <u i18n>Exists since:</u> {{ proofData!.existsSinceBlockTime | date : 'medium' : 'UTC' }} UTC (block
+                    {{ proofData!.existsSinceBlock | number : '1.0-0' }} )<br />
+                    <u i18n>Current block height:</u> {{ proofData!.currentBlockHeight | number : '1.0-0' }}
                   </p>
                 </ion-label>
               </ion-item>
@@ -95,23 +98,47 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Sealed by</h2>
                   <p>
-                    <ion-text *ngIf="proofData!.sealedBy === null; else disclosedSealer" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text *ngIf="proofData!.sealedBy === null; else disclosedSealer" color="warning" i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedSealer>
-                      <u>DID:</u> {{ proofData!.sealedBy!.accountDid }}<br>
+                      <u>DID:</u> {{ proofData!.sealedBy!.accountDid }}<br />
                       <u>KeyID:</u> {{ proofData!.sealedBy!.keyId }}
                     </ng-template>
                   </p>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.sealedBy === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.sealedBy === null"
+                  slot="end"
+                  color="warning"
+                  name="warning-outline"
+                ></ion-icon>
               </ion-item>
               <ion-item>
                 <ion-label class="ion-text-wrap">
                   <h2 i18n>Sealed by the creator of the proof</h2>
-                  <ion-text *ngIf="proofData!.sealedByProofCreator === null" color="warning" i18n>Not disclosed</ion-text>
+                  <ion-text *ngIf="proofData!.sealedByProofCreator === null" color="warning" i18n
+                    >Not disclosed</ion-text
+                  >
                 </ion-label>
-                <ion-icon *ngIf="proofData!.sealedByProofCreator === null" slot="end" color="warning" name="warning-outline"></ion-icon>
-                <ion-icon *ngIf="proofData!.sealedByProofCreator === true" slot="end" color="success" name="checkmark-circle-outline"></ion-icon>
-                <ion-icon *ngIf="proofData!.sealedByProofCreator === false" slot="end" color="danger" name="close-circle-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.sealedByProofCreator === null"
+                  slot="end"
+                  color="warning"
+                  name="warning-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.sealedByProofCreator === true"
+                  slot="end"
+                  color="success"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.sealedByProofCreator === false"
+                  slot="end"
+                  color="danger"
+                  name="close-circle-outline"
+                ></ion-icon>
               </ion-item>
 
               <ion-item-divider class="ion-margin-top">
@@ -127,31 +154,58 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Name</h2>
                   <p>
-                    <ion-text *ngIf="proofData!.projectName === null; else disclosedProjectName" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text *ngIf="proofData!.projectName === null; else disclosedProjectName" color="warning" i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedProjectName>{{ proofData!.projectName }}</ng-template>
                   </p>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.projectName === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.projectName === null"
+                  slot="end"
+                  color="warning"
+                  name="warning-outline"
+                ></ion-icon>
               </ion-item>
               <ion-item>
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Description</h2>
                   <p>
-                    <ion-text *ngIf="proofData!.projectDescription === null; else disclosedProjectDescription" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text
+                      *ngIf="proofData!.projectDescription === null; else disclosedProjectDescription"
+                      color="warning"
+                      i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedProjectDescription>{{ proofData!.projectDescription }}</ng-template>
                   </p>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.projectDescription === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.projectDescription === null"
+                  slot="end"
+                  color="warning"
+                  name="warning-outline"
+                ></ion-icon>
               </ion-item>
               <ion-item>
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Version Description</h2>
                   <p>
-                    <ion-text *ngIf="proofData!.versionDescription === null; else disclosedVersionDescription" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text
+                      *ngIf="proofData!.versionDescription === null; else disclosedVersionDescription"
+                      color="warning"
+                      i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedVersionDescription>{{ proofData!.versionDescription }}</ng-template>
                   </p>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.versionDescription === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.versionDescription === null"
+                  slot="end"
+                  color="warning"
+                  name="warning-outline"
+                ></ion-icon>
               </ion-item>
 
               <ion-item-divider class="ion-margin-top">
@@ -161,21 +215,41 @@
                 <ion-label class="ion-text-wrap">
                   <h2 i18n>Proof's creator has MANAGE permission on the project now</h2>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.proofCreatorHasManagePermission" slot="end" color="success" name="checkmark-circle-outline"></ion-icon>
-                <ion-icon *ngIf="!proofData!.proofCreatorHasManagePermission" slot="end" color="danger" name="close-circle-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.proofCreatorHasManagePermission"
+                  slot="end"
+                  color="success"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="!proofData!.proofCreatorHasManagePermission"
+                  slot="end"
+                  color="danger"
+                  name="close-circle-outline"
+                ></ion-icon>
               </ion-item>
               <ion-item>
                 <ion-label class="ion-text-wrap">
                   <h2 i18n>Proof's creator had MANAGE permission on the project when the version was sealed</h2>
                 </ion-label>
-                <ion-icon *ngIf="proofData!.proofCreatorHadManagePermission" slot="end" color="success" name="checkmark-circle-outline"></ion-icon>
-                <ion-icon *ngIf="!proofData!.proofCreatorHadManagePermission" slot="end" color="danger" name="close-circle-outline"></ion-icon>
+                <ion-icon
+                  *ngIf="proofData!.proofCreatorHadManagePermission"
+                  slot="end"
+                  color="success"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="!proofData!.proofCreatorHadManagePermission"
+                  slot="end"
+                  color="danger"
+                  name="close-circle-outline"
+                ></ion-icon>
               </ion-item>
             </ion-item-group>
           </ion-card-content>
-         </ion-card>
+        </ion-card>
 
-         <ion-card [class.iop-muted-content]="selectedProof === null">
+        <ion-card [class.iop-muted-content]="selectedProof === null">
           <ion-card-header>
             <ion-card-title i18n>Shared Files</ion-card-title>
           </ion-card-header>
@@ -189,9 +263,11 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Uploader</h2>
                   <p>
-                    <ion-text *ngIf="file.uploader === null; else disclosedUploader" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text *ngIf="file.uploader === null; else disclosedUploader" color="warning" i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedUploader>
-                      <u>DID:</u> {{ file.uploader!.accountDid }}<br>
+                      <u>DID:</u> {{ file.uploader!.accountDid }}<br />
                       <u>KeyID:</u> {{ file.uploader!.keyId }}
                     </ng-template>
                   </p>
@@ -202,7 +278,9 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2>Authors</h2>
                   <p>
-                    <ion-text *ngIf="file.authors === null; else disclosedAuthors" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text *ngIf="file.authors === null; else disclosedAuthors" color="warning" i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedAuthors>
                       {{ file.authors!.join(', ') }}
                     </ng-template>
@@ -214,7 +292,9 @@
                 <ion-label position="stacked" class="ion-text-wrap">
                   <h2 i18n>Owners</h2>
                   <p>
-                    <ion-text *ngIf="file.owners === null; else disclosedOwners" color="warning" i18n>Not disclosed</ion-text>
+                    <ion-text *ngIf="file.owners === null; else disclosedOwners" color="warning" i18n
+                      >Not disclosed</ion-text
+                    >
                     <ng-template #disclosedOwners>
                       {{ file.owners!.join(', ') }}
                     </ng-template>

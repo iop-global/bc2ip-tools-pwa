@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { IonicModule, IonInput, ModalController } from '@ionic/angular';
 import { passwordValidator } from './validators';
 
@@ -30,7 +24,7 @@ export class UnlockCredentialModalComponent {
     password: new FormControl(
       null,
       [Validators.required],
-      [(control) => passwordValidator(control, this.credentialFile)]
+      [(control) => passwordValidator(control, this.credentialFile)],
     ),
   });
 
