@@ -32,6 +32,7 @@ export interface ProofData {
   versionDescription: null | string;
   proofCreatorHasManagePermission: boolean;
   proofCreatorHadManagePermission: boolean;
+  blockchainTxUrl: string;
   files: {
     name: string;
     uploader: null | ActorUser;
@@ -157,6 +158,7 @@ export class ProofService {
       versionDescription: typeof claim.versionDescription === 'string' ? null : claim.versionDescription.value,
       proofCreatorHasManagePermission,
       proofCreatorHadManagePermission,
+      blockchainTxUrl: `https://dev.explorer.hydraledger.io/transaction/${history.txid}`,
       files,
     };
   }
