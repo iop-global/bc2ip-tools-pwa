@@ -258,59 +258,61 @@
           </ion-card-header>
 
           <ion-card-content *ngIf="selectedProof !== null">
-            <ng-container *ngFor="let file of proofData!.files; else: noFiles">
-              <ion-item-divider class="ion-margin-top">
-                <ion-label>{{ file.name }}</ion-label>
-              </ion-item-divider>
-              <ion-item class="ion-margin-top">
-                <ion-label position="stacked" class="ion-text-wrap">
-                  <h2 i18n>Uploader</h2>
-                  <p>
-                    <ion-text *ngIf="file.uploader === null; else disclosedUploader" color="warning" i18n
-                      >Not disclosed</ion-text
-                    >
-                    <ng-template #disclosedUploader>
-                      <u>DID:</u> {{ file.uploader!.accountDid }}<br />
-                      <u>KeyID:</u> {{ file.uploader!.keyId }}
-                    </ng-template>
-                  </p>
-                </ion-label>
-                <ion-icon *ngIf="file.uploader === null" slot="end" color="warning" name="warning-outline"></ion-icon>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
-                  <h2>Authors</h2>
-                  <p>
-                    <ion-text *ngIf="file.authors === null; else disclosedAuthors" color="warning" i18n
-                      >Not disclosed</ion-text
-                    >
-                    <ng-template #disclosedAuthors>
-                      {{ file.authors!.join(', ') }}
-                    </ng-template>
-                  </p>
-                </ion-label>
-                <ion-icon *ngIf="file.authors === null" slot="end" color="warning" name="warning-outline"></ion-icon>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
-                  <h2 i18n>Owners</h2>
-                  <p>
-                    <ion-text *ngIf="file.owners === null; else disclosedOwners" color="warning" i18n
-                      >Not disclosed</ion-text
-                    >
-                    <ng-template #disclosedOwners>
-                      {{ file.owners!.join(', ') }}
-                    </ng-template>
-                  </p>
-                </ion-label>
-                <ion-icon *ngIf="file.owners === null" slot="end" color="warning" name="warning-outline"></ion-icon>
-              </ion-item>
-              <ion-button size="small" class="ion-margin-start ion-margin-top" (click)="downloadFile(file.name)">
-                <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
-                <ion-text i18n>Download</ion-text>
-              </ion-button>
+            <ng-container *ngIf="proofData!.files.length; else noFiles">
+              <ng-container *ngFor="let file of proofData!.files">
+                <ion-item-divider class="ion-margin-top">
+                  <ion-label>{{ file.name }}</ion-label>
+                </ion-item-divider>
+                <ion-item class="ion-margin-top">
+                  <ion-label position="stacked" class="ion-text-wrap">
+                    <h2 i18n>Uploader</h2>
+                    <p>
+                      <ion-text *ngIf="file.uploader === null; else disclosedUploader" color="warning" i18n
+                        >Not disclosed</ion-text
+                      >
+                      <ng-template #disclosedUploader>
+                        <u>DID:</u> {{ file.uploader!.accountDid }}<br />
+                        <u>KeyID:</u> {{ file.uploader!.keyId }}
+                      </ng-template>
+                    </p>
+                  </ion-label>
+                  <ion-icon *ngIf="file.uploader === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked" class="ion-text-wrap">
+                    <h2>Authors</h2>
+                    <p>
+                      <ion-text *ngIf="file.authors === null; else disclosedAuthors" color="warning" i18n
+                        >Not disclosed</ion-text
+                      >
+                      <ng-template #disclosedAuthors>
+                        {{ file.authors!.join(', ') }}
+                      </ng-template>
+                    </p>
+                  </ion-label>
+                  <ion-icon *ngIf="file.authors === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked" class="ion-text-wrap">
+                    <h2 i18n>Owners</h2>
+                    <p>
+                      <ion-text *ngIf="file.owners === null; else disclosedOwners" color="warning" i18n
+                        >Not disclosed</ion-text
+                      >
+                      <ng-template #disclosedOwners>
+                        {{ file.owners!.join(', ') }}
+                      </ng-template>
+                    </p>
+                  </ion-label>
+                  <ion-icon *ngIf="file.owners === null" slot="end" color="warning" name="warning-outline"></ion-icon>
+                </ion-item>
+                <ion-button size="small" class="ion-margin-start ion-margin-top" (click)="downloadFile(file.name)">
+                  <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+                  <ion-text i18n>Download</ion-text>
+                </ion-button>
+              </ng-container>
             </ng-container>
-            <ng-container #noFiles i18n>No files are selected</ng-container>
+            <ng-template #noFiles i18n>No files are shared</ng-template>
           </ion-card-content>
         </ion-card>
 

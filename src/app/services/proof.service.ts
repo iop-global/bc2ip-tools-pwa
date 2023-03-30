@@ -12,6 +12,7 @@ import {
 import { CryptoValidationResult, isIntegrityOK, isSignatureValid } from '../tools/crypto';
 import { SDKWebService } from './sdk-webservice.service';
 import { ActorUser } from '../types/common';
+import { environment } from '../../environments/environment';
 
 const PRESENTATION_JSON = 'signed-presentation.json';
 
@@ -45,14 +46,23 @@ interface NetworkMap {
   [key: string]: Network;
 }
 
+interface ExplorerMap {
+  [key: string]: string;
+}
+
 const networkMap: NetworkMap = {
   testnet: Network.Testnet,
   devnet: Network.Devnet,
   mainnet: Network.Mainnet,
 };
-const networkConfig = NetworkConfig.fromNetwork(
-  networkMap['devnet'], // TODO from config
-);
+
+const blockchainExplorerMap: ExplorerMap = {
+  testnet: 'https://test.explorer.hydraledger.io',
+  devnet: 'https://dev.explorer.hydraledger.io',
+  mainnet: 'https://explorer.hydraledger.io',
+};
+
+const networkConfig = NetworkConfig.fromNetwork(networkMap[environment.hydraledgerNetwork]);
 
 @Injectable({
   providedIn: 'root',
@@ -158,7 +168,7 @@ export class ProofService {
       versionDescription: typeof claim.versionDescription === 'string' ? null : claim.versionDescription.value,
       proofCreatorHasManagePermission,
       proofCreatorHadManagePermission,
-      blockchainTxUrl: `https://dev.explorer.hydraledger.io/transaction/${history.txid}`,
+      blockchainTxUrl: `${blockchainExplorerMap[environment.hydraledgerNetwork]}/transaction/${history.txid}`,
       files,
     };
   }

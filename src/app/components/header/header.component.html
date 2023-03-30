@@ -1,12 +1,16 @@
 <ion-header>
-  <ion-toolbar class="iop-header-toolbar">
-    <ion-img src="assets/bc2ip-neg.png" alt="bc2ip Logo"></ion-img>
-    <ion-title class="ion-text-center">
-      <ion-text>Dev Tools</ion-text>
+  <ion-toolbar
+    class="iop-header-toolbar"
+    *ngIf="tenant.settings$ | async as settings; else loadingTenantSettings"
+    [style.--background]="settings.colors.primary"
+  >
+    <ion-img [src]="settings.assets.logo" alt="bc2ip Logo"></ion-img>
+    <ion-title class="ion-text-center" [style.color]="settings.colors.text">
+      <ion-text>{{ settings.name }}</ion-text>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button id="popover-button">
-        <ion-icon slot="icon-only" name="globe-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="globe-outline" [style.color]="settings.colors.text"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-popover trigger="popover-button" [dismissOnSelect]="true">
@@ -26,4 +30,11 @@
       </ng-template>
     </ion-popover>
   </ion-toolbar>
+  <ng-template #loadingTenantSettings>
+    <ion-toolbar class="iop-header-toolbar">
+      <ion-title class="ion-text-center">
+        <ion-spinner></ion-spinner>
+      </ion-title>
+    </ion-toolbar>
+  </ng-template>
 </ion-header>
