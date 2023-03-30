@@ -191,9 +191,9 @@ export class CreateProofPage {
       );
 
       const alert = await this.alertController.create({
-        header: 'Success',
-        message: 'Your proof has been downloaded',
-        buttons: ['OK'],
+        header: $localize`Success`,
+        message: $localize`Your proof has been downloaded`,
+        buttons: [$localize`OK`],
       });
       await alert.present();
       await alert.onWillDismiss();
@@ -214,9 +214,9 @@ export class CreateProofPage {
 
     if (!this.isSomethingToBeShared(this.form.value)) {
       const alert = await this.alertController.create({
-        header: 'Cannot create proof',
-        message: "You must select at least one file or any of the project's properties",
-        buttons: ['OK'],
+        header: $localize`Cannot create proof`,
+        message: $localize`You must select at least one file or any of the project's properties`,
+        buttons: [$localize`OK`],
       });
 
       await alert.present();

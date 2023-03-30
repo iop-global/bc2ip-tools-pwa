@@ -53,7 +53,6 @@
   "1310121980420484904": "Select certificate file",
   "8910544545685245659": "2. Select the data you Share",
   "3162770834467017772": "Data selected.",
-  "4982333296173178660": "Edit data",
   "5271386784792535579": "Here you can select what data you'd like to share from your certificate. What you don't share will be completly removed from your proof.",
   "8705550334240764369": "Proof Settings",
   "4091167643710900323": "Purpose of share:",
@@ -109,5 +108,10 @@
   "6758768289957454963": "Proof's creator had MANAGE permission on the project when the version was sealed",
   "1166735618648500203": "Shared Files",
   "295101320056341637": "Owners",
-  "3099741642167775297": "Download"
+  "3099741642167775297": "Download",
+  "7005666273393038119": "Edit data",
+  "4648900870671159218": "Success",
+  "346322252946493777": "Your proof has been downloaded",
+  "4696163234731470276": "Cannot create proof",
+  "6603341485650163954": "You must select at least one file or any of the project's properties"
 }

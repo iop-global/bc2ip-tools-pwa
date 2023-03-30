@@ -1,10 +1,10 @@
 import { MorpheusPlugin, Vault } from '@internet-of-people/sdk-wasm';
 import { Crypto } from '@internet-of-people/sdk';
 import { PublicKey, Signature, SignedJson } from '@internet-of-people/sdk-wasm';
-import { ClaimFile } from '../types/statement';
+import { blake2b } from 'hash-wasm';
 import { Entry, Uint8ArrayWriter } from '@zip.js/zip.js';
 import { PresentationClaimFile } from '../types/presentation';
-import { blake2b } from 'hash-wasm';
+import { ClaimFile } from '../types/statement';
 
 export interface SignerContext {
   priv: Crypto.MorpheusPrivate;
