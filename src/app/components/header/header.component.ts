@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-header',
@@ -9,4 +10,10 @@ import { IonicModule } from '@ionic/angular';
   standalone: true,
   imports: [CommonModule, IonicModule],
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  constructor(private readonly i18: I18nService) {}
+
+  setLocale(language: string) {
+    this.i18.setLocale(language);
+  }
+}

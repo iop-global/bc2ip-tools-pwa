@@ -5,17 +5,17 @@
       <ion-col size="12" size-sm="8" size-xl="8">
         <ion-button size="small" fill="outline" class="ion-margin-start ion-margin-top" routerLink="/" routerDirection="back">
           <ion-icon slot="start" name="arrow-back"></ion-icon>
-          Cancel &amp; Back
+          <ion-text i18n>Cancel &amp; Back</ion-text>
         </ion-button>
         <ion-card>
           <ion-card-header>
-            <ion-card-title *ngIf="currentStep === 1">1. Select Certificate</ion-card-title>
-            <ion-card-title *ngIf="currentStep > 1">1. Selected Certificate</ion-card-title>
-            <ion-card-subtitle *ngIf="currentStep > 1" color="success">Your certificate is valid.</ion-card-subtitle>
+            <ion-card-title *ngIf="currentStep === 1" i18n>1. Select Certificate</ion-card-title>
+            <ion-card-title *ngIf="currentStep > 1" i18n>1. Selected Certificate</ion-card-title>
+            <ion-card-subtitle *ngIf="currentStep > 1" color="success" i18n>Your certificate is valid.</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-text *ngIf="currentStep === 1">
+            <ion-text *ngIf="currentStep === 1" i18n>
               Select your certificate file which you'd like to use to create a proof.
             </ion-text>
 
@@ -23,25 +23,25 @@
               <ion-list>
                 <ion-item lines="none">
                   <ion-label>
-                    <h3>Name:</h3>
+                    <h3 i18n>Name:</h3>
                     <p class="ion-text-wrap">{{ selectedCertificate }}</p>
                   </ion-label>
                 </ion-item>
                 <ion-item lines="none">
                   <ion-label>
-                    <h3>Process ID:</h3>
+                    <h3 i18n>Process ID:</h3>
                     <p class="ion-text-wrap">{{ selectedCertificateProcessId }}</p>
                   </ion-label>
                 </ion-item>
               </ion-list>
             
-              <ion-button class="ion-margin-top" size="small" fill="outline" (click)="goto(1)">
+              <ion-button class="ion-margin-top" size="small" fill="outline" (click)="goto(1)" i18n>
                 Start Over
               </ion-button>
             </ng-container>
           </ion-card-content>
 
-          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="certificateFileControl.click()">
+          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="certificateFileControl.click()" i18n>
             Select certificate file
           </ion-button>
 
@@ -56,36 +56,36 @@
 
         <ion-card [class.iop-muted-content]="currentStep === 1">
           <ion-card-header>
-            <ion-card-title>2. Select the data you Share</ion-card-title>
-            <ion-card-subtitle *ngIf="currentStep > 2" color="success">Data selected.</ion-card-subtitle>
+            <ion-card-title i18n>2. Select the data you Share</ion-card-title>
+            <ion-card-subtitle *ngIf="currentStep > 2" color="success" i18n>Data selected.</ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content *ngIf="currentStep > 2">
-            <ion-button size="small" fill="outline" (click)="goto(2)">
+            <ion-button size="small" fill="outline" (click)="goto(2)" i18n>
               Edit data
             </ion-button>
           </ion-card-content>
 
           <form *ngIf="currentStep === 2" [formGroup]="form" (ngSubmit)="proofContentSelected()">
             <ion-card-content>
-              <ion-text>
+              <ion-text i18n>
                 Here you can select what data you'd like to share from your certificate. What you don't share will be completly removed from your proof.
               </ion-text>
 
               <ng-container *ngIf="currentStep === 2">
                 <ion-item-group>
                   <ion-item-divider class="ion-margin-top">
-                    <ion-label>Proof Settings</ion-label>
+                    <ion-label i18n>Proof Settings</ion-label>
                   </ion-item-divider>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="stacked" class="ion-text-wrap"><h2>Purpose of share:</h2></ion-label>
-                    <ion-input formControlName="purpose" placeholder="E.g.: prove at a court-case"></ion-input>
-                    <ion-note *ngIf="hasErrors('purpose') && form.get('purpose')?.hasError('required')" slot="error">
+                    <ion-label position="stacked" class="ion-text-wrap"><h2 i18n>Purpose of share:</h2></ion-label>
+                    <ion-input formControlName="purpose" i18n-placeholder placeholder="E.g.: prove at a court-case"></ion-input>
+                    <ion-note *ngIf="hasErrors('purpose') && form.get('purpose')?.hasError('required')" slot="error" i18n>
                       Please provide the purpose of the proof to be created.
                     </ion-note>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label position="stacked"><h2>Valid until (in UTC):</h2></ion-label>
+                    <ion-label position="stacked"><h2 i18n>Valid until (in UTC):</h2></ion-label>
                     <ion-datetime-button datetime="datetime" class="ion-margin-bottom"></ion-datetime-button>
                     <ion-modal [keepContentsMounted]="true">
                       <ng-template>
@@ -100,7 +100,7 @@
                     </ion-modal>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label><h2>Protect with password</h2></ion-label>
+                    <ion-label><h2 i18n>Protect with password</h2></ion-label>
                     <ion-toggle
                       formControlName="protectWithPassword"
                       slot="end"
@@ -114,17 +114,18 @@
                       <ion-input
                         formControlName="password"
                         type="password"
+                        i18n-placeholder
                         placeholder="Please, enter your password"
                         (ionChange)="onPasswordChange($event)"
                       ></ion-input>
-                      <ion-note *ngIf="hasErrors('password') && form.get('password')?.hasError('required')" slot="error">
+                      <ion-note *ngIf="hasErrors('password') && form.get('password')?.hasError('required')" slot="error" i18n>
                         To make your proof password protected, please provide a secure password.
                       </ion-note>
                     </ion-item>
                     <ion-item class="ion-margin-start">
-                      <ion-label position="stacked" class="ion-text-wrap"><h2>Repeat password:</h2></ion-label>
-                      <ion-input formControlName="passwordRepeat"  type="password" placeholder="Please, repeat the password"></ion-input>
-                      <ion-note *ngIf="hasErrors('passwordRepeat') && form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')" slot="error">
+                      <ion-label position="stacked" class="ion-text-wrap"><h2 i18n>Repeat password:</h2></ion-label>
+                      <ion-input formControlName="passwordRepeat"  type="password" i18n-placeholder placeholder="Please, repeat the password"></ion-input>
+                      <ion-note *ngIf="hasErrors('passwordRepeat') && form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')" slot="error" i18n>
                         Passwords do not match.
                       </ion-note>
                     </ion-item>
@@ -133,32 +134,32 @@
 
                 <ion-item-group>
                   <ion-item-divider class="ion-margin-top">
-                    <ion-label>Project Data</ion-label>
+                    <ion-label i18n>Project Data</ion-label>
                   </ion-item-divider>
                   <ion-item class="ion-margin-top">
                     <ion-label>
-                      <h2>Name:</h2>
+                      <h2 i18n>Name:</h2>
                       <p>{{ statement?.content?.claim?.content?.projectName?.value }}</p>
                     </ion-label>
                     <ion-toggle formControlName="shareProjectName" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
-                      <h2>Description:</h2>
+                      <h2 i18n>Description:</h2>
                       <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.projectDescription?.value }}</p>
                     </ion-label>
                     <ion-toggle formControlName="shareProjectDescription" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
-                      <h2>Version description:</h2>
+                      <h2 i18n>Version description:</h2>
                       <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.versionDescription?.value }}</p>
                     </ion-label>
                     <ion-toggle formControlName="shareVersionDescription" slot="end"></ion-toggle>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
-                      <h2>Version sealer:</h2>
+                      <h2 i18n>Version sealer:</h2>
                       <p class="ion-text-wrap">
                         <u>DID:</u> {{ statement?.content?.claim?.content?.sealer?.accountDid }}<br>
                         <u>KeyID:</u> {{ statement?.content?.claim?.content?.sealer?.keyId }}
@@ -170,7 +171,7 @@
 
                 <ion-item-group>
                   <ion-item-divider class="ion-margin-top">
-                    <ion-label>Files</ion-label>
+                    <ion-label i18n>Files</ion-label>
                   </ion-item-divider>
 
                   <ng-container *ngFor="let file of statement?.content?.claim?.content?.files | keyvalue" formGroupName="files">
@@ -184,7 +185,7 @@
                       <ng-container *ngIf="form.get('files')?.get(file.key)?.get('shareFile')?.value">
                         <ion-item class="ion-margin-start">
                           <ion-label>
-                            <h2>Uploader</h2>
+                            <h2 i18n>Uploader</h2>
                             <p class="ion-text-wrap">
                               <u>DID:</u> {{ file.value.uploader.accountDid }}<br>
                               <u>KeyID:</u> {{ file.value.uploader.keyId }}
@@ -196,7 +197,7 @@
                         <ng-container *ngFor="let author of file.value.authors | keyvalue">
                           <ion-item class="ion-margin-start" formGroupName="authors">
                             <ion-label>
-                              <h2>Author</h2>
+                              <h2 i18n>Author</h2>
                               <p class="ion-text-wrap">{{ author.value.author }}</p>
                             </ion-label>
                             <ion-toggle [formControlName]="author.key" slot="end"></ion-toggle>
@@ -206,7 +207,7 @@
                         <ng-container *ngFor="let owner of file.value.owners | keyvalue">
                           <ion-item class="ion-margin-start" formGroupName="owners">
                             <ion-label>
-                              <h2>Owner</h2>
+                              <h2 i18n>Owner</h2>
                               <p class="ion-text-wrap">{{ owner.value.owner }}</p>
                             </ion-label>
                             <ion-toggle [formControlName]="owner.key" slot="end"></ion-toggle>
@@ -224,6 +225,7 @@
               class="ion-margin"
               expand="block"
               type="submit"
+              i18n
             >
               Continue
             </ion-button>
@@ -232,16 +234,16 @@
 
         <ion-card [class.iop-muted-content]="currentStep !== 3">
           <ion-card-header>
-            <ion-card-title>3. Secure Sign Data</ion-card-title>
+            <ion-card-title i18n>3. Secure Sign Data</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-text *ngIf="currentStep === 3">
+            <ion-text *ngIf="currentStep === 3" i18n>
               To be able to download the proof, you first must sign it with your credential.
             </ion-text>
           </ion-card-content>
 
-          <ion-button  *ngIf="currentStep === 3" class="ion-margin" (click)="credentialFileControl.click()">
+          <ion-button  *ngIf="currentStep === 3" class="ion-margin" (click)="credentialFileControl.click()" i18n>
             Select credential
           </ion-button>
 

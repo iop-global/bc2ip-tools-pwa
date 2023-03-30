@@ -1,8 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Error</ion-title>
+    <ion-title i18n>Error</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">OK</ion-button>
+      <ion-button (click)="dismiss()" i18n>OK</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,12 +10,12 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        <ng-container *ngIf="isCertificate()">Certificate</ng-container>
-        <ng-container *ngIf="isProof()">Proof</ng-container>
+        <ng-container *ngIf="isCertificate()" i18n>Certificate</ng-container>
+        <ng-container *ngIf="isProof()" i18n>Proof</ng-container>
       </ion-card-title>
       <ion-card-subtitle color="danger">
-        <ng-container *ngIf="isCertificate()">Your certificate is not valid.</ng-container>
-        <ng-container *ngIf="isProof()">Your proof is not valid.</ng-container>
+        <ng-container *ngIf="isCertificate()" i18n>Your certificate is not valid.</ng-container>
+        <ng-container *ngIf="isProof()" i18n>Your proof is not valid.</ng-container>
       </ion-card-subtitle>
     </ion-card-header>
 
@@ -28,20 +28,20 @@
     <ion-accordion>
       <ion-item slot="header" color="light">
         <ion-label>
-          <h2>Cryptographic Descriptor Present</h2>
+          <h2 i18n>Cryptographic Descriptor Present</h2>
         </ion-label>
         <ion-icon *ngIf="props.result.cryptoDescriptorPresent" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
         <ion-icon *ngIf="!props.result.cryptoDescriptorPresent" name="close-circle-outline" color="danger" slot="end"></ion-icon>
       </ion-item>
       <div class="ion-padding" slot="content">
         <p class="ion-text-wrap">
-          <ng-container *ngIf="isCertificate()">The certificate contains a cryptographic descriptor file.</ng-container>
-          <ng-container *ngIf="isProof()">The proof contains a cryptographic descriptor file.</ng-container>
+          <ng-container *ngIf="isCertificate()" i18n>The certificate contains a cryptographic descriptor file.</ng-container>
+          <ng-container *ngIf="isProof()" i18n>The proof contains a cryptographic descriptor file.</ng-container>
         </p>
         <p class="ion-text-wrap">
           <ion-text class="medium">
-            <ng-container *ngIf="isCertificate()">Certificates must contain a Signed Witness Statement which describes and validates the certificate itself.</ng-container>
-            <ng-container *ngIf="isProof()">Proofs must contain a Signed Presentation which describes and validates the proof itself.</ng-container>
+            <ng-container *ngIf="isCertificate()" i18n>Certificates must contain a Signed Witness Statement which describes and validates the certificate itself.</ng-container>
+            <ng-container *ngIf="isProof()" i18n>Proofs must contain a Signed Presentation which describes and validates the proof itself.</ng-container>
           </ion-text>
         </p>
       </div>
@@ -49,20 +49,20 @@
     <ion-accordion>
       <ion-item slot="header" color="light">
         <ion-label>
-          <h2>Integrity OK</h2>
+          <h2 i18n>Integrity OK</h2>
         </ion-label>
         <ion-icon *ngIf="props.result.integrityOK" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
         <ion-icon *ngIf="!props.result.integrityOK" name="close-circle-outline" color="danger" slot="end"></ion-icon>
       </ion-item>
       <div class="ion-padding" slot="content">
         <p class="ion-text-wrap">
-          <ng-container *ngIf="isCertificate()">The certificate contains the same files that are described in its cryptographic descriptor. All files are verified and trusted.</ng-container>
-          <ng-container *ngIf="isProof()">The proof contains the same files that are described in its cryptographic descriptor. All files are verified and trusted.</ng-container>
+          <ng-container *ngIf="isCertificate()" i18n>The certificate contains the same files that are described in its cryptographic descriptor. All files are verified and trusted.</ng-container>
+          <ng-container *ngIf="isProof()" i18n>The proof contains the same files that are described in its cryptographic descriptor. All files are verified and trusted.</ng-container>
         </p>
         <p class="ion-text-wrap">
           <ion-text class="medium">
-            <ng-container *ngIf="isCertificate()">Files are compared against to the Signed Witness Statement by checking their hashes and their presence.</ng-container>
-            <ng-container *ngIf="isProof()">Files are compared against to the Signed Presentation by checking their hashes and their presence.</ng-container>
+            <ng-container *ngIf="isCertificate()" i18n>Files are compared against to the Signed Witness Statement by checking their hashes and their presence.</ng-container>
+            <ng-container *ngIf="isProof()" i18n>Files are compared against to the Signed Presentation by checking their hashes and their presence.</ng-container>
           </ion-text>
         </p>
       </div>
@@ -70,17 +70,17 @@
     <ion-accordion>
       <ion-item slot="header" color="light">
         <ion-label>
-          <h2>Valid Signature</h2>
+          <h2 i18n>Valid Signature</h2>
         </ion-label>
         <ion-icon *ngIf="props.result.signatureIsValid" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
         <ion-icon *ngIf="!props.result.signatureIsValid" name="close-circle-outline" color="danger" slot="end"></ion-icon>
       </ion-item>
       <div class="ion-padding" slot="content">
-        <p class="ion-text-wrap">The signature is valid, it was not edited by a thirdparty.</p>
+        <p class="ion-text-wrap" i18n>The signature is valid, it was not edited by a thirdparty.</p>
         <p class="ion-text-wrap">
           <ion-text class="medium">
-            <ng-container *ngIf="isCertificate()">The Signed Witness Statement's content was signed by the project version's sealer's device.</ng-container>
-            <ng-container *ngIf="isProof()">The Signed Presentation's content was signed by the creator of the proof.</ng-container>
+            <ng-container *ngIf="isCertificate()" i18n>The Signed Witness Statement's content was signed by the project version's sealer's device.</ng-container>
+            <ng-container *ngIf="isProof()" i18n>The Signed Presentation's content was signed by the creator of the proof.</ng-container>
           </ion-text>
         </p>
       </div>
@@ -88,27 +88,27 @@
     <ion-accordion>
       <ion-item slot="header" color="light">
         <ion-label>
-          <h2>Timestamp Exists on the Blockchain</h2>
+          <h2 i18n>Timestamp Exists on the Blockchain</h2>
         </ion-label>
         <ion-icon *ngIf="props.result.timestampFoundOnBlockchain" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
         <ion-icon *ngIf="!props.result.timestampFoundOnBlockchain" name="close-circle-outline" color="danger" slot="end"></ion-icon>
       </ion-item>
       <div class="ion-padding" slot="content">
         <p class="ion-text-wrap">
-          <ng-container *ngIf="isCertificate()">
+          <ng-container *ngIf="isCertificate()" i18n>
             The certificate's timestamp exists on the blockchain, thus it's confirmed that the referred project version (in the certificate) was sealed at the time of the timestamp, through bc2ip.
           </ng-container>
-          <ng-container *ngIf="isProof()">
+          <ng-container *ngIf="isProof()" i18n>
             The proof's timestamp exists on the blockchain, thus it's confirmed that the referred project version (in the proof) was sealed at the time of the timestamp, through bc2ip.
           </ng-container>
         </p>
         <p class="ion-text-wrap">
           <ion-text class="medium">
-            <ng-container *ngIf="isCertificate()">
+            <ng-container *ngIf="isCertificate()" i18n>
               The Signed Witness Statement is cryptographically hashed and without any private data is stored on the blockchain. 
               It ensures that even if the signature is valid cryptographically, the blockchain proves, when the project's version was sealed and by whom.  
             </ng-container>
-            <ng-container *ngIf="isProof()">
+            <ng-container *ngIf="isProof()" i18n>
               The Signed Presentation's content is cryptographically hashed and without any private data is stored on the blockchain. 
               It ensures that even if the signature is valid cryptographically, the blockchain proves, when the project's version was sealed and by whom.
             </ng-container>
@@ -119,13 +119,13 @@
     <ion-accordion *ngIf="isProof()">
       <ion-item slot="header" color="light">
         <ion-label>
-          <h2>Not Expired</h2>
+          <h2 i18n>Not Expired</h2>
         </ion-label>
         <ion-icon *ngIf="props.result.notExpired" name="checkmark-circle-outline" color="success" slot="end"></ion-icon>
         <ion-icon *ngIf="!props.result.notExpired" name="close-circle-outline" color="danger" slot="end"></ion-icon>
       </ion-item>
       <div class="ion-padding" slot="content">
-        <p class="ion-text-wrap">
+        <p class="ion-text-wrap" i18n>
           The proof is not expired, thus can still be used. Otherwise you need to ask your source for a new proof with an extended expiry date.
         </p>
       </div>
@@ -134,11 +134,11 @@
   
   <ion-list lines="inset">
     <ion-item-divider class="ion-margin-top">
-      <ion-label>References</ion-label>
+      <ion-label i18n>References</ion-label>
     </ion-item-divider>
     <ion-item lines="none">
       <ion-label>
-        <h2 class="ion-text-wrap">
+        <h2 class="ion-text-wrap" i18n>
           To see how this site validates and creates certificate, please visit our GitHub page. Also, to see the technical background of it,
           please visit IOP's developer portal.
         </h2>
@@ -150,6 +150,7 @@
         target="_blank"
         fill="outline"
         size="small"
+        i18n
       >
         GitHub
       </ion-button>
@@ -158,6 +159,7 @@
         target="_blank"
         fill="outline"
         size="small"
+        i18n
       >
         Developer Portal
       </ion-button>

@@ -9,6 +9,4 @@ import { HeaderComponent } from './components/header/header.component';
   standalone: true,
   imports: [IonicModule, HeaderComponent],
 })
-export class AppComponent {
-  constructor() {}
-}
+export class AppComponent {}
