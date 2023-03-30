@@ -1,14 +1,17 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { IonInput, ModalController } from '@ionic/angular';
+import { IonicModule, IonInput, ModalController } from '@ionic/angular';
 import { Entry } from '@zip.js/zip.js';
-import { catchError, from, map, Observable, of, tap } from 'rxjs';
+import { Observable, from, map, catchError, of } from 'rxjs';
 import { Zipper } from '../../tools/zipper';
 
 export interface CredentialPasswordModalProps {
@@ -20,6 +23,8 @@ export interface CredentialPasswordModalProps {
   selector: 'app-credential-password-modal',
   templateUrl: './credential-password-modal.component.html',
   styleUrls: ['./credential-password-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule],
 })
 export class CredentialPasswordModalComponent implements AfterViewInit {
   @ViewChild('password', { static: true }) password!: IonInput;

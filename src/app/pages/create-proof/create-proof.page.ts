@@ -1,14 +1,23 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {
   AlertController,
   CheckboxCustomEvent,
+  IonicModule,
   ModalController,
 } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
 import { Entry } from '@zip.js/zip.js';
 import {
-  InvalidCryptoArchiveModalComponent,
   InvalidCryptoArchiveModalProps,
+  InvalidCryptoArchiveModalComponent,
 } from '../../components/invalid-crypto-archive-modal/invalid-crypto-archive-modal.component';
 import {
   UnlockCredentialModalComponent,
@@ -17,22 +26,34 @@ import {
 import { CertificateService } from '../../services/certificate.service';
 import { PresentationServiceService } from '../../services/presentation-service.service';
 import {
-  CryptoValidationResult,
   getSignerFromCredential,
+  CryptoValidationResult,
 } from '../../tools/crypto';
 import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
 import { SignedWitnessStatement } from '../../types/statement';
 import {
-  passwordRepeatValidator,
   passwordRequiredValidator,
+  passwordRepeatValidator,
 } from './validators';
+import { CredentialPasswordModalComponent } from '../../components/credential-password-modal/credential-password-modal.component';
 
 @Component({
   selector: 'app-create-proof',
   templateUrl: './create-proof.page.html',
   styleUrls: ['./create-proof.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonicModule,
+    RouterModule,
+    CredentialPasswordModalComponent,
+    InvalidCryptoArchiveModalComponent,
+    UnlockCredentialModalComponent,
+  ],
 })
 export class CreateProofPage {
   @ViewChild('certificateFileControl', { static: true })

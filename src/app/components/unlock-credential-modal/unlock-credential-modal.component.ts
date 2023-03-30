@@ -1,6 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { IonInput, ModalController } from '@ionic/angular';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+} from '@angular/forms';
+import { IonicModule, IonInput, ModalController } from '@ionic/angular';
 import { passwordValidator } from './validators';
 
 export interface UnlockCredentialModalProps {
@@ -11,6 +18,8 @@ export interface UnlockCredentialModalProps {
   selector: 'app-unlock-credential-modal',
   templateUrl: './unlock-credential-modal.component.html',
   styleUrls: ['./unlock-credential-modal.component.scss'],
+  standalone: true,
+  imports: [CommonModule, IonicModule, FormsModule, ReactiveFormsModule],
 })
 export class UnlockCredentialModalComponent {
   @ViewChild('password', { static: true }) password!: IonInput;

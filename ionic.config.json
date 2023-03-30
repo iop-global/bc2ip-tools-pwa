@@ -1,5 +1,5 @@
 {
-  "name": "bc2ip Tools",
+  "name": "tools-webapp",
   "integrations": {
     "capacitor": {}
   },

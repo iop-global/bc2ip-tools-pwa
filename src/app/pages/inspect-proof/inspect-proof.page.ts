@@ -1,9 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { BlobWriter, Entry } from '@zip.js/zip.js';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { Entry, BlobWriter } from '@zip.js/zip.js';
 import {
-  InvalidCryptoArchiveModalComponent,
   InvalidCryptoArchiveModalProps,
+  InvalidCryptoArchiveModalComponent,
 } from '../../components/invalid-crypto-archive-modal/invalid-crypto-archive-modal.component';
 import { ProofData, ProofService } from '../../services/proof.service';
 import { CryptoValidationResult } from '../../tools/crypto';
@@ -14,6 +17,8 @@ import { Zipper } from '../../tools/zipper';
   selector: 'app-inspect-proof',
   templateUrl: './inspect-proof.page.html',
   styleUrls: ['./inspect-proof.page.scss'],
+  standalone: true,
+  imports: [IonicModule, CommonModule, FormsModule, RouterModule],
 })
 export class InspectProofPage {
   @ViewChild('proofFileControl', { static: true })

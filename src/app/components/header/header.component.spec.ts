@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { InvalidCryptoArchiveModalComponent } from './invalid-crypto-archive-modal.component';
+import { HeaderComponent } from './header.component';
 
-describe('InvalidCryptoArchiveModalComponent', () => {
-  let component: InvalidCryptoArchiveModalComponent;
-  let fixture: ComponentFixture<InvalidCryptoArchiveModalComponent>;
+describe('HeaderComponent', () => {
+  let component: HeaderComponent;
+  let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InvalidCryptoArchiveModalComponent ],
+      declarations: [ HeaderComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InvalidCryptoArchiveModalComponent);
+    fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
