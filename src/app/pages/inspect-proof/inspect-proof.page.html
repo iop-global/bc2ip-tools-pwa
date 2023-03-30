@@ -255,7 +255,7 @@
           </ion-card-header>
 
           <ion-card-content *ngIf="selectedProof !== null">
-            <ng-container *ngFor="let file of proofData!.files">
+            <ng-container *ngFor="let file of proofData!.files; else: noFiles">
               <ion-item-divider class="ion-margin-top">
                 <ion-label>{{ file.name }}</ion-label>
               </ion-item-divider>
@@ -307,8 +307,13 @@
                 <ion-text i18n>Download</ion-text>
               </ion-button>
             </ng-container>
+            <ng-container #noFiles i18n>No files are selected</ng-container>
           </ion-card-content>
         </ion-card>
+
+        <div *ngIf="selectedProof !== null" class="ion-text-center">
+          <ion-button routerLink="/home" i18n>Done</ion-button>
+        </div>
       </ion-col>
       <ion-col></ion-col>
     </ion-row>

@@ -113,5 +113,7 @@
   "4648900870671159218": "Success",
   "346322252946493777": "Your proof has been downloaded",
   "4696163234731470276": "Cannot create proof",
-  "6603341485650163954": "You must select at least one file or any of the project's properties"
+  "6603341485650163954": "You must select at least one file or any of the project's properties",
+  "4020396387966983848": "No files are selected",
+  "397098723873502323": "Done"
 }

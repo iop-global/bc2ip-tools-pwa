@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AlertController, CheckboxCustomEvent, IonicModule, ModalController } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Entry } from '@zip.js/zip.js';
 import {
   InvalidCryptoArchiveModalProps,
@@ -63,6 +63,7 @@ export class CreateProofPage {
     private readonly certificateService: CertificateService,
     private readonly presentationService: PresentationServiceService,
     private readonly alertController: AlertController,
+    private readonly router: Router,
   ) {}
 
   gotoStep3(result: ValidatedCreateProofFormResult): void {
@@ -197,7 +198,8 @@ export class CreateProofPage {
       });
       await alert.present();
       await alert.onWillDismiss();
-      this.goto(1);
+
+      await this.router.navigate(['/home']);
     }
   }
 
