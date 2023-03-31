@@ -12,15 +12,16 @@ import {
   UnlockCredentialModalComponent,
   UnlockCredentialModalProps,
 } from '../../components/unlock-credential-modal/unlock-credential-modal.component';
-import { CertificateService } from '../../services/certificate.service';
-import { PresentationServiceService } from '../../services/presentation-service.service';
 import { getSignerFromCredential, CryptoValidationResult } from '../../tools/crypto';
 import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
-import { SignedWitnessStatement } from '../../types/statement';
 import { passwordRequiredValidator, passwordRepeatValidator } from './validators';
 import { CredentialPasswordModalComponent } from '../../components/credential-password-modal/credential-password-modal.component';
+import { CertificateService } from '../../services/certificate.service';
+import { CertificateData } from '../../types/common';
+import { ProofService } from '../../services/proof.service';
+import { SignedWitnessStatement } from '../../types/schemas/common/statement';
 
 @Component({
   selector: 'app-create-proof',
@@ -46,9 +47,9 @@ export class CreateProofPage {
 
   currentStep = 1;
   selectedCertificate = '';
-  selectedCertificateProcessId = '';
   certificateEntries: Entry[] = [];
-  statement: SignedWitnessStatement | null = null;
+  certificateData: CertificateData | null = null;
+  certificateStatement: SignedWitnessStatement<unknown> | null = null;
   form!: FormGroup;
   formSubmitted = false;
   formResult: ValidatedCreateProofFormResult | null = null;
@@ -61,7 +62,7 @@ export class CreateProofPage {
   constructor(
     private readonly modalCtrl: ModalController,
     private readonly certificateService: CertificateService,
-    private readonly presentationService: PresentationServiceService,
+    private readonly proofService: ProofService,
     private readonly alertController: AlertController,
     private readonly router: Router,
   ) {}
@@ -76,9 +77,9 @@ export class CreateProofPage {
       case 1:
         this.currentStep = 1;
         this.selectedCertificate = '';
-        this.selectedCertificateProcessId = '';
         this.certificateEntries = [];
-        this.statement = null;
+        this.certificateData = null;
+        this.certificateStatement = null;
         this.certificateFileControl.nativeElement.value = '';
         this.credentialFileControl.nativeElement.value = '';
         this.formResult = null;
@@ -134,10 +135,9 @@ export class CreateProofPage {
       }
 
       this.selectedCertificate = zipFile.name;
-      this.statement = await this.certificateService.extractStatement(this.certificateEntries);
-      this.selectedCertificateProcessId = this.statement.content.processId;
-      const claimFiles = this.statement.content.claim.content.files;
-
+      const { data, statement } = await this.certificateService.extractData(this.certificateEntries);
+      this.certificateData = data;
+      this.certificateStatement = statement;
       this.form = new FormGroup({
         purpose: new FormControl(null, [Validators.required]),
         validUntil: new FormControl(new Date().toISOString(), [Validators.required]),
@@ -149,18 +149,20 @@ export class CreateProofPage {
         shareVersionDescription: new FormControl(false),
         shareVersionSealer: new FormControl(false),
         files: new FormGroup(
-          Object.keys(claimFiles).map((fileIdx) => {
-            const file = claimFiles[fileIdx];
-            return new FormGroup({
-              shareFile: new FormControl(false),
-              fileName: new FormControl(claimFiles[fileIdx].fileName),
-              uploader: new FormControl(false),
-              authors: new FormGroup(Object.keys(file.authors).map((_) => new FormControl(false))),
-              owners: new FormGroup(Object.keys(file.owners).map((_) => new FormControl(false))),
-            });
-          }),
+          this.certificateData.files.map(
+            (f) =>
+              new FormGroup({
+                shareFile: new FormControl(false),
+                fileName: new FormControl(f.name),
+                uploader: new FormControl(false),
+                authors: new FormGroup(f.authors.map((_) => new FormControl(false))),
+                owners: new FormGroup(f.owners.map((_) => new FormControl(false))),
+              }),
+          ),
         ),
       });
+
+      this.certificateService.adjustFormToSchema(this.form, data.schemaVersion);
 
       this.goto(2);
     }
@@ -184,9 +186,11 @@ export class CreateProofPage {
         return;
       }
 
-      await this.presentationService.download(
+      await this.proofService.createAndDownload(
         this.formResult!,
-        this.statement!,
+        this.certificateStatement!,
+        this.certificateData!.projectName,
+        this.certificateData!.versionId,
         this.certificateEntries,
         await getSignerFromCredential(credentialFile, result.data!),
       );

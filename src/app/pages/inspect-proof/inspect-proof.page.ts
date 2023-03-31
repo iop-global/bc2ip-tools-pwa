@@ -8,10 +8,11 @@ import {
   InvalidCryptoArchiveModalProps,
   InvalidCryptoArchiveModalComponent,
 } from '../../components/invalid-crypto-archive-modal/invalid-crypto-archive-modal.component';
-import { ProofData, ProofService } from '../../services/proof.service';
 import { CryptoValidationResult } from '../../tools/crypto';
 import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
+import { ProofService } from '../../services/proof.service';
+import { ProofData } from '../../types/common';
 
 @Component({
   selector: 'app-inspect-proof',
@@ -53,8 +54,7 @@ export class InspectProofPage {
         return;
       }
 
-      const presentation = await this.proofService.extractPresentation(entries);
-      this.proofData = await this.proofService.getProofData(presentation);
+      this.proofData = await this.proofService.extractData(entries);
       this.selectedProof = zipFile.name;
     }
   }

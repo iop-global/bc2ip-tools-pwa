@@ -37,8 +37,12 @@
                 </ion-item>
                 <ion-item lines="none">
                   <ion-label>
-                    <h3 i18n>Process ID:</h3>
-                    <p class="ion-text-wrap">{{ selectedCertificateProcessId }}</p>
+                    <h3 i18n>Schema:</h3>
+                    <p class="ion-text-wrap">
+                      <ion-text i18n>VERSION</ion-text> {{ certificateData!.schemaVersion }} ({{
+                        certificateData!.schemaProcessId
+                      }})
+                    </p>
                   </ion-label>
                 </ion-item>
               </ion-list>
@@ -166,33 +170,74 @@
                   <ion-item-divider class="ion-margin-top">
                     <ion-label i18n>Project Data</ion-label>
                   </ion-item-divider>
+                  <ion-item
+                    *ngIf="certificateData!.somePartsOfTheDataIsNotMaskable"
+                    class="ion-margin-top ion-margin-bottom"
+                    lines="none"
+                  >
+                    <ion-text color="warning"
+                      ><strong i18n
+                        >Note: your certificate does not support some part of its data to be hidden.</strong
+                      ></ion-text
+                    >
+                  </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
                       <h2 i18n>Name:</h2>
-                      <p>{{ statement?.content?.claim?.content?.projectName?.value }}</p>
+                      <p>{{ certificateData!.projectName }}</p>
                     </ion-label>
-                    <ion-toggle formControlName="shareProjectName" slot="end"></ion-toggle>
+                    <ion-toggle
+                      [class.ion-hide]="form.get('shareProjectName')?.disabled"
+                      formControlName="shareProjectName"
+                      slot="end"
+                    ></ion-toggle>
+                    <ion-icon
+                      *ngIf="form.get('shareProjectName')?.disabled"
+                      slot="end"
+                      color="warning"
+                      name="warning-outline"
+                    ></ion-icon>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
                       <h2 i18n>Description:</h2>
-                      <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.projectDescription?.value }}</p>
+                      <p class="ion-text-wrap">{{ certificateData!.projectDescription }}</p>
                     </ion-label>
-                    <ion-toggle formControlName="shareProjectDescription" slot="end"></ion-toggle>
+                    <ion-toggle
+                      [class.ion-hide]="form.get('shareProjectDescription')?.disabled"
+                      formControlName="shareProjectDescription"
+                      slot="end"
+                    ></ion-toggle>
+                    <ion-icon
+                      *ngIf="form.get('shareProjectDescription')?.disabled"
+                      slot="end"
+                      color="warning"
+                      name="warning-outline"
+                    ></ion-icon>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
                       <h2 i18n>Version description:</h2>
-                      <p class="ion-text-wrap">{{ statement?.content?.claim?.content?.versionDescription?.value }}</p>
+                      <p class="ion-text-wrap">{{ certificateData!.versionDescription }}</p>
                     </ion-label>
-                    <ion-toggle formControlName="shareVersionDescription" slot="end"></ion-toggle>
+                    <ion-toggle
+                      [class.ion-hide]="form.get('shareVersionDescription')?.disabled"
+                      formControlName="shareVersionDescription"
+                      slot="end"
+                    ></ion-toggle>
+                    <ion-icon
+                      *ngIf="form.get('shareVersionDescription')?.disabled"
+                      slot="end"
+                      color="warning"
+                      name="warning-outline"
+                    ></ion-icon>
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label>
                       <h2 i18n>Version sealer:</h2>
                       <p class="ion-text-wrap">
-                        <u>DID:</u> {{ statement?.content?.claim?.content?.sealer?.accountDid }}<br />
-                        <u>KeyID:</u> {{ statement?.content?.claim?.content?.sealer?.keyId }}
+                        <u>DID:</u> {{ certificateData!.sealer.did }}<br />
+                        <u>KeyID:</u> {{ certificateData!.sealer.keyId }}
                       </p>
                     </ion-label>
                     <ion-toggle formControlName="shareVersionSealer" slot="end"></ion-toggle>
@@ -204,48 +249,45 @@
                     <ion-label i18n>Files</ion-label>
                   </ion-item-divider>
 
-                  <ng-container
-                    *ngFor="let file of statement?.content?.claim?.content?.files | keyvalue"
-                    formGroupName="files"
-                  >
-                    <ng-container [formGroupName]="file.key">
+                  <ng-container *ngFor="let file of certificateData!.files" formGroupName="files">
+                    <ng-container [formGroupName]="file.index">
                       <ion-item class="ion-margin-top">
                         <ion-label class="iop-max-width-label ion-text-wrap"
-                          ><h2>{{ file.value.fileName }}</h2></ion-label
+                          ><h2>{{ file.name }}</h2></ion-label
                         >
                         <ion-toggle formControlName="shareFile" slot="end"></ion-toggle>
-                        <ion-input hidden formControlName="fileName" [value]="file.value.fileName"></ion-input>
+                        <ion-input hidden formControlName="fileName" [value]="file.name"></ion-input>
                       </ion-item>
 
-                      <ng-container *ngIf="form.get('files')?.get(file.key)?.get('shareFile')?.value">
+                      <ng-container *ngIf="form.get('files')?.get(file.index)?.get('shareFile')?.value">
                         <ion-item class="ion-margin-start">
                           <ion-label>
                             <h2 i18n>Uploader</h2>
                             <p class="ion-text-wrap">
-                              <u>DID:</u> {{ file.value.uploader.accountDid }}<br />
-                              <u>KeyID:</u> {{ file.value.uploader.keyId }}
+                              <u>DID:</u> {{ file.uploader.did }}<br />
+                              <u>KeyID:</u> {{ file.uploader.keyId }}
                             </p>
                           </ion-label>
                           <ion-toggle formControlName="uploader" slot="end"></ion-toggle>
                         </ion-item>
 
-                        <ng-container *ngFor="let author of file.value.authors | keyvalue">
+                        <ng-container *ngFor="let author of file.authors">
                           <ion-item class="ion-margin-start" formGroupName="authors">
                             <ion-label>
                               <h2 i18n>Author</h2>
-                              <p class="ion-text-wrap">{{ author.value.author }}</p>
+                              <p class="ion-text-wrap">{{ author.name }}</p>
                             </ion-label>
-                            <ion-toggle [formControlName]="author.key" slot="end"></ion-toggle>
+                            <ion-toggle [formControlName]="author.index" slot="end"></ion-toggle>
                           </ion-item>
                         </ng-container>
 
-                        <ng-container *ngFor="let owner of file.value.owners | keyvalue">
+                        <ng-container *ngFor="let owner of file.owners">
                           <ion-item class="ion-margin-start" formGroupName="owners">
                             <ion-label>
                               <h2 i18n>Owner</h2>
-                              <p class="ion-text-wrap">{{ owner.value.owner }}</p>
+                              <p class="ion-text-wrap">{{ owner.name }}</p>
                             </ion-label>
-                            <ion-toggle [formControlName]="owner.key" slot="end"></ion-toggle>
+                            <ion-toggle [formControlName]="owner.index" slot="end"></ion-toggle>
                           </ion-item>
                         </ng-container>
                       </ng-container>

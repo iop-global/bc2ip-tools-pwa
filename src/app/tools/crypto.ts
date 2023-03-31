@@ -3,8 +3,7 @@ import { Crypto } from '@internet-of-people/sdk';
 import { PublicKey, Signature, SignedJson } from '@internet-of-people/sdk-wasm';
 import { blake2b } from 'hash-wasm';
 import { Entry, Uint8ArrayWriter } from '@zip.js/zip.js';
-import { PresentationClaimFile } from '../types/presentation';
-import { ClaimFile } from '../types/statement';
+import { HashedFile } from '../types/schemas/common/statement';
 
 export interface SignerContext {
   priv: Crypto.MorpheusPrivate;
@@ -64,14 +63,11 @@ export const isSignatureValid = (
   }
 };
 
-export const isIntegrityOK = async (
-  claimFiles: PresentationClaimFile[] | ClaimFile[],
-  entries: Entry[],
-): Promise<boolean> => {
+export const isIntegrityOK = async (files: HashedFile[], entries: Entry[]): Promise<boolean> => {
   try {
-    const sameAmountOfFiles = Object.keys(claimFiles).length === entries.length - 1;
+    const sameAmountOfFiles = Object.keys(files).length === entries.length - 1;
 
-    const validations = await Promise.all(claimFiles.map((c) => compareClaimFileWithZipEntries(c, entries)));
+    const validations = await Promise.all(files.map((c) => compareClaimFileWithZipEntries(c, entries)));
 
     const allHashesAreValid = validations.filter((valid) => valid === false).length === 0;
 
@@ -82,18 +78,15 @@ export const isIntegrityOK = async (
   }
 };
 
-const compareClaimFileWithZipEntries = async (
-  claim: PresentationClaimFile | ClaimFile,
-  entries: Entry[],
-): Promise<boolean> => {
-  const zipEntry = entries.find((e) => e.filename === claim.fileName);
+const compareClaimFileWithZipEntries = async (file: HashedFile, entries: Entry[]): Promise<boolean> => {
+  const zipEntry = entries.find((e) => e.filename === file.fileName);
   if (!zipEntry) {
     return false;
   }
 
   const zipEntryContent = await zipEntry.getData(new Uint8ArrayWriter());
   const zipEntryHash = await blake2b(zipEntryContent);
-  return zipEntryHash === claim.hash;
+  return zipEntryHash === file.hash;
 };
 
 export class CryptoValidationResult {
