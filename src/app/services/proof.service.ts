@@ -1,13 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  BlobReader,
-  BlobWriter,
-  Entry,
-  TextReader,
-  TextWriter,
-  ZipWriter,
-  ZipWriterConstructorOptions,
-} from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, Entry, TextReader, TextWriter, ZipWriter } from '@zip.js/zip.js';
 import { Layer1, Layer2, Network, NetworkConfig, Types } from '@internet-of-people/sdk';
 import { digestJson, selectiveDigestJson } from '@internet-of-people/sdk-wasm';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
@@ -144,11 +136,7 @@ export class ProofService {
     };
 
     const zipFileWriter = new BlobWriter('application/zip');
-    const zipWriterOpts: ZipWriterConstructorOptions = {};
-    if (formResult.protectWithPassword) {
-      zipWriterOpts.password = formResult.password!;
-    }
-    const zipWriter = new ZipWriter(zipFileWriter, zipWriterOpts);
+    const zipWriter = new ZipWriter(zipFileWriter, { password: formResult.password });
 
     await zipWriter.add('signed-presentation.json', new TextReader(JSON.stringify(signedPresentationJson)));
 

@@ -60,7 +60,6 @@
   "9051684253589592073": "E.g.: prove at a court-case",
   "875798221231088642": "Please provide the purpose of the proof to be created.",
   "7854832644586936277": "Valid until (in UTC):",
-  "2704321738704602979": "Protect with password",
   "517971376067830320": "Please, enter your password",
   "5180672376730657934": "To make your proof password protected, please provide a secure password.",
   "7864193007659849769": "Repeat password:",
@@ -121,5 +120,7 @@
   "397098723873502323": "Done",
   "8600387188142646396": "Tenant Config Error",
   "8720754980971165581": "Could not load your tenant default configuration from {$PH}/settings.json",
-  "5509973196717139369": "Note: your certificate does not support some part of its data to be hidden."
+  "5509973196717139369": "Note: your certificate does not support some part of its data to be hidden.",
+  "8149750208464716450": "The password is too weak. Must be at least 8 characters long; must contain a lower- and uppercase letter and a symbol or a number.",
+  "508569352083391767": "Please confirm your password. "
 }

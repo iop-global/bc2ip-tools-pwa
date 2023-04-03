@@ -15,9 +15,8 @@ interface ValidatedCreateProofFormFiles {
 export interface ValidatedCreateProofFormResult {
   purpose: string;
   validUntil: string;
-  protectWithPassword: boolean;
-  password: string | null;
-  passwordRepeat: string | null;
+  password: string;
+  passwordRepeat: string;
   shareProjectName: boolean;
   shareProjectDescription: boolean;
   shareVersionDescription: boolean;

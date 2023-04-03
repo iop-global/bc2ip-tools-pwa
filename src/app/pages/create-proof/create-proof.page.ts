@@ -16,7 +16,7 @@ import { getSignerFromCredential, CryptoValidationResult } from '../../tools/cry
 import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ValidatedCreateProofFormResult } from '../../types/create-proof-form';
-import { passwordRequiredValidator, passwordRepeatValidator } from './validators';
+import { passwordRepeatValidator, passwordStrengthValidator } from './validators';
 import { CredentialPasswordModalComponent } from '../../components/credential-password-modal/credential-password-modal.component';
 import { CertificateService } from '../../services/certificate.service';
 import { CertificateData } from '../../types/common';
@@ -99,13 +99,7 @@ export class CreateProofPage {
     return subimmtedOrTouched && hasErrors;
   }
 
-  onProtectWithPasswordChange(event: Event): void {
-    if (!(event as CheckboxCustomEvent).detail.checked) {
-      this.form.patchValue({ password: null, passwordRepeat: null });
-    }
-  }
-
-  onPasswordChange(event: Event): void {
+  onPasswordChange(_: Event): void {
     if (this.form.get('passwordRepeat')?.touched) {
       this.form.get('passwordRepeat')?.updateValueAndValidity();
     }
@@ -141,9 +135,8 @@ export class CreateProofPage {
       this.form = new FormGroup({
         purpose: new FormControl(null, [Validators.required]),
         validUntil: new FormControl(new Date().toISOString(), [Validators.required]),
-        protectWithPassword: new FormControl(false),
-        password: new FormControl(null, [passwordRequiredValidator]),
-        passwordRepeat: new FormControl(null, [passwordRepeatValidator]),
+        password: new FormControl(null, [Validators.required, passwordStrengthValidator]),
+        passwordRepeat: new FormControl(null, [Validators.required, passwordRepeatValidator]),
         shareProjectName: new FormControl(false),
         shareProjectDescription: new FormControl(false),
         shareVersionDescription: new FormControl(false),

@@ -119,51 +119,45 @@
                     </ion-modal>
                   </ion-item>
                   <ion-item class="ion-margin-top">
-                    <ion-label><h2 i18n>Protect with password</h2></ion-label>
-                    <ion-toggle
-                      formControlName="protectWithPassword"
-                      slot="end"
-                      (ionChange)="onProtectWithPasswordChange($event)"
-                    >
-                    </ion-toggle>
+                    <ion-label position="stacked"><h2>Password:</h2></ion-label>
+                    <ion-input
+                      formControlName="password"
+                      type="password"
+                      i18n-placeholder
+                      placeholder="Please, enter your password"
+                      (ionChange)="onPasswordChange($event)"
+                    ></ion-input>
+                    <ion-note class="iop-validation-error-list" *ngIf="hasErrors('password')" slot="error">
+                      <ul>
+                        <li *ngIf="form.get('password')?.hasError('required')" i18n>
+                          To make your proof password protected, please provide a secure password.
+                        </li>
+                        <li *ngIf="form.get('password')?.hasError('weakPassword')" i18n>
+                          The password is too weak. Must be at least 8 characters long; must contain a lower- and
+                          uppercase letter and a symbol or a number.
+                        </li>
+                      </ul>
+                    </ion-note>
                   </ion-item>
-                  <ng-container *ngIf="form.get('protectWithPassword')?.value">
-                    <ion-item class="ion-margin-start">
-                      <ion-label position="stacked"><h2>Password:</h2></ion-label>
-                      <ion-input
-                        formControlName="password"
-                        type="password"
-                        i18n-placeholder
-                        placeholder="Please, enter your password"
-                        (ionChange)="onPasswordChange($event)"
-                      ></ion-input>
-                      <ion-note
-                        *ngIf="hasErrors('password') && form.get('password')?.hasError('required')"
-                        slot="error"
-                        i18n
-                      >
-                        To make your proof password protected, please provide a secure password.
-                      </ion-note>
-                    </ion-item>
-                    <ion-item class="ion-margin-start">
-                      <ion-label position="stacked" class="ion-text-wrap"><h2 i18n>Repeat password:</h2></ion-label>
-                      <ion-input
-                        formControlName="passwordRepeat"
-                        type="password"
-                        i18n-placeholder
-                        placeholder="Please, repeat the password"
-                      ></ion-input>
-                      <ion-note
-                        *ngIf="
-                          hasErrors('passwordRepeat') && form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')
-                        "
-                        slot="error"
-                        i18n
-                      >
-                        Passwords do not match.
-                      </ion-note>
-                    </ion-item>
-                  </ng-container>
+                  <ion-item class="ion-margin-top">
+                    <ion-label position="stacked" class="ion-text-wrap"><h2 i18n>Repeat password:</h2></ion-label>
+                    <ion-input
+                      formControlName="passwordRepeat"
+                      type="password"
+                      i18n-placeholder
+                      placeholder="Please, repeat the password"
+                    ></ion-input>
+                    <ion-note class="iop-validation-error-list" *ngIf="hasErrors('passwordRepeat')" slot="error">
+                      <ul>
+                        <li *ngIf="form.get('passwordRepeat')?.hasError('passwordsDoNotMatch')" i18n>
+                          Passwords do not match.
+                        </li>
+                        <li *ngIf="form.get('passwordRepeat')?.hasError('required')" i18n>
+                          Please confirm your password.
+                        </li>
+                      </ul>
+                    </ion-note>
+                  </ion-item>
                 </ion-item-group>
 
                 <ion-item-group>

@@ -1,14 +1,17 @@
-import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { passwordStrength } from 'check-password-strength';
 
-export const passwordRequiredValidator = (control: AbstractControl): ValidationErrors | null => {
+export const passwordStrengthValidator = (control: AbstractControl): ValidationErrors | null => {
   if (!control.parent) {
     return null;
   }
-  if (control.parent.get('protectWithPassword')?.value) {
-    return Validators.required(control);
+
+  const result = passwordStrength(control.value);
+  if (['Medium', 'Strong'].includes(result.value)) {
+    return null;
   }
 
-  return null;
+  return { weakPassword: true };
 };
 
 export const passwordRepeatValidator = (control: AbstractControl): ValidationErrors | null => {
@@ -16,10 +19,9 @@ export const passwordRepeatValidator = (control: AbstractControl): ValidationErr
     return null;
   }
 
-  const checkbox = control.parent.get('protectWithPassword');
   const password = control.parent.get('password');
 
-  if (checkbox?.value && password?.value !== control.value) {
+  if (password?.value !== control.value) {
     return { passwordsDoNotMatch: true };
   }
 
