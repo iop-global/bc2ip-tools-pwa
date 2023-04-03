@@ -22,6 +22,7 @@ import { CertificateService } from '../../services/certificate.service';
 import { CertificateData } from '../../types/common';
 import { ProofService } from '../../services/proof.service';
 import { SignedWitnessStatement } from '../../types/schemas/common/statement';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-create-proof',
@@ -65,7 +66,12 @@ export class CreateProofPage {
     private readonly proofService: ProofService,
     private readonly alertController: AlertController,
     private readonly router: Router,
+    private readonly i18n: I18nService,
   ) {}
+
+  getLocale(): string {
+    return this.i18n.getAppLocale();
+  }
 
   gotoStep3(result: ValidatedCreateProofFormResult): void {
     this.currentStep = 3;

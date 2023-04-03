@@ -114,6 +114,11 @@
                           [min]="now"
                           presentation="date"
                           showDefaultButtons="true"
+                          doneText="Done"
+                          cancelText="Cancel"
+                          i18n-doneText
+                          i18n-cancelText
+                          [locale]="getLocale()"
                         ></ion-datetime>
                       </ng-template>
                     </ion-modal>
