@@ -36,9 +36,7 @@
   "7446975330875781517": "Not Expired",
   "5109873381279911595": "The proof is not expired, thus can still be used. Otherwise you need to ask your source for a new proof with an extended expiry date.",
   "449712922219700420": "References",
-  "332820509231455490": "To see how this site validates and creates certificate, please visit our GitHub page. Also, to see the technical background of it, please visit IOP's developer portal.",
   "5453179079862122867": "GitHub",
-  "6502778127244547552": "Developer Portal",
   "2159130950882492111": "Cancel",
   "4968023632711283690": "Unlock your credential",
   "4757943997095130729": "Cancel & Back",
@@ -122,5 +120,7 @@
   "8720754980971165581": "Could not load your tenant default configuration from {$PH}/settings.json",
   "5509973196717139369": "Note: your certificate does not support some part of its data to be hidden.",
   "8149750208464716450": "The password is too weak. Must be at least 8 characters long; must contain a lower- and uppercase letter and a symbol or a number.",
-  "508569352083391767": "Please confirm your password. "
+  "508569352083391767": "Please confirm your password.",
+  "3509925917516817788": "To see how this site validates and creates certificate, please visit our GitHub page. Also, to see the technical background of it, please visit our overview page.",
+  "6492690912049633374": "Overview "
 }
