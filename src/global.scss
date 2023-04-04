@@ -48,6 +48,10 @@ ion-note.iop-validation-error-list {
 }
 
 /* Overrides */
+ion-content {
+  --padding-top: var(--ion-safe-area-top, 0);
+}
+
 input {
   font-size: 14px !important;
 }
@@ -58,11 +62,6 @@ input {
     border-bottom: none;
     color: black;
     font-weight: bold;
-  }
-
-  ion-item-divider.iop-item-divider {
-    margin-left: -20px;
-    width: 100vh;
   }
 }
 

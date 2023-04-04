@@ -4,10 +4,12 @@
     *ngIf="tenant.settings$ | async as settings; else loadingTenantSettings"
     [style.--background]="settings.colors.primary"
   >
-    <ion-img [src]="settings.assets.logo" alt="bc2ip Logo"></ion-img>
+    <img class="iop-header-img" [src]="settings.assets.logo" slot="start" alt="bc2ip logo" />
+
     <ion-title class="ion-text-center" [style.color]="settings.colors.text">
       <ion-text>{{ settings.name }}</ion-text>
     </ion-title>
+
     <ion-buttons slot="end">
       <ion-button id="popover-button">
         <ion-icon slot="icon-only" name="globe-outline" [style.color]="settings.colors.text"></ion-icon>
@@ -18,11 +20,11 @@
         <ion-content>
           <ion-list>
             <ion-item [button]="true" [detail]="false" lines="full" (click)="setLocale('de')">
-              <ion-img src="assets/locales/de/flag.svg" slot="start" class="iop-flag"></ion-img>
+              <img src="assets/locales/de/flag.svg" slot="start" class="iop-flag" />
               <ion-text slot="end" i18n>German</ion-text>
             </ion-item>
             <ion-item [button]="true" [detail]="false" (click)="setLocale('en')" lines="none">
-              <ion-img src="assets/locales/en/flag.svg" slot="start" class="iop-flag"></ion-img>
+              <img src="assets/locales/en/flag.svg" slot="start" class="iop-flag" />
               <ion-text slot="end" i18n>English</ion-text>
             </ion-item>
           </ion-list>

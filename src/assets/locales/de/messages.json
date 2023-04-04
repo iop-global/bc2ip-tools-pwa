@@ -47,7 +47,6 @@
   "7658402240953727096": "Name:",
   "7257420460109926387": "Schema:",
   "999949023067288159": "VERSION",
-  "8806956309017303593": "Von vorne beginnen",
   "1310121980420484904": "Zertifikatsdatei auswählen",
   "8910544545685245659": "2. Wählen Sie die Daten, die Sie teilen möchten",
   "3162770834467017772": "Daten ausgewählt.",
@@ -76,7 +75,6 @@
   "6929346716168051339": "Um den Nachweis herunterladen zu können, müssen Sie ihn zuerst mit Ihrer Anmeldeinformation signieren.",
   "5733756930217406904": "Anmeldeinformation auswählen",
   "4648900870671159218": "Erfolg",
-  "346322252946493777": "Ihr Nachweis wurde heruntergeladen",
   "4696163234731470276": "Nachweis kann nicht erstellt werden",
   "6603341485650163954": "Sie müssen mindestens eine Datei oder eine der Projekteigenschaften auswählen",
   "1824904462424642999": "Willkommen bei bc2ip's Tools",
@@ -122,5 +120,8 @@
   "8149750208464716450": "Das Passwort ist zu schwach. Es muss mindestens 8 Zeichen lang sein; und muss einen Klein- und Großbuchstaben sowie ein Symbol enthalten",
   "508569352083391767": "Bitte bestätigen Sie Ihr Passwort.",
   "3509925917516817788": "Um zu sehen, wie diese Website Zertifikate validiert und erstellt, besuchen Sie bitte unsere GitHub-Seite. Um den technischen Hintergrund zu sehen, besuchen Sie bitte unsere Übersichtsseite.",
-  "6492690912049633374": "Übersicht"
+  "6492690912049633374": "Übersicht",
+  "2740831890339580810": "Von vorne beginnen",
+  "8710136565583660330": "Ihr Nachweis wurde in Ihren Dokumentenordner heruntergeladen.",
+  "8291069339594518142": "Die Datei wurde in Ihren Dokumentenordner heruntergeladen."
 }

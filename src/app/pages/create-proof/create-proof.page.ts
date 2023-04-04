@@ -196,7 +196,7 @@ export class CreateProofPage {
 
       const alert = await this.alertController.create({
         header: $localize`Success`,
-        message: $localize`Your proof has been downloaded`,
+        message: $localize`Your proof has been downloaded to your Documents folder.`,
         buttons: [$localize`OK`],
       });
       await alert.present();

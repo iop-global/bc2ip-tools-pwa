@@ -30,20 +30,3 @@ $ ionic serve
 
 # Then open http://localhost:8100 in your browser.
 ```
-
-**For mobile**
-
-```bash
-# Run:
-$ ionic capacitor run android -l --external
-```
-
-**For mobile through Android Studio**
-
-```bash
-# Run:
-$ npm run build-mobile:devnet
-
-# Then start the app from Android Studio
-```
-

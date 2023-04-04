@@ -1,12 +1,9 @@
-ion-img {
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
+img.iop-header-img {
+  height: 36px;
+  width: auto !important
 }
 
 .iop-header-toolbar {
-  padding: 8pt;
   color: #ffffff;
   --background: rgb(26, 33, 65);
 }
@@ -15,7 +12,7 @@ ion-button {
   --color: white !important;
 }
 
-ion-img.iop-flag {
+img.iop-flag {
   height: 21pt;
   margin: 6pt;
 }

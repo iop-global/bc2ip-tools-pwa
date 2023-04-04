@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { AlertController, IonicModule, ModalController } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { Entry, BlobWriter } from '@zip.js/zip.js';
 import {
@@ -30,7 +30,11 @@ export class InspectProofPage {
 
   private proofEntries: Entry[] = [];
 
-  constructor(private readonly proofService: ProofService, private readonly modalCtrl: ModalController) {}
+  constructor(
+    private readonly proofService: ProofService,
+    private readonly modalCtrl: ModalController,
+    private readonly alertController: AlertController,
+  ) {}
 
   async selectProof(event: Event): Promise<void> {
     const files = (event.target as HTMLInputElement).files;
@@ -74,6 +78,14 @@ export class InspectProofPage {
     a.click();
 
     await downloadFile(file, fileName);
+
+    const alert = await this.alertController.create({
+      header: $localize`Success`,
+      message: $localize`File has been downloaded to your Documents folder.`,
+      buttons: [$localize`OK`],
+    });
+    await alert.present();
+    await alert.onWillDismiss();
   }
 
   private async handleInvalidProof(result: CryptoValidationResult, proofName: string): Promise<void> {

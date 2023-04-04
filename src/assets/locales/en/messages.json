@@ -47,7 +47,6 @@
   "7658402240953727096": "Name:",
   "7257420460109926387": "Schema:",
   "999949023067288159": "VERSION",
-  "8806956309017303593": "Start Over",
   "1310121980420484904": "Select certificate file",
   "8910544545685245659": "2. Select the data you Share",
   "3162770834467017772": "Data selected.",
@@ -76,7 +75,6 @@
   "6929346716168051339": "To be able to download the proof, you first must sign it with your credential.",
   "5733756930217406904": "Select credential",
   "4648900870671159218": "Success",
-  "346322252946493777": "Your proof has been downloaded",
   "4696163234731470276": "Cannot create proof",
   "6603341485650163954": "You must select at least one file or any of the project's properties",
   "1824904462424642999": "Welcome to bc2ip's Tools",
@@ -122,5 +120,8 @@
   "8149750208464716450": "The password is too weak. Must be at least 8 characters long; must contain a lower- and uppercase letter and a symbol or a number.",
   "508569352083391767": "Please confirm your password.",
   "3509925917516817788": "To see how this site validates and creates certificate, please visit our GitHub page. Also, to see the technical background of it, please visit our overview page.",
-  "6492690912049633374": "Overview"
+  "6492690912049633374": "Overview",
+  "2740831890339580810": "Start Over",
+  "8710136565583660330": "Your proof has been downloaded to your Documents folder.",
+  "8291069339594518142": "File has been downloaded to your Documents folder."
 }
