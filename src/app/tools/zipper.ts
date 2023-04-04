@@ -22,6 +22,7 @@ export class Zipper {
     if (password) {
       params.password = password;
     }
+
     const reader = new ZipReader(new BlobReader(zipFile), params);
     const entries = await reader.getEntries();
 

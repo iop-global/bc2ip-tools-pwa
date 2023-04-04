@@ -3,13 +3,7 @@
     <ion-row class="ion-align-items-center">
       <ion-col></ion-col>
       <ion-col size="12" size-sm="8" size-xl="8">
-        <ion-button
-          size="small"
-          fill="outline"
-          class="ion-margin-start ion-margin-top"
-          routerLink="/"
-          routerDirection="back"
-        >
+        <ion-button fill="clear" routerLink="/" routerDirection="back">
           <ion-icon slot="start" name="arrow-back"></ion-icon>
           <ion-text i18n>Cancel &amp; Back</ion-text>
         </ion-button>
@@ -45,14 +39,25 @@
                   </ion-label>
                 </ion-item>
               </ion-list>
-
-              <ion-button class="ion-margin-top" size="small" fill="outline" (click)="startOver()" i18n>
-                Start Over
-              </ion-button>
             </ng-container>
           </ion-card-content>
 
-          <ion-button *ngIf="selectedProof === null" class="ion-margin" (click)="proofFileControl.click()" i18n>
+          <ion-button
+            *ngIf="selectedProof !== null"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="startOver()"
+            fill="outline"
+            i18n
+          >
+            Start Over
+          </ion-button>
+
+          <ion-button
+            *ngIf="selectedProof === null"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="proofFileControl.click()"
+            i18n
+          >
             Select proof file
           </ion-button>
 
@@ -66,17 +71,17 @@
 
           <ion-card-content *ngIf="selectedProof !== null">
             <ion-item-group>
-              <ion-item-divider class="ion-margin-top">
+              <ion-item-divider class="ion-margin-top iop-item-divider">
                 <ion-label i18n>Metadata</ion-label>
               </ion-item-divider>
               <ion-item class="ion-margin-top">
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Purpose of share:</h2>
                   <p>{{ proofData!.purpose }}</p>
                 </ion-label>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Validity</h2>
                   <p>
                     <u i18n>From:</u> {{ proofData!.validFrom | date : 'medium' : 'UTC' }} UTC<br />
@@ -85,20 +90,25 @@
                 </ion-label>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Timestamp on Blockchain</h2>
                   <p>
                     <u i18n>Exists since:</u> {{ proofData!.existsSinceBlockTime | date : 'medium' : 'UTC' }} UTC (block
                     {{ proofData!.existsSinceBlock | number : '1.0-0' }} )<br />
                     <u i18n>Current block height:</u> {{ proofData!.currentBlockHeight | number : '1.0-0' }}
                   </p>
-                  <ion-button fill="outline" size="small" [href]="proofData!.blockchainTxUrl" target="_blank" i18n
+                  <ion-button
+                    class="ion-margin-top"
+                    size="small"
+                    [href]="proofData!.blockchainTxUrl"
+                    target="_blank"
+                    i18n
                     >Check transaction</ion-button
                   >
                 </ion-label>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Sealed by</h2>
                   <p>
                     <ion-text *ngIf="proofData!.sealedBy === null; else disclosedSealer" color="warning" i18n
@@ -144,17 +154,17 @@
                 ></ion-icon>
               </ion-item>
 
-              <ion-item-divider class="ion-margin-top">
+              <ion-item-divider class="ion-margin-top iop-item-divider">
                 <ion-label i18n>Project Data</ion-label>
               </ion-item-divider>
               <ion-item class="ion-margin-top">
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2>ID</h2>
                   <p>{{ proofData!.projectId }}</p>
                 </ion-label>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Name</h2>
                   <p>
                     <ion-text *ngIf="proofData!.projectName === null; else disclosedProjectName" color="warning" i18n
@@ -171,7 +181,7 @@
                 ></ion-icon>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Description</h2>
                   <p>
                     <ion-text
@@ -191,7 +201,7 @@
                 ></ion-icon>
               </ion-item>
               <ion-item>
-                <ion-label position="stacked" class="ion-text-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 i18n>Version Description</h2>
                   <p>
                     <ion-text
@@ -211,7 +221,7 @@
                 ></ion-icon>
               </ion-item>
 
-              <ion-item-divider class="ion-margin-top">
+              <ion-item-divider class="ion-margin-top iop-item-divider">
                 <ion-label i18n>Project Permissions</ion-label>
               </ion-item-divider>
               <ion-item class="ion-margin-top">
@@ -260,11 +270,11 @@
           <ion-card-content *ngIf="selectedProof !== null">
             <ng-container *ngIf="proofData!.files.length; else noFiles">
               <ng-container *ngFor="let file of proofData!.files">
-                <ion-item-divider class="ion-margin-top">
+                <ion-item-divider class="ion-margin-top iop-item-divider">
                   <ion-label>{{ file.name }}</ion-label>
                 </ion-item-divider>
                 <ion-item class="ion-margin-top">
-                  <ion-label position="stacked" class="ion-text-wrap">
+                  <ion-label class="ion-text-wrap">
                     <h2 i18n>Uploader</h2>
                     <p>
                       <ion-text *ngIf="file.uploader === null; else disclosedUploader" color="warning" i18n
@@ -279,7 +289,7 @@
                   <ion-icon *ngIf="file.uploader === null" slot="end" color="warning" name="warning-outline"></ion-icon>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="stacked" class="ion-text-wrap">
+                  <ion-label class="ion-text-wrap">
                     <h2>Authors</h2>
                     <p>
                       <ion-text *ngIf="file.authors === null; else disclosedAuthors" color="warning" i18n
@@ -293,7 +303,7 @@
                   <ion-icon *ngIf="file.authors === null" slot="end" color="warning" name="warning-outline"></ion-icon>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="stacked" class="ion-text-wrap">
+                  <ion-label class="ion-text-wrap">
                     <h2 i18n>Owners</h2>
                     <p>
                       <ion-text *ngIf="file.owners === null; else disclosedOwners" color="warning" i18n
@@ -306,7 +316,7 @@
                   </ion-label>
                   <ion-icon *ngIf="file.owners === null" slot="end" color="warning" name="warning-outline"></ion-icon>
                 </ion-item>
-                <ion-button size="small" class="ion-margin-start ion-margin-top" (click)="downloadFile(file.name)">
+                <ion-button size="small" class="ion-margin-top" (click)="downloadFile(file.name)">
                   <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
                   <ion-text i18n>Download</ion-text>
                 </ion-button>

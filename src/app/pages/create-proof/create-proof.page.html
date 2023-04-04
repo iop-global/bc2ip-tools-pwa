@@ -3,13 +3,7 @@
     <ion-row class="ion-align-items-center">
       <ion-col></ion-col>
       <ion-col size="12" size-sm="8" size-xl="8">
-        <ion-button
-          size="small"
-          fill="outline"
-          class="ion-margin-start ion-margin-top"
-          routerLink="/"
-          routerDirection="back"
-        >
+        <ion-button fill="clear" routerLink="/" routerDirection="back">
           <ion-icon slot="start" name="arrow-back"></ion-icon>
           <ion-text i18n>Cancel &amp; Back</ion-text>
         </ion-button>
@@ -46,14 +40,24 @@
                   </ion-label>
                 </ion-item>
               </ion-list>
-
-              <ion-button class="ion-margin-top" size="small" fill="outline" (click)="goto(1)" i18n>
-                Start Over
-              </ion-button>
             </ng-container>
           </ion-card-content>
 
-          <ion-button *ngIf="currentStep === 1" class="ion-margin" (click)="certificateFileControl.click()" i18n>
+          <ion-button
+            *ngIf="currentStep > 1"
+            fill="outline"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="goto(1)"
+            i18n
+            >Start Over</ion-button
+          >
+
+          <ion-button
+            *ngIf="currentStep === 1"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="certificateFileControl.click()"
+            i18n
+          >
             Select certificate file
           </ion-button>
 
@@ -72,9 +76,14 @@
             <ion-card-subtitle *ngIf="currentStep > 2" color="success" i18n>Data selected.</ion-card-subtitle>
           </ion-card-header>
 
-          <ion-card-content *ngIf="currentStep > 2">
-            <ion-button size="small" fill="outline" (click)="goto(2)" i18n>Edit data</ion-button>
-          </ion-card-content>
+          <ion-button
+            *ngIf="currentStep > 2"
+            fill="outline"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="goto(2)"
+            i18n
+            >Edit data</ion-button
+          >
 
           <form *ngIf="currentStep === 2" [formGroup]="form" (ngSubmit)="proofContentSelected()">
             <ion-card-content>
@@ -85,10 +94,10 @@
 
               <ng-container *ngIf="currentStep === 2">
                 <ion-item-group>
-                  <ion-item-divider class="ion-margin-top">
+                  <ion-item-divider class="ion-margin-top iop-item-divider">
                     <ion-label i18n>Proof Settings</ion-label>
                   </ion-item-divider>
-                  <ion-item class="ion-margin-top">
+                  <ion-item>
                     <ion-label position="stacked" class="ion-text-wrap"><h2 i18n>Purpose of share:</h2></ion-label>
                     <ion-input
                       formControlName="purpose"
@@ -105,7 +114,10 @@
                   </ion-item>
                   <ion-item class="ion-margin-top">
                     <ion-label position="stacked"><h2 i18n>Valid until (in UTC):</h2></ion-label>
-                    <ion-datetime-button datetime="datetime" class="ion-margin-bottom"></ion-datetime-button>
+                    <ion-datetime-button
+                      datetime="datetime"
+                      class="ion-margin-bottom ion-margin-top"
+                    ></ion-datetime-button>
                     <ion-modal [keepContentsMounted]="true">
                       <ng-template>
                         <ion-datetime
@@ -166,7 +178,7 @@
                 </ion-item-group>
 
                 <ion-item-group>
-                  <ion-item-divider class="ion-margin-top">
+                  <ion-item-divider class="ion-margin-top iop-item-divider">
                     <ion-label i18n>Project Data</ion-label>
                   </ion-item-divider>
                   <ion-item
@@ -244,7 +256,7 @@
                 </ion-item-group>
 
                 <ion-item-group>
-                  <ion-item-divider class="ion-margin-top">
+                  <ion-item-divider class="ion-margin-top iop-item-divider">
                     <ion-label i18n>Files</ion-label>
                   </ion-item-divider>
 
@@ -296,9 +308,7 @@
               </ng-container>
             </ion-card-content>
 
-            <ion-button *ngIf="currentStep === 2" class="ion-margin" expand="block" type="submit" i18n>
-              Continue
-            </ion-button>
+            <ion-button *ngIf="currentStep === 2" class="ion-margin" type="submit" i18n> Continue </ion-button>
           </form>
         </ion-card>
 
@@ -313,7 +323,12 @@
             </ion-text>
           </ion-card-content>
 
-          <ion-button *ngIf="currentStep === 3" class="ion-margin" (click)="credentialFileControl.click()" i18n>
+          <ion-button
+            *ngIf="currentStep === 3"
+            class="ion-margin-start ion-margin-bottom"
+            (click)="credentialFileControl.click()"
+            i18n
+          >
             Select credential
           </ion-button>
 

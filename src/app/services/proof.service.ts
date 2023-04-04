@@ -14,6 +14,7 @@ import { findSchemaByProcessId, SchemaVersion } from '../types/schemas/schemas';
 import { extractProofV1Data, SignedPresentationV1 } from '../types/schemas/v1';
 import { extractProofV2Data, SignedPresentationV2 } from '../types/schemas/v2';
 import { PresentationContentWithFiles, SignedPresentation } from '../types/schemas/common/presentation';
+import { downloadFile } from '../tools/file';
 
 const PRESENTATION_JSON = 'signed-presentation.json';
 
@@ -157,6 +158,8 @@ export class ProofService {
     a.download = `${projectName} - ${versionId}.${new Date().getTime()}.proof`;
 
     a.click();
+
+    await downloadFile(data, `${projectName} - ${versionId}.${new Date().getTime()}.proof`);
   }
 
   async validate(entries: Entry[]): Promise<CryptoValidationResult> {

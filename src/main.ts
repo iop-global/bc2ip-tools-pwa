@@ -21,7 +21,7 @@ bootstrapApplication(AppComponent, {
     { provide: LOCALE_ID, useValue: 'en-US' },
     I18nModule.setLocale(),
     I18nModule.setLocaleId(),
-    importProvidersFrom(IonicModule.forRoot({ mode: 'ios' }), HttpClientModule),
+    importProvidersFrom(IonicModule.forRoot(), HttpClientModule),
     provideRouter(routes),
   ],
 });

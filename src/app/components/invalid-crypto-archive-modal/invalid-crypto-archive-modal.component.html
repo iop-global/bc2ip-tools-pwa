@@ -7,13 +7,13 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
-  <ion-card>
+  <ion-card color="danger" class="iop-danger-card">
     <ion-card-header>
       <ion-card-title>
         <ng-container *ngIf="isCertificate()" i18n>Certificate</ng-container>
         <ng-container *ngIf="isProof()" i18n>Proof</ng-container>
       </ion-card-title>
-      <ion-card-subtitle color="danger">
+      <ion-card-subtitle>
         <ng-container *ngIf="isCertificate()" i18n>Your certificate is not valid.</ng-container>
         <ng-container *ngIf="isProof()" i18n>Your proof is not valid.</ng-container>
       </ion-card-subtitle>
@@ -195,7 +195,7 @@
     </ion-accordion>
   </ion-accordion-group>
 
-  <ion-list lines="inset">
+  <ion-list>
     <ion-item-divider class="ion-margin-top">
       <ion-label i18n>References</ion-label>
     </ion-item-divider>

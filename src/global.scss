@@ -51,3 +51,24 @@ ion-note.iop-validation-error-list {
 input {
   font-size: 14px !important;
 }
+
+.md {
+  ion-item-divider {
+    background-color: #e6e6e6;
+    border-bottom: none;
+    color: black;
+    font-weight: bold;
+  }
+
+  ion-item-divider.iop-item-divider {
+    margin-left: -20px;
+    width: 100vh;
+  }
+}
+
+.ios {
+  ion-item-divider.iop-item-divider {
+    margin-left: -20px;
+    width: 100vh;
+  }
+}

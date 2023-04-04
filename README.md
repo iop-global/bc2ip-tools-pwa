@@ -1,4 +1,4 @@
-# bc2ip Proof Generator / Inspector Webapp
+# bc2ip Proof Generator / Inspector PWA
 
 ## What is bc2ip?
 
@@ -20,12 +20,30 @@ You can verify evidence for cryptographic integrity and authenticity in a legall
 
 ## Development
 
-You can even run this webapp locally. You only need to also run bc2ip's [sdk webservice](https://github.com/iop-global/bc2ip-sdk-webservice).
+You can run this webapp locally in your browser or on your mobile.
+
+**For browser**
 
 ```bash
 # Run:
 $ ionic serve
 
 # Then open http://localhost:8100 in your browser.
+```
+
+**For mobile**
+
+```bash
+# Run:
+$ ionic capacitor run android -l --external
+```
+
+**For mobile through Android Studio**
+
+```bash
+# Run:
+$ npm run build-mobile:devnet
+
+# Then start the app from Android Studio
 ```
 

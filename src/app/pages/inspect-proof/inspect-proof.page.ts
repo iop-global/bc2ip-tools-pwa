@@ -13,6 +13,7 @@ import { handlePasswordProtectedZip } from '../../tools/protected-zip-modal';
 import { Zipper } from '../../tools/zipper';
 import { ProofService } from '../../services/proof.service';
 import { ProofData } from '../../types/common';
+import { downloadFile } from '../../tools/file';
 
 @Component({
   selector: 'app-inspect-proof',
@@ -71,6 +72,8 @@ export class InspectProofPage {
     a.href = window.URL.createObjectURL(file);
     a.download = fileName;
     a.click();
+
+    await downloadFile(file, fileName);
   }
 
   private async handleInvalidProof(result: CryptoValidationResult, proofName: string): Promise<void> {
