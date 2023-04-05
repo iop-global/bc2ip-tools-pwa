@@ -267,7 +267,7 @@
                           ><h2>{{ file.name }}</h2></ion-label
                         >
                         <ion-toggle formControlName="shareFile" slot="end"></ion-toggle>
-                        <ion-input hidden formControlName="fileName" [value]="file.name"></ion-input>
+                        <ion-input class="ion-hide" formControlName="fileName" [value]="file.name"></ion-input>
                       </ion-item>
 
                       <ng-container *ngIf="form.get('files')?.get(file.index)?.get('shareFile')?.value">

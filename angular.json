@@ -126,6 +126,12 @@
             "development": {
               "browserTarget": "app:build:development"
             },
+            "mobile-devnet": {
+              "browserTarget": "app:build:mobile-devnet"
+            },
+            "mobile-mainnet": {
+              "browserTarget": "app:build:mobile-mainnet"
+            },
             "ci": {
               "progress": false
             }
