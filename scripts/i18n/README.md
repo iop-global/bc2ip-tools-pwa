@@ -27,7 +27,7 @@ Extracts the labels from all the apps' source files.
 $ npm run extract
 ```
 
-It will generate files: `apps/[webapp|console]/src/assets/locales/[de|en]messages.json`.
+It will generate files: `src/assets/locales/[de|en]messages.json`.
 
 Note: if a language file already exists, it will merge them.
 

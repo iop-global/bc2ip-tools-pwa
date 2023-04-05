@@ -16,7 +16,9 @@
     "copy-android:devnet": "ionic capacitor copy android --configuration=mobile-devnet",
     "run-android:devnet": "ionic capacitor run android --configuration=mobile-devnet",
     "copy-ios:devnet": "ionic capacitor copy ios --configuration=mobile-devnet",
-    "run-ios:devnet": "ionic capacitor run ios --configuration=mobile-devnet"
+    "run-ios:devnet": "ionic capacitor run ios --configuration=mobile-devnet",
+    "build-android:devnet": "npm run copy-android:devnet && ionic capacitor sync --configuration=mobile-devnet && npx cap open android",
+    "build-android:mainnet": "npm run copy-android:mainnet && ionic capacitor sync --configuration=mobile-mainnet && npx cap open android"
   },
   "private": true,
   "dependencies": {
@@ -88,10 +90,10 @@
   },
   "release-it": {
     "git": {
-      "changelog": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --compare-url 'https://github.com/iop-global/bc2ip-tools-webapp/compare/{from}..{to}' --unreleased-only --hide-credit"
+      "changelog": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-pwa/commit/{id}' --compare-url 'https://github.com/iop-global/bc2ip-tools-pwa/compare/{from}..{to}' --unreleased-only --hide-credit"
     },
     "hooks": {
-      "after:bump": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-webapp/commit/{id}' --unreleased false --hide-credit "
+      "after:bump": "npx auto-changelog -p --sort-commits date-desc --commit-limit false -u --commit-url 'https://github.com/iop-global/bc2ip-tools-pwa/commit/{id}' --unreleased false --hide-credit "
     }
   }
 }

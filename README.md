@@ -8,7 +8,7 @@ product development and IP processes and to meet the requirements of the Trade S
 
 ## Proof Generator / Inspector
 
-With this webapp one can create a bc2ip proof out from a bc2ip certificate and inspect a bc2ip proof to see its content's validity.
+With this [PWA app](https://web.dev/progressive-web-apps/) one can create a bc2ip proof out from a bc2ip certificate and inspect a bc2ip proof to see its content's validity.
 
 ### Generating Proof
 
@@ -20,13 +20,6 @@ You can verify evidence for cryptographic integrity and authenticity in a legall
 
 ## Development
 
-You can run this webapp locally in your browser or on your mobile.
+You can run this app locally in your browser or on your mobile.
 
-**For browser**
-
-```bash
-# Run:
-$ ionic serve
-
-# Then open http://localhost:8100 in your browser.
-```
+Please refer to [Ionic's documentation](https://ionicframework.com/docs/) to get more information.

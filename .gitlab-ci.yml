@@ -33,11 +33,11 @@ docker-rc:
     - docker push $CI_REGISTRY_IMAGE/app:rc
     - docker push $CI_REGISTRY_IMAGE/app:$nextVersion-rc
     # GCP images
-    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
-    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
+    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:rc
+    - docker tag $CI_REGISTRY_IMAGE/app:rc europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:$nextVersion-rc
     - cat $GCP_DEPLOY_JSON_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
-    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:rc
-    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$nextVersion-rc
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:rc
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:$nextVersion-rc
 
 docker-latest:
   stage: docker
@@ -56,8 +56,8 @@ docker-latest:
     - docker push $CI_REGISTRY_IMAGE/app:latest
     - docker push $CI_REGISTRY_IMAGE/app:$version
     # GCP images
-    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:latest
-    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$version
+    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:latest
+    - docker tag $CI_REGISTRY_IMAGE/app:latest europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:$version
     - cat $GCP_DEPLOY_JSON_KEY | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
-    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:latest
-    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/webapp:$version
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:latest
+    - docker push europe-west3-docker.pkg.dev/iop-tresor/tresor-tools/pwa:$version
