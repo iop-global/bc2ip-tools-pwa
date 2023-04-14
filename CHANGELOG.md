@@ -2,13 +2,47 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [1.1.1](https://github.com/iop-global/bc2ip-tools-pwa/compare/1.1.0...1.1.1)
+#### [2.0.0](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/1.1.1...2.0.0)
 
+- Adding release script [`0b6c9bc`](https://github.com/iop-global/bc2ip-tools-pwa/commit/0b6c9bc13f3d3c280f24c4be5fff1fc80d2a080e)
+- Add icons and splash screens [`cb87902`](https://github.com/iop-global/bc2ip-tools-pwa/commit/cb87902c836c48ba6578db785f6a43d22204f74f)
+- Fix: file selection does not trigger keyboard anymore [`a3692db`](https://github.com/iop-global/bc2ip-tools-pwa/commit/a3692db0b413e7a12074ec0ae920b2d91bb6ea7e)
+- tools-webapp -&gt; tools-pwa [`c491335`](https://github.com/iop-global/bc2ip-tools-pwa/commit/c491335be5f8b4e948737c4d2d5e4acc6ca3f42d)
+- iOS build is ready [`eea24f2`](https://github.com/iop-global/bc2ip-tools-pwa/commit/eea24f2875b7720902e4089c69149d1614529702)
+- Android build is ready [`37d3d51`](https://github.com/iop-global/bc2ip-tools-pwa/commit/37d3d5128fc3a76120153ebdc41bf90f26924c56)
+- Complete localisation [`3ffac0d`](https://github.com/iop-global/bc2ip-tools-pwa/commit/3ffac0d70f18634109c4f1390862bc03f31a1ab6)
+- Refer to bc2ip's doc site [`6d3ee24`](https://github.com/iop-global/bc2ip-tools-pwa/commit/6d3ee2465cf17e1aed93f4f096558eba0782395e)
+- Always require password; password must comply with our password policy [`49750f0`](https://github.com/iop-global/bc2ip-tools-pwa/commit/49750f0f811200748668296cb62fe99e5ee8771d)
+- Handle all schema versions [`9fa91f8`](https://github.com/iop-global/bc2ip-tools-pwa/commit/9fa91f8a371e9e83c0b494e24471af5fc26ae92d)
+- Complete configuration [`e1a3c1a`](https://github.com/iop-global/bc2ip-tools-pwa/commit/e1a3c1a93294fca3fecd370a9449af7925597226)
+- Point the blockchain transaction to the chain explorer [`cb116fc`](https://github.com/iop-global/bc2ip-tools-pwa/commit/cb116fcb78a3d88c05af75e690262297ec51bf21)
+- Navigate back to home, when everything is done [`6f1710b`](https://github.com/iop-global/bc2ip-tools-pwa/commit/6f1710b5f62eed6e9c90c4c73644d7e8500f3439)
+- Lint on CI [`9d8cc57`](https://github.com/iop-global/bc2ip-tools-pwa/commit/9d8cc57373e74d99efd83dcad8dbdb1e72cfc3a7)
+- Add remaining translation [`9ab23fd`](https://github.com/iop-global/bc2ip-tools-pwa/commit/9ab23fd78364bb3f6772ade1f2dde127627c0241)
+- Add linting [`8193eb3`](https://github.com/iop-global/bc2ip-tools-pwa/commit/8193eb353686ecb038a506e3d72b842498185565)
+- Add localization [`bde833e`](https://github.com/iop-global/bc2ip-tools-pwa/commit/bde833e028db65c212c65dab464161a5395894d1)
+- Upgrade to ionic 7 [`1a82823`](https://github.com/iop-global/bc2ip-tools-pwa/commit/1a828238338f5a76ba90172d58e82111704f6d63)
+- Fix docker build [`69763f3`](https://github.com/iop-global/bc2ip-tools-pwa/commit/69763f3d2387cfad88d2b68bf8114d5ffd0e291b)
+- Add development/CI stuff back [`ac2d48c`](https://github.com/iop-global/bc2ip-tools-pwa/commit/ac2d48c3332820089d99e922f01ebdd4eb033a25)
+- Implement inspect proof [`2d0e992`](https://github.com/iop-global/bc2ip-tools-pwa/commit/2d0e99291adb2435b8e1e72bde1f0b631ffcb0b8)
+- Show technical details in a case of invalid certificate [`8b98fcc`](https://github.com/iop-global/bc2ip-tools-pwa/commit/8b98fcc3a1ae7d7a64b9f19e0d613391df8ab75d)
+- Language selector added [`9f35c59`](https://github.com/iop-global/bc2ip-tools-pwa/commit/9f35c5972f6f475b274858cd76df834bd61c018e)
+- Make form consistent [`83ba242`](https://github.com/iop-global/bc2ip-tools-pwa/commit/83ba242fab4823447e0295f5f69321ac54c68455)
+- Theming [`d797aff`](https://github.com/iop-global/bc2ip-tools-pwa/commit/d797aff64d59e2654ebb7a86688a6d4246fef125)
+- Create proof done [`2219405`](https://github.com/iop-global/bc2ip-tools-pwa/commit/2219405f85a8a27b2d76377b0210132a7e94c7c1)
+- Create proof implementation started [`5762559`](https://github.com/iop-global/bc2ip-tools-pwa/commit/5762559e9b3110bb866183f072ec711d70091145)
+- Do not run CI on tags [`67ee79b`](https://github.com/iop-global/bc2ip-tools-pwa/commit/67ee79bcdba95ccd3d275b5426466e45276e19fe)
+
+#### [1.1.1](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/1.1.0...1.1.1)
+
+> 17 January 2023
+
+- Release 1.1.1 [`0d55685`](https://github.com/iop-global/bc2ip-tools-pwa/commit/0d55685218d88a20030cb159cd4366b960a3d08f)
 - Prepare release 1.1.1 [`0d1a70e`](https://github.com/iop-global/bc2ip-tools-pwa/commit/0d1a70e3482b10ef93b27f789ebb43a73288556e)
 - Inspect proof: handle invalid password [`050f293`](https://github.com/iop-global/bc2ip-tools-pwa/commit/050f293a252d0b285a5e8e103d242ce62cb01504)
 - Make it clear if an older cert's metadata is not maskable [`9d91aa2`](https://github.com/iop-global/bc2ip-tools-pwa/commit/9d91aa2ac9572cfe309f5c79fdf0ca5f0eaabf97)
 
-#### [1.1.0](https://github.com/iop-global/bc2ip-tools-pwa/compare/1.0.0...1.1.0)
+#### [1.1.0](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/1.0.0...1.1.0)
 
 > 11 November 2022
 
