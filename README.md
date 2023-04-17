@@ -43,3 +43,9 @@ Please refer to [Ionic's documentation](https://ionicframework.com/docs/) to get
 1. Open XCode.
 2. Go to left sidebar, `App` -> `Assets` -> `AppIcon`.
 3. Drag and drop the icons from the `resources` folder to the matching places.
+
+### Increase Versions
+
+```bash
+$ npx capacitor-set-version . -v [SEMVER_VERSION] -b [VERSION_CODE]
+```
