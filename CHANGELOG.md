@@ -2,8 +2,16 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
-#### [2.0.0](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/1.1.1...2.0.0)
+#### [2.0.1](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/2.0.0...2.0.1)
 
+- Target newer androids [`be59e3e`](https://github.com/iop-global/bc2ip-tools-pwa/commit/be59e3eb75f96c5af2ef383ef0dd3a642dd0cf3d)
+- Adding graphics for android release; set correct versions [`d8c060d`](https://github.com/iop-global/bc2ip-tools-pwa/commit/d8c060d15da85a80b0a5dbf05f7c3d2f69e8669e)
+
+### [2.0.0](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/1.1.1...2.0.0)
+
+> 14 April 2023
+
+- Release 2.0.0 [`b5b8b4b`](https://github.com/iop-global/bc2ip-tools-pwa/commit/b5b8b4b630859612e88e9e87cd5c52a30aa6e923)
 - Adding release script [`0b6c9bc`](https://github.com/iop-global/bc2ip-tools-pwa/commit/0b6c9bc13f3d3c280f24c4be5fff1fc80d2a080e)
 - Add icons and splash screens [`cb87902`](https://github.com/iop-global/bc2ip-tools-pwa/commit/cb87902c836c48ba6578db785f6a43d22204f74f)
 - Fix: file selection does not trigger keyboard anymore [`a3692db`](https://github.com/iop-global/bc2ip-tools-pwa/commit/a3692db0b413e7a12074ec0ae920b2d91bb6ea7e)

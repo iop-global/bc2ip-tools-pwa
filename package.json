@@ -2,7 +2,7 @@
   "name": "tools-pwa",
   "author": "IOP Global GmbH",
   "homepage": "https://bc2ip.com/",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "versionCode": "3",
   "nextVersion": "2.0.1",
   "nextVersionIncrement": "patch",
