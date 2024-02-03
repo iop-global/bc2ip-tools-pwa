@@ -3,8 +3,8 @@
   "author": "IOP Global GmbH",
   "homepage": "https://bc2ip.com/",
   "version": "2.0.1",
-  "versionCode": "3",
-  "nextVersion": "2.0.1",
+  "versionCode": "4",
+  "nextVersion": "2.0.2",
   "nextVersionIncrement": "patch",
   "scripts": {
     "ng": "ng",
