@@ -33,12 +33,27 @@ const networkMap: NetworkMap = {
 };
 
 const blockchainExplorerMap: ExplorerMap = {
-  testnet: 'https://test.explorer.hydraledger.io',
-  devnet: 'https://dev.explorer.hydraledger.io',
-  mainnet: 'https://explorer.hydraledger.io',
+  testnet: 'https://test.explorer.hydraledger.tech',
+  devnet: 'https://dev.explorer.hydraledger.tech',
+  mainnet: 'https://explorer.hydraledger.tech',
 };
 
-const networkConfig = NetworkConfig.fromNetwork(networkMap[environment.hydraledgerNetwork]);
+const getHostByNetwork = (network: Network): string => {
+  switch (network) {
+    case Network.LocalTestnet:
+      return 'http://127.0.0.1';
+    case Network.Testnet:
+      return 'https://test.explorer.hydraledger.tech';
+    case Network.Devnet:
+      return 'https://dev.explorer.hydraledger.tech';
+    case Network.Mainnet:
+      return 'https://explorer.hydraledger.tech';
+    default:
+      throw new Error(`Unknown network ${network}`);
+  }
+};
+
+const networkConfig = NetworkConfig.fromUrl(getHostByNetwork(networkMap[environment.hydraledgerNetwork]), 4705);
 
 @Injectable({
   providedIn: 'root',
