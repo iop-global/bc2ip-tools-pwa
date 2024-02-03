@@ -2,8 +2,16 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [2.0.2](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/2.0.1...2.0.2)
+
+- Prepare release 2.0.2 [`88da981`](https://github.com/iop-global/bc2ip-tools-pwa/commit/88da981dc90bd1b78f36f4f22be0b0135563ad8d)
+- Hackily update hydraledger's domain [`8753516`](https://github.com/iop-global/bc2ip-tools-pwa/commit/8753516677b67954ab56d5ed1ee2879b2b143253)
+
 #### [2.0.1](https://gitlab.iop-ventures.com/tresor/tools-pwa/compare/2.0.0...2.0.1)
 
+> 21 August 2023
+
+- Release 2.0.1 [`92dfdb2`](https://github.com/iop-global/bc2ip-tools-pwa/commit/92dfdb24f9b2364ccf705369a0e9f516bc20c2a5)
 - Target newer androids [`be59e3e`](https://github.com/iop-global/bc2ip-tools-pwa/commit/be59e3eb75f96c5af2ef383ef0dd3a642dd0cf3d)
 - Adding graphics for android release; set correct versions [`d8c060d`](https://github.com/iop-global/bc2ip-tools-pwa/commit/d8c060d15da85a80b0a5dbf05f7c3d2f69e8669e)
 
